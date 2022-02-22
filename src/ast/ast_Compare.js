@@ -10,6 +10,14 @@ BlockMirrorTextToBlocks.COMPARES = [
     ["in", "In", 'Return whether the left value is in the right value.'],
     ["not in", "NotIn", 'Return whether the left value is not in the right value.'],
 ];
+BlockMirrorTextToBlocks.CONVDICT = {
+    "Eq":"EQ",
+    "NotEq":"NEQ",
+    "Lt": "LT",
+    "LtE": "LTE",
+    "Gt": "GT",
+    "GtE": "GTE"
+};
 
 var COMPARES_BLOCKLY_DISPLAY = BlockMirrorTextToBlocks.COMPARES.map(
     boolop => [boolop[0], boolop[1]]
@@ -49,8 +57,8 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
     var values = node.comparators;
     var result_block = this.convert(left, node);
     for (var i = 0; i < values.length; i += 1) {
-        result_block = BlockMirrorTextToBlocks.create_block("ast_Compare", node.lineno, {
-            "OP": ops[i].name
+        result_block = BlockMirrorTextToBlocks.create_block("logic_compare", node.lineno, {
+            "OP": BlockMirrorTextToBlocks.CONVDICT[ops[i].name]
         }, {
             "A": result_block,
             "B": this.convert(values[i], node)

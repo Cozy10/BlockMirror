@@ -1492,7 +1492,7 @@ BlockMirrorTextToBlocks.prototype['ast_For'] = function (node, parent) {
   var iter = node.iter;
   var body = node.body;
   var orelse = node.orelse;
-  var blockName = 'ast_For';
+  var blockName = 'controls_forEach';
   var bodies = {
     'BODY': this.convertBody(body, node)
   };
@@ -1566,8 +1566,8 @@ Blockly.Blocks['ast_If'] = {
    */
   mutationToDom: function mutationToDom() {
     var container = document.createElement('mutation');
-    container.setAttribute('orelse', this.orelse_);
-    container.setAttribute('elifs', this.elifs_);
+    container.setAttribute('else', this.orelse_);
+    container.setAttribute('elseif', this.elifs_);
     return container;
   },
 
@@ -1577,8 +1577,8 @@ Blockly.Blocks['ast_If'] = {
    * @this Blockly.Block
    */
   domToMutation: function domToMutation(xmlElement) {
-    this.orelse_ = "true" === xmlElement.getAttribute('orelse');
-    this.elifs_ = parseInt(xmlElement.getAttribute('elifs'), 10) || 0;
+    this.orelse_ = "true" === xmlElement.getAttribute('else');
+    this.elifs_ = parseInt(xmlElement.getAttribute('elseif'), 10) || 0;
     this.updateShape_();
   }
 };
@@ -1612,13 +1612,13 @@ BlockMirrorTextToBlocks.prototype['ast_If'] = function (node, parent) {
   var test = node.test;
   var body = node.body;
   var orelse = node.orelse;
-  var hasOrelse = false;
+  var hasOrelse = 0;
   var elifCount = 0;
   var values = {
-    "TEST": this.convert(test, node)
+    "IF0": this.convert(test, node)
   };
   var statements = {
-    "BODY": this.convertBody(body, node)
+    "DO0": this.convertBody(body, node)
   };
 
   while (orelse !== undefined && orelse.length > 0) {
@@ -1626,24 +1626,24 @@ BlockMirrorTextToBlocks.prototype['ast_If'] = function (node, parent) {
       if (orelse[0]._astname === "If") {
         // This is an ELIF
         this.heights.shift();
-        values['ELIFTEST' + elifCount] = this.convert(orelse[0].test, node);
-        statements['ELIFBODY' + elifCount] = this.convertBody(orelse[0].body, node);
         elifCount++;
+        values['IF' + elifCount] = this.convert(orelse[0].test, node);
+        statements['DO' + elifCount] = this.convertBody(orelse[0].body, node);
       } else {
-        hasOrelse = true;
-        statements['ORELSEBODY'] = this.convertBody(orelse, node);
+        hasOrelse = 1;
+        statements['ELSE'] = this.convertBody(orelse, node);
       }
     } else {
-      hasOrelse = true;
-      statements['ORELSEBODY'] = this.convertBody(orelse, node);
+      hasOrelse = 1;
+      statements['ELSE'] = this.convertBody(orelse, node);
     }
 
     orelse = orelse[0].orelse;
   }
 
-  return BlockMirrorTextToBlocks.create_block("ast_If", node.lineno, {}, values, {}, {
-    "@orelse": hasOrelse,
-    "@elifs": elifCount
+  return BlockMirrorTextToBlocks.create_block("controls_if", node.lineno, {}, values, {}, {
+    "@else": hasOrelse,
+    "@elseif": elifCount
   }, statements);
 };
 
@@ -1761,7 +1761,7 @@ Blockly.Python['ast_Num'] = function (block) {
 
 BlockMirrorTextToBlocks.prototype['ast_Num'] = function (node, parent) {
   var n = node.n;
-  return BlockMirrorTextToBlocks.create_block("ast_Num", node.lineno, {
+  return BlockMirrorTextToBlocks.create_block("math_number", node.lineno, {
     "NUM": Sk.ffi.remapToJs(n)
   });
 };
@@ -1943,7 +1943,7 @@ BlockMirrorTextToBlocks.prototype['ast_Name'] = function (node, parent) {
   if (id.v == Blockly.Python.blank) {
     return null;
   } else {
-    return BlockMirrorTextToBlocks.create_block('ast_Name', node.lineno, {
+    return BlockMirrorTextToBlocks.create_block('variables_get', node.lineno, {
       "VAR": id.v
     });
   }
@@ -2059,9 +2059,7 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
   }
 
   values['VALUE'] = this.convert(value, node);
-  return BlockMirrorTextToBlocks.create_block("ast_Assign", node.lineno, fields, values, {
-    "inline": "true"
-  }, {
+  return BlockMirrorTextToBlocks.create_block("variables_set", node.lineno, fields, values, {}, {
     "@targets": targets.length,
     "@simple": simpleTarget
   });
@@ -2370,7 +2368,7 @@ BlockMirrorTextToBlocks.prototype['ast_AugAssign'] = function (node, parent) {
 };
 
 BlockMirrorTextToBlocks.BLOCKS.push({
-  "type": "ast_Str",
+  "type": "TEXT",
   "message0": "%1",
   "args0": [{
     "type": "field_input",
@@ -2576,7 +2574,7 @@ BlockMirrorTextToBlocks.prototype['ast_Str'] = function (node, parent) {
       "TEXT": dedented
     })];
   } else if (text.indexOf('\n') === -1) {
-    return BlockMirrorTextToBlocks.create_block("ast_Str", node.lineno, {
+    return BlockMirrorTextToBlocks.create_block("text", node.lineno, {
       "TEXT": text
     });
   } else {
@@ -2651,6 +2649,15 @@ BlockMirrorTextToBlocks.UNARYOPS.forEach(function (unaryop) {
 BlockMirrorTextToBlocks.prototype['ast_UnaryOp'] = function (node, parent) {
   var op = node.op.name;
   var operand = node.operand;
+
+  if (op === "Not") {
+    return BlockMirrorTextToBlocks.create_block('logic_negate', node.lineno, {}, {
+      "BOOL": this.convert(operand, node)
+    }, {
+      "inline": false
+    });
+  }
+
   return BlockMirrorTextToBlocks.create_block('ast_UnaryOp' + op, node.lineno, {}, {
     "VALUE": this.convert(operand, node)
   }, {
@@ -2701,8 +2708,8 @@ BlockMirrorTextToBlocks.prototype['ast_BoolOp'] = function (node, parent) {
   var result_block = this.convert(values[0], node);
 
   for (var i = 1; i < values.length; i += 1) {
-    result_block = BlockMirrorTextToBlocks.create_block("ast_BoolOp", node.lineno, {
-      "OP": op.name
+    result_block = BlockMirrorTextToBlocks.create_block("logic_operation", node.lineno, {
+      "OP": op.name.toUpperCase()
     }, {
       "A": result_block,
       "B": this.convert(values[i], node)
@@ -2715,6 +2722,14 @@ BlockMirrorTextToBlocks.prototype['ast_BoolOp'] = function (node, parent) {
 };
 
 BlockMirrorTextToBlocks.COMPARES = [["==", "Eq", 'Return whether the two values are equal.'], ["!=", "NotEq", 'Return whether the two values are not equal.'], ["<", "Lt", 'Return whether the left value is less than the right value.'], ["<=", "LtE", 'Return whether the left value is less than or equal to the right value.'], [">", "Gt", 'Return whether the left value is greater than the right value.'], [">=", "GtE", 'Return whether the left value is greater than or equal to the right value.'], ["is", "Is", 'Return whether the left value is identical to the right value.'], ["is not", "IsNot", 'Return whether the left value is not identical to the right value.'], ["in", "In", 'Return whether the left value is in the right value.'], ["not in", "NotIn", 'Return whether the left value is not in the right value.']];
+BlockMirrorTextToBlocks.CONVDICT = {
+  "Eq": "EQ",
+  "NotEq": "NEQ",
+  "Lt": "LT",
+  "LtE": "LTE",
+  "Gt": "GT",
+  "GtE": "GTE"
+};
 var COMPARES_BLOCKLY_DISPLAY = BlockMirrorTextToBlocks.COMPARES.map(function (boolop) {
   return [boolop[0], boolop[1]];
 });
@@ -2759,8 +2774,8 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
   var result_block = this.convert(left, node);
 
   for (var i = 0; i < values.length; i += 1) {
-    result_block = BlockMirrorTextToBlocks.create_block("ast_Compare", node.lineno, {
-      "OP": ops[i].name
+    result_block = BlockMirrorTextToBlocks.create_block("logic_compare", node.lineno, {
+      "OP": BlockMirrorTextToBlocks.CONVDICT[ops[i].name]
     }, {
       "A": result_block,
       "B": this.convert(values[i], node)
@@ -3061,7 +3076,7 @@ Blockly.Python['ast_List'] = function (block) {
 BlockMirrorTextToBlocks.prototype['ast_List'] = function (node, parent) {
   var elts = node.elts;
   var ctx = node.ctx;
-  return BlockMirrorTextToBlocks.create_block("ast_List", node.lineno, {}, this.convertElements("ADD", elts, node), {
+  return BlockMirrorTextToBlocks.create_block("lists_create_with", node.lineno, {}, this.convertElements("ADD", elts, node), {
     "inline": elts.length > 3 ? "false" : "true"
   }, {
     "@items": elts.length
@@ -3789,10 +3804,10 @@ BlockMirrorTextToBlocks.prototype['ast_IfExp'] = function (node, parent) {
   var test = node.test;
   var body = node.body;
   var orelse = node.orelse;
-  return BlockMirrorTextToBlocks.create_block("ast_IfExp", node.lineno, {}, {
-    "TEST": this.convert(test, node),
-    "BODY": this.convert(body, node),
-    "ORELSE": this.convert(orelse, node)
+  return BlockMirrorTextToBlocks.create_block("logic_ternary", node.lineno, {}, {
+    "IF": this.convert(test, node),
+    "THEN": this.convert(body, node),
+    "ELSE": this.convert(orelse, node)
   });
 };
 
