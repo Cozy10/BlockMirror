@@ -88,4 +88,5 @@ typings/
 .dynamodb/
 
 # Dist files
-dist/*
+dist/block_mirror.js
+dist/skulpt_parser.js
