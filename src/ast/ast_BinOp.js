@@ -1,6 +1,6 @@
 BlockMirrorTextToBlocks.CONVERT_BINOPS = { 
     "Sub" : "MINUS",
-    "Add" : "add"
+    "Add" : ""
 };
 BlockMirrorTextToBlocks.BINOPS = [
     ["+", "Add", Blockly.Python.ORDER_ADDITIVE, 'Return the sum of the two numbers.', 'increase', 'by'],
