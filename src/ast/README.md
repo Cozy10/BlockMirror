@@ -13,3 +13,10 @@ https://codebeautify.org/xmlviewer
 Test des blocks générer + génération de xml via les blocks blockly
 https://blockly-demo.appspot.com/static/demos/code/index.html
 
+# Fonctions faites
+String
+if, compare, set, get, number
+not, boolop
+for (en cours)
+math op
+
