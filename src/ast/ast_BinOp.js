@@ -1,5 +1,5 @@
 BlockMirrorTextToBlocks.CONVERT_BINOPS = { 
-    "Sub" : "MINUS"
+    "Sub" : "MINUS",
     "Add" : ""
 };
 BlockMirrorTextToBlocks.BINOPS = [
