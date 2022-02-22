@@ -1,3 +1,7 @@
+BlockMirrorTextToBlocks.CONVERT_BINOPS = { 
+    "Sub" : "MINUS",
+    "Add" : ""
+};
 BlockMirrorTextToBlocks.BINOPS = [
     ["+", "Add", Blockly.Python.ORDER_ADDITIVE, 'Return the sum of the two numbers.', 'increase', 'by'],
     ["-", "Sub", Blockly.Python.ORDER_ADDITIVE, 'Return the difference of the two numbers.', 'decrease', 'by'],
@@ -44,54 +48,15 @@ BlockMirrorTextToBlocks.BINOPS.forEach(function (binop) {
     //Blockly.Constants.Math.TOOLTIPS_BY_OP[binop[1]] = binop[3];
 });
 
-BlockMirrorTextToBlocks.BLOCKS.push({
-    "type": "ast_BinOpFull",
-    "message0": "%1 %2 %3",
-    "args0": [
-        {"type": "input_value", "name": "A"},
-        {"type": "field_dropdown", "name": "OP", "options": BINOPS_BLOCKLY_DISPLAY_FULL},
-        {"type": "input_value", "name": "B"}
-    ],
-    "inputsInline": true,
-    "output": null,
-    "colour": BlockMirrorTextToBlocks.COLOR.MATH
-    //"extensions": ["math_op_tooltip"]
-});
-
-BlockMirrorTextToBlocks.BLOCKS.push({
-    "type": "ast_BinOp",
-    "message0": "%1 %2 %3",
-    "args0": [
-        {"type": "input_value", "name": "A"},
-        {"type": "field_dropdown", "name": "OP", "options": BINOPS_BLOCKLY_DISPLAY},
-        {"type": "input_value", "name": "B"}
-    ],
-    "inputsInline": true,
-    "output": null,
-    "colour": BlockMirrorTextToBlocks.COLOR.MATH
-    //"extensions": ["math_op_tooltip"]
-});
-
-Blockly.Python['ast_BinOp'] = function (block) {
-    // Basic arithmetic operators, and power.
-    var tuple = BINOPS_BLOCKLY_GENERATE[block.getFieldValue('OP')];
-    var operator = tuple[0]+" ";
-    var order = tuple[1];
-    var argument0 = Blockly.Python.valueToCode(block, 'A', order) || Blockly.Python.blank;
-    var argument1 = Blockly.Python.valueToCode(block, 'B', order) || Blockly.Python.blank;
-    var code = argument0 + operator + argument1;
-    return [code, order];
-};
-
 BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
     let left = node.left;
-    let op = node.op.name;
+    let op = node.op.prototype._astname;
     let right = node.right;
 
-    let blockName = (BINOPS_SIMPLE.indexOf(op) >= 0) ? "ast_BinOp" : 'ast_BinOpFull';
+    let blockName = "math_arithmetic";
 
     return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {
-        "OP": op
+        "OP": BlockMirrorTextToBlocks.CONVERT_BINOPS[op]
     }, {
         "A": this.convert(left, node),
         "B": this.convert(right, node)
@@ -100,5 +65,4 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
     });
 }
 
-Blockly.Python['ast_BinOpFull'] = Blockly.Python['ast_BinOp'];
-BlockMirrorTextToBlocks.prototype['ast_BinOpFull'] = BlockMirrorTextToBlocks.prototype['ast_BinOp'];
+BlockMirrorTextToBlocks.prototype['math_arithmetic'] = BlockMirrorTextToBlocks.prototype['ast_BinOp'];
