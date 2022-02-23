@@ -3,7 +3,7 @@ BlockMirrorTextToBlocks.CONVERT_BINOPS = {
     "Add" : "ADD",
     "Mult" : "MULTIPLY",
     "Div" : "DIVIDE",
-    "BitXor" : "POWER"
+    "Pow" : "POWER"
 };
 
 BlockMirrorTextToBlocks.BINOPS = [
