@@ -1,7 +1,11 @@
 BlockMirrorTextToBlocks.CONVERT_BINOPS = { 
     "Sub" : "MINUS",
-    "Add" : ""
+    "Add" : "ADD",
+    "Mult" : "MULTIPLY",
+    "Div" : "DIVIDE",
+    "BitXor" : "POWER"
 };
+
 BlockMirrorTextToBlocks.BINOPS = [
     ["+", "Add", Blockly.Python.ORDER_ADDITIVE, 'Return the sum of the two numbers.', 'increase', 'by'],
     ["-", "Sub", Blockly.Python.ORDER_ADDITIVE, 'Return the difference of the two numbers.', 'decrease', 'by'],
@@ -52,11 +56,10 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
     let left = node.left;
     let op = node.op.prototype._astname;
     let right = node.right;
-
     let blockName = "math_arithmetic";
 
     return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {
-        "OP": BlockMirrorTextToBlocks.CONVERT_BINOPS[op]
+        "OP": op
     }, {
         "A": this.convert(left, node),
         "B": this.convert(right, node)
