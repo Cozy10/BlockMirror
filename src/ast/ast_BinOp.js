@@ -59,7 +59,7 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
     let blockName = "math_arithmetic";
 
     return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {
-        "OP": op
+        "OP": BlockMirrorTextToBlocks.CONVERT_BINOPS[op]
     }, {
         "A": this.convert(left, node),
         "B": this.convert(right, node)
