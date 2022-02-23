@@ -4,14 +4,13 @@ BlockMirrorTextToBlocks.prototype['ast_For'] = function (node, parent) {
     var iter = node.iter;
     var body = node.body;
     var orelse = node.orelse;
+    var fields = {};
     
-    var blockName = 'controls_forEach';
+    var blockName;
     var bodies = {'DO': this.convertBody(body, node)};
     var iter_val;
-    console.log("C'est moi===============================");
     // for i in range(...)
     if (iter.func != undefined && iter.func.id.v === "range"){
-      console.log(node.iter)
       // "for i in range(x)" block repeat x times
       if(iter.args.length == 1){
         blockName = "controls_repeat_ext";
@@ -21,8 +20,8 @@ BlockMirrorTextToBlocks.prototype['ast_For'] = function (node, parent) {
       }
       // for i in range(x, y, step)
       else{
-        // "for i in range(x, y)"
         var by_block;
+        // "for i in range(x, y)"
         if(iter.args.length == 2){
           by_block = BlockMirrorTextToBlocks.create_block("math_number", node.lineno, {
               "NUM": 1
@@ -40,18 +39,13 @@ BlockMirrorTextToBlocks.prototype['ast_For'] = function (node, parent) {
       }
     }
     else{
+      blockName = 'controls_forEach';
+      fields['VAR'] = Sk.ffi.remapToJs(target.id);
       iter_val = {
-          "ITER": this.convert(iter, node),
-          "TARGET": this.convert(target, node)
+          "LIST": this.convert(iter, node)
       };
     }
-    if (orelse.length > 0) {
-        blockName = "ast_ForElse";
-        bodies['ELSE'] = this.convertBody(orelse, node);
-    }
 
-    return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {
-    }, iter_val, {}, {}, bodies);
+    return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, fields,
+      iter_val, {}, {}, bodies);
 }
-
-BlockMirrorTextToBlocks.prototype['ast_ForElse'] = BlockMirrorTextToBlocks.prototype['ast_For'];
