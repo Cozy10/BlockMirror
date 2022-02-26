@@ -19,7 +19,9 @@ Blockly.Python['ast_Expr'] = function (block) {
 
 BlockMirrorTextToBlocks.prototype['ast_Expr'] = function (node, parent) {
     var value = node.value;
-
+    if(BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[value.func.id.v] != undefined){
+        return this.convert(value, node);
+    }
     var converted = this.convert(value, node);
 
     if (converted.constructor === Array) {
