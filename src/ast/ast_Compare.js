@@ -58,7 +58,7 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
     var result_block = this.convert(left, node);
     for (var i = 0; i < values.length; i += 1) {
         result_block = BlockMirrorTextToBlocks.create_block("logic_compare", node.lineno, {
-            "OP": BlockMirrorTextToBlocks.CONVDICT[ops[i].name]
+            "OP": BlockMirrorTextToBlocks.CONVDICT[ops[i].prototype._astname]
         }, {
             "A": result_block,
             "B": this.convert(values[i], node)
