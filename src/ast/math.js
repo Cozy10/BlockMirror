@@ -130,4 +130,40 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["atan"] = function(args, node
         "statements":{}     //tag statement
     };
 };
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["round"] = function(args, node){ // Give node.args and node
+    return {
+        "name":"math_round", // block type="text_print"
+        "fields":{
+            "OP":"ROUND"
+        },        // tag field of the block <field ...>
+        "values":{          
+            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{}     //tag statement
+    };
+};
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["ceil"] = function(args, node){ // Give node.args and node
+    return {
+        "name":"math_round", // block type="text_print"
+        "fields":{
+            "OP":"ROUNDUP"
+        },        // tag field of the block <field ...>
+        "values":{          
+            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{}     //tag statement
+    };
+};
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["floor"] = function(args, node){ // Give node.args and node
+    return {
+        "name":"math_round", // block type="text_print"
+        "fields":{
+            "OP":"ROUNDDOWN"
+        },        // tag field of the block <field ...>
+        "values":{          
+            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{}     //tag statement
+    };
+};
 

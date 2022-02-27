@@ -44,7 +44,6 @@ BlockMirrorTextToBlocks.prototype['ast_Call'] = function (node, parent) {
             },);
     }
    
-
     if(mModule === undefined){
         blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[node.func.id.v];
     }

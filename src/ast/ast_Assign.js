@@ -89,7 +89,6 @@ Blockly.Python['ast_Assign'] = function (block) {
 BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
     let targets = node.targets;
     let value = node.value;
-
     let values;
     let fields = {};
     let simpleTarget = (targets.length === 1 && targets[0]._astname === 'Name');
@@ -100,7 +99,7 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
         values = this.convertElements("TARGET", targets, node);
     }
     values['VALUE'] = this.convert(value, node);
-
+    console.log(value);
     return BlockMirrorTextToBlocks.create_block("variables_set", node.lineno, fields,
         values,
         {
