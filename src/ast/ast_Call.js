@@ -36,6 +36,15 @@ BlockMirrorTextToBlocks.prototype['ast_Call'] = function (node, parent) {
     let colour = BlockMirrorTextToBlocks.COLOR.FUNCTIONS;
     let mModule = ((node.func.attr!=undefined) ? node.func.value.id.v : undefined);
     let blockDataFunc;
+    
+    // constant infinity -> float('inf')
+    if (Sk.ffi.remapToJs(func.id) === 'float' && Sk.ffi.remapToJs(args[0].s) === 'inf'){
+        return BlockMirrorTextToBlocks.create_block("math_constant", node.lineno, {
+            "CONSTANT": "INFINITY"
+            },);
+    }
+   
+
     if(mModule === undefined){
         blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[node.func.id.v];
     }
