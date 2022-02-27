@@ -176,9 +176,15 @@ BlockMirrorTextToBlocks.prototype['ast_List'] = function (node, parent) {
     var elts = node.elts;
     var ctx = node.ctx;
 
-    return BlockMirrorTextToBlocks.create_block("lists_create_with", node.lineno, {},
-        this.convertElements("ADD", elts, node),
-        {}, {
-            "@items": elts.length
+    return BlockMirrorTextToBlocks.create_block(
+        "lists_create_with"//type
+    , node.lineno //balec
+    , {}//fields
+    ,
+        this.convertElements("ADD", elts, node)//value
+        ,
+        {}
+        , {
+            "@items": elts.length //mutation
         });
 }
