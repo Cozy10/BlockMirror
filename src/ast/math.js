@@ -270,3 +270,19 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["choice"] = function(args, no
         "statements":{}     //tag statement
     };
 };
+/*
+
+Fonction randint
+
+*/
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["randint"] = function(args, node){ // Give node.args and node
+    return {
+        "name":"math_random_int", // block type="text_print"
+        "fields":{},        // tag field of the block <field ...>
+        "values":{          
+            "FROM":BlockMirrorTextToBlocks.prototype.convert(args[0], node), // recursive conversion for args[0]
+            "TO":BlockMirrorTextToBlocks.prototype.convert(args[1], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{}     //tag statement
+    };
+};
