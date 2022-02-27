@@ -70,4 +70,64 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["pow"] = function(args, node)
         "statements":{}     //tag statement
     };
 };
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["sin"] = function(args, node){ // Give node.args and node
+    return {
+        "name":"math_trig", // block type="text_print"
+        "fields":{
+            "OP":"SIN"
+        },        // tag field of the block <field ...>
+        "values":{          
+            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{}     //tag statement
+    };
+};
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["cos"] = function(args, node){ // Give node.args and node
+    return {
+        "name":"math_trig", // block type="text_print"
+        "fields":{
+            "OP":"COS"
+        },        // tag field of the block <field ...>
+        "values":{          
+            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{}     //tag statement
+    };
+};
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["asin"] = function(args, node){ // Give node.args and node
+    return {
+        "name":"math_trig", // block type="text_print"
+        "fields":{
+            "OP":"ASIN"
+        },        // tag field of the block <field ...>
+        "values":{          
+            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{}     //tag statement
+    };
+};
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["acos"] = function(args, node){ // Give node.args and node
+    return {
+        "name":"math_trig", // block type="text_print"
+        "fields":{
+            "OP":"ACOS"
+        },        // tag field of the block <field ...>
+        "values":{          
+            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{}     //tag statement
+    };
+};
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["atan"] = function(args, node){ // Give node.args and node
+    return {
+        "name":"math_trig", // block type="text_print"
+        "fields":{
+            "OP":"ATAN"
+        },        // tag field of the block <field ...>
+        "values":{          
+            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{}     //tag statement
+    };
+};
 
