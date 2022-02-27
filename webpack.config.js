@@ -30,8 +30,9 @@ const JS_SKULPT_PARSER_FILES = [
 // BlockMirror
 const JS_BLOCKMIRROR_FILES = [
     path.resolve(__dirname, 'src/text_to_blocks.js'),
-    path.resolve(__dirname, 'src/ast/ast_functions.js'),
+
     // AST Handlers
+    path.resolve(__dirname, 'src/ast/ast_functions.js'),
     path.resolve(__dirname, 'src/ast/ast_For.js'),
     path.resolve(__dirname, 'src/ast/ast_If.js'),
     path.resolve(__dirname, 'src/ast/ast_While.js'),
@@ -73,7 +74,9 @@ const JS_BLOCKMIRROR_FILES = [
     path.resolve(__dirname, 'src/ast/ast_Import.js'),
     path.resolve(__dirname, 'src/ast/ast_With.js'),
     path.resolve(__dirname, 'src/ast/ast_Comment.js'),
-    path.resolve(__dirname, 'src/ast/ast_Raw.js')
+    path.resolve(__dirname, 'src/ast/ast_Raw.js'),
+    path.resolve(__dirname,'src/ast/math.js')
+
 ];
 
 const JS_FILES = [].concat(JS_BLOCKLY_FILES, JS_SKULPT_FILES,
