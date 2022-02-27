@@ -1,3 +1,7 @@
+BlockMirrorTextToBlocks.OPS = {
+    "USub" : "NEG"
+}
+
 BlockMirrorTextToBlocks.UNARYOPS = [
     ["+", "UAdd", 'Do nothing to the number'],
     ["-", "USub", 'Make the number negative'],
@@ -9,15 +13,19 @@ BlockMirrorTextToBlocks.prototype['ast_UnaryOp'] = function (node, parent) {
     const op = node.op.prototype._astname;
     let operand = node.operand;
     if(op === "Not"){
-        return BlockMirrorTextToBlocks.create_block('logic_negate', node.lineno, {}, {
+        return BlockMirrorTextToBlocks.create_block('logic_negate', node.lineno, {}, 
+        {
             "BOOL": this.convert(operand, node)
         }, {
             "inline": false
         });
     }
-    return BlockMirrorTextToBlocks.create_block('ast_UnaryOp' + op, node.lineno, {}, {
-        "VALUE": this.convert(operand, node)
-    }, {
-        "inline": false
-    });
+    return BlockMirrorTextToBlocks.create_block('math_single', node.lineno, 
+    {
+        "OP" : BlockMirrorTextToBlocks.OPS[op]
+    }, 
+    {
+        "NUM": this.convert(operand, node)
+    }, 
+    {});
 }
