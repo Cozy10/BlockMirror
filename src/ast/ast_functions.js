@@ -1,3 +1,17 @@
+
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS = {
+    "print": function(args, node){ // Give node.args and node
+        return {
+            "name":"text_print", // block type="text_print"
+            "fields":{},        // tag field of the block <field ...>
+            "values":{          
+                "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            },                  // tag value
+            "statements":{}     //tag statement
+        };
+    }
+};
+
 BlockMirrorTextToBlocks['ast_Image'] = function (node, parent, bmttb) {
     if (!bmttb.blockMirror.configuration.imageMode) {
         throw "Not using image constructor";
