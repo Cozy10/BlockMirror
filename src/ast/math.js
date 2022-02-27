@@ -272,7 +272,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["choice"] = function(args, no
 };
 /*
 
-Fonction randint
+Fonction rand
 
 */
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["randint"] = function(args, node){ // Give node.args and node
@@ -283,6 +283,14 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["randint"] = function(args, n
             "FROM":BlockMirrorTextToBlocks.prototype.convert(args[0], node), // recursive conversion for args[0]
             "TO":BlockMirrorTextToBlocks.prototype.convert(args[1], node) // recursive conversion for args[0]
         },                  // tag value
+        "statements":{}     //tag statement
+    };
+};
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["random"] = function(args, node){ // Give node.args and node
+    return {
+        "name":"math_random_float", // block type="text_print"
+        "fields":{},        // tag field of the block <field ...>
+        "values":{},                  // tag value
         "statements":{}     //tag statement
     };
 };
