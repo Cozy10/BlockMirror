@@ -23,33 +23,22 @@ BlockMirrorTextToBlocks.BLOCKS.push({
     "colour": BlockMirrorTextToBlocks.COLOR.OO,
 });
 
-Blockly.Python['ast_Attribute'] = function (block) {
-    // Text value.
-    var value = Blockly.Python.variableDB_.getName(block.getFieldValue('VALUE'),
-        Blockly.Variables.NAME_TYPE);
-    var attr = block.getFieldValue('ATTR');
-    let code = value + "." + attr;
-    return [code, Blockly.Python.ORDER_MEMBER];
-};
-
-Blockly.Python['ast_AttributeFull'] = function (block) {
-    // Text value.
-    var value = Blockly.Python.valueToCode(block, 'VALUE', Blockly.Python.ORDER_NONE) || Blockly.Python.blank;
-    var attr = block.getFieldValue('ATTR');
-    let code = value + "." + attr;
-    return [code, Blockly.Python.ORDER_MEMBER];
-};
-
 BlockMirrorTextToBlocks.prototype['ast_Attribute'] = function (node, parent) {
     let value = node.value;
     let attr = node.attr;
 
-    //if (value.constructor)
     if (value._astname == "Name") {
-        return BlockMirrorTextToBlocks.create_block("ast_Attribute", node.lineno, {
+        if (Sk.ffi.remapToJs(attr) === "pi" || Sk.ffi.remapToJs(attr) === "e"){
+            return BlockMirrorTextToBlocks.create_block("math_constant", node.lineno, {
+                "CONSTANT": Sk.ffi.remapToJs(attr).toUpperCase()
+                },);
+        }else{
+            return BlockMirrorTextToBlocks.create_block("ast_Attribute", node.lineno, {
             "VALUE": Sk.ffi.remapToJs(value.id),
             "ATTR": Sk.ffi.remapToJs(attr)
-        },);
+            },);
+        }
+        
     } else {
         return BlockMirrorTextToBlocks.create_block("ast_AttributeFull", node.lineno, {
             "ATTR": Sk.ffi.remapToJs(attr)
