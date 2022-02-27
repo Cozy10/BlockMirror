@@ -171,6 +171,18 @@ Blockly.Python['ast_List'] = function (block) {
     var code = '[' + elements.join(', ') + ']';
     return [code, Blockly.Python.ORDER_ATOMIC];
 };
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["len"] = function(args, node){
+    return {
+        "name":"lists_length", // block type="text_print"
+        "fields":{},        // tag field of the block <field ...>
+        "values":{          
+            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{
+            "Bonjour":BlockMirrorTextToBlocks.prototype.convert(args[0], node)
+        }     //tag statement
+    };
+}
 
 BlockMirrorTextToBlocks.prototype['ast_List'] = function (node, parent) {
     var elts = node.elts;

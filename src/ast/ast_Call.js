@@ -34,8 +34,14 @@ BlockMirrorTextToBlocks.prototype['ast_Call'] = function (node, parent) {
     let name = "";
     let caller = null;
     let colour = BlockMirrorTextToBlocks.COLOR.FUNCTIONS;
-        
-    let blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[node.func.id.v]
+    let mModule = ((node.func.attr!=undefined) ? node.func.value.id.v : undefined);
+    let blockDataFunc;
+    if(mModule === undefined){
+        blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[node.func.id.v];
+    }
+    else{
+        blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[node.func.attr.v];
+    }
     if(blockDataFunc != undefined){
         let blockData = blockDataFunc(args, node);
         return BlockMirrorTextToBlocks.create_block(blockData.name, node.lineno, blockData.fields,
