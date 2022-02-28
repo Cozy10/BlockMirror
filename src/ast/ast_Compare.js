@@ -56,11 +56,9 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
     var left = node.left;
     var values = node.comparators;
     var result_block = this.convert(left, node);
-    console.log(node);
-    
+        
     // on cherche si  X 
     if (left.op != undefined && left.op.prototype._astname === "Mod"){ // %
-        console.log(left.right.n.v);
         if(left.right != undefined && left.right.n.v === 2){ // 2
             if (ops[0].prototype._astname === "Eq"){ // ==
                 if(values[0] != undefined && values[0].n.v === 0){ // 0 <=> pair                    
