@@ -140,6 +140,17 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["atan"] = function(args, node
         "statements":{}     //tag statement
     };
 };
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["atan2"] = function(args, node){ // Give node.args and node
+    return {
+        "name":"math_atan2", // block type="text_print"
+        "fields":{},        // tag field of the block <field ...>
+        "values":{          
+            "X":BlockMirrorTextToBlocks.prototype.convert(args[0], node), // recursive conversion for args[0]
+            "Y":BlockMirrorTextToBlocks.prototype.convert(args[1], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{}     //tag statement
+    };
+};
 /*
 
 Fonctions pour arrondir
