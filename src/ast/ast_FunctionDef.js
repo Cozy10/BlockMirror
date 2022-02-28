@@ -1,20 +1,20 @@
-// TODO: what if a user deletes a parameter through the context menu?
+// TODO: what if all returns are inside a if/else block ?
 
 // The mutator container
 
 BlockMirrorTextToBlocks.prototype['ast_FunctionDef'] = function (node, parent) {
     let name = node.name;
-    let returns = null;
     let blockName = "procedures_defnoreturn";
 
     let values = {};
 
-    // Search return and remove all items after in the block
+    // Search return and remove all items after in the block because useless
     node.body.forEach((element, i, tab) => {
         if(element._astname === "Return"){
-            returns = element.value;
-            blockName = "procedures_defreturn";
-            values["RETURN"] = this.convert(element.value, node);
+            if(element.value != null){
+                blockName = "procedures_defreturn";
+                values["RETURN"] = this.convert(element.value, node);
+            }
             tab.splice(i);
         }
     });

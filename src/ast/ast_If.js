@@ -8,10 +8,11 @@ BlockMirrorTextToBlocks.prototype['ast_If'] = function (node, parent) {
 
     // check if it's ifreturn block if immediatly follow by a return
     if(orelse != undefined && orelse.length == 0 && node.body[0]._astname == "Return"){
-        return BlockMirrorTextToBlocks.create_block("procedures_ifreturn", node.lineno, {}, {
-            "CONDITION": this.convert(test, node),
-            "VALUE": this.convert(node.body[0].value, node)
-        });        
+        let values = {"CONDITION": this.convert(test, node)}
+        if(node.body[0].value != null){
+            values["VALUE"] = this.convert(node.body[0].value, node)
+        }
+        return BlockMirrorTextToBlocks.create_block("procedures_ifreturn", node.lineno, {}, values);
     }
 
     let values = {"IF0": this.convert(test, node)};
