@@ -57,6 +57,16 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
     let op = node.op.prototype._astname;
     let right = node.right;
     let blockName = "math_arithmetic";
+    
+    if ( op === "Mod"){
+        blockName = "math_modulo";
+        return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {},
+        {
+            "DIVIDEND": this.convert(left, node),
+            "DIVISOR": this.convert(right, node)
+        },
+        {});
+    }
 
     return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {
         "OP": BlockMirrorTextToBlocks.CONVERT_BINOPS[op]
