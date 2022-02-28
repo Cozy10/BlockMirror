@@ -56,18 +56,14 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
     var left = node.left;
     var values = node.comparators;
     var result_block = this.convert(left, node);
-
+    console.log(node);
+    
     // on cherche si  X 
-    console.log(left.op.prototype._astname);
-    if (left.op.prototype._astname === "Mod"){ // %
+    if (left.op != undefined && left.op.prototype._astname === "Mod"){ // %
         console.log(left.right.n.v);
-        if(left.right.n.v === 2){ // 2
-            console.log(ops[0].prototype._astname);
+        if(left.right != undefined && left.right.n.v === 2){ // 2
             if (ops[0].prototype._astname === "Eq"){ // ==
-                console.log(values[0].n.v);
-                if(values[0].n.v === 0){ // 0 <=> pair
-                    console.log(left.left.n.v);
-                    
+                if(values[0] != undefined && values[0].n.v === 0){ // 0 <=> pair                    
                     return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno, 
                     {
                         "PROPERTY": "EVEN"
@@ -76,7 +72,7 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
                         "NUMBER_TO_CHECK": BlockMirrorTextToBlocks.create_block("math_number", node.lineno, { "NUMBER_TO_CHECK": left.left.n.v},{},{})
                     },{});
                 }
-                if(values[0].n.v === 1) { // 1 <=> impair
+                if(values[0] != undefined && values[0].n.v === 1) { // 1 <=> impair
                     return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno, 
                     {
                         "PROPERTY": "ODD"
@@ -85,9 +81,9 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
                         "NUMBER_TO_CHECK": BlockMirrorTextToBlocks.create_block("math_number", node.lineno, { "NUMBER_TO_CHECK": left.left.n.v},{},{})
                     },{});
                 }
-            }     
+            }
         }
-        if(left.right.n.v === 1){ // 1 <=> est entier
+        if(left.right != undefined && left.right.n.v === 1){ // 1 <=> est entier
             return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno, 
             {
                 "PROPERTY": "WHOLE"
@@ -96,7 +92,43 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
                 "NUMBER_TO_CHECK": BlockMirrorTextToBlocks.create_block("math_number", node.lineno, { "NUMBER_TO_CHECK": left.left.n.v},{},{})
             },{});
         }
+        if(left.right != undefined){ // un nombre quelconque
+            if (ops[0].prototype._astname === "Eq"){ // ==
+                if(values[0] != undefined && values[0].n.v === 0){ // 0 <=> divisible par                    
+                    return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno, 
+                    {
+                        "PROPERTY": "DIVISIBLE_BY"
+                    },
+                    {
+                        "NUMBER_TO_CHECK": BlockMirrorTextToBlocks.create_block("math_number", node.lineno, { "NUM": left.left.n.v},{},{}),
+                        "DIVISOR": BlockMirrorTextToBlocks.create_block("math_number", node.lineno, { "NUM": left.right.n.v},{},{})
+                    },{});
+                }
+            }
+        }
     }
+    if (ops[0].prototype._astname === "Gt"){  // X >
+        if(values[0] != undefined && values[0].n.v === 0){ // 0 <=> positif
+            return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno, 
+            {
+                "PROPERTY": "POSITIVE"
+            },
+            {
+                "NUMBER_TO_CHECK": BlockMirrorTextToBlocks.create_block("math_number", node.lineno, { "NUMBER_TO_CHECK": left.n.v},{},{})
+            },{});
+        }
+    } 
+    if (ops[0].prototype._astname === "Lt"){  // X <
+        if(values[0] != undefined && values[0].n.v === 0){ // 0 <=> négatif
+            return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno, 
+            {
+                "PROPERTY": "NEGATIVE"
+            },
+            {
+                "NUMBER_TO_CHECK": BlockMirrorTextToBlocks.create_block("math_number", node.lineno, { "NUMBER_TO_CHECK": left.n.v},{},{})
+            },{});
+        }
+    }    
     for (var i = 0; i < values.length; i += 1) {
         result_block = BlockMirrorTextToBlocks.create_block("logic_compare", node.lineno, {
             "OP": BlockMirrorTextToBlocks.CONVDICT[ops[i].prototype._astname]
