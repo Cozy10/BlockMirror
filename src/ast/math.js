@@ -305,3 +305,16 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["random"] = function(args, no
         "statements":{}     //tag statement
     };
 };
+
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math_isPrime"] = function(args, node){ // Give node.args and node
+    return {
+        "name":"math_number_property", // block type="text_print"
+        "fields":{
+            "PROPERTY": "PRIME"
+        },        // tag field of the block <field ...>
+        "values":{
+            "NUMBER_TO_CHECK": BlockMirrorTextToBlocks.prototype.convert(args[0], node)
+        },                  // tag value
+        "statements":{}     //tag statement
+    };
+};

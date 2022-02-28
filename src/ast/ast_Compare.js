@@ -56,6 +56,38 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
     var left = node.left;
     var values = node.comparators;
     var result_block = this.convert(left, node);
+
+    // on cherche si  X % 2 == 0 ou  X % 2 == 1 <=> X est pair ou impair
+    console.log(left.op.prototype._astname);
+    if (left.op.prototype._astname === "Mod"){ // %
+        console.log(left.right.n.v);
+        if(left.right.n.v === 2){ // 2
+            console.log(ops[0].prototype._astname);
+            if (ops[0].prototype._astname === "Eq"){ // ==
+                console.log(values[0].n.v);
+                if(values[0].n.v === 0){ // 0 <=> pair
+                    console.log(left.left.n.v);
+                    
+                    return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno, 
+                    {
+                        "PROPERTY": "EVEN"
+                    },
+                    {
+                        "NUMBER_TO_CHECK": BlockMirrorTextToBlocks.create_block("math_number", node.lineno, { "NUMBER_TO_CHECK": left.left.n.v},{},{})
+                    },{});
+                }
+                if(values[0].n.v === 1) { // 1 <=> impair
+                    return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno, 
+                    {
+                        "PROPERTY": "ODD"
+                    },
+                    {
+                        "NUMBER_TO_CHECK": BlockMirrorTextToBlocks.create_block("math_number", node.lineno, { "NUMBER_TO_CHECK": left.left.n.v},{},{})
+                    },{});
+                }
+            }     
+        }
+    }
     for (var i = 0; i < values.length; i += 1) {
         result_block = BlockMirrorTextToBlocks.create_block("logic_compare", node.lineno, {
             "OP": BlockMirrorTextToBlocks.CONVDICT[ops[i].prototype._astname]
