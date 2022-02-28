@@ -44,16 +44,20 @@ BlockMirrorTextToBlocks.prototype['ast_Call'] = function (node, parent) {
             },);
     }
    
+    // Functions from an integrated module or function defined by user in blockly
     if(mModule === undefined){
-        blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[node.func.id.v];
+        blockDataFunc = BlockMirrorTextToBlocks.prototype.LOCAL_FUNCTIONS[node.func.id.v];
+        if(blockDataFunc === undefined){
+            blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[node.func.id.v];
+        }
     }
-    else{
+    else{ // Integrated functions
         blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[node.func.attr.v];
     }
-    if(blockDataFunc != undefined){
+    if(blockDataFunc !== undefined){
         let blockData = blockDataFunc(args, node);
         return BlockMirrorTextToBlocks.create_block(blockData.name, node.lineno, blockData.fields,
-            blockData.values, {}, {}, blockData.statements);
+            blockData.values, {}, blockData.mutations, blockData.statements);
     }
 
     
@@ -62,7 +66,7 @@ BlockMirrorTextToBlocks.prototype['ast_Call'] = function (node, parent) {
         if (name in this.FUNCTION_SIGNATURES) {
             signature = this.FUNCTION_SIGNATURES[Sk.ffi.remapToJs(func.id)];
         }
-    } 
+    }
     else if (func._astname === 'Attribute') {
         isMethod = true;
         caller = func.value;

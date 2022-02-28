@@ -11,6 +11,24 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS = {
         };
     }
 };
+BlockMirrorTextToBlocks.prototype.LOCAL_FUNCTIONS = {}
+
+BlockMirrorTextToBlocks.prototype.create_block_functionDef = function(name, mutation, type){
+    return function(args, node){
+        let values = {};
+        args.forEach((arg, i)=>{
+            values["ARG"+i] = BlockMirrorTextToBlocks.prototype.convert(arg, node);
+        });
+        return {"name": type, // block type=name
+            "fields":{
+                "NAME":name
+            },        // tag field of the block <field ...>
+            "values":values,                  // tag value
+            "mutations":mutation,      //tag mutation
+            "statements":{}     //tag statement
+        };
+    };
+}
 
 BlockMirrorTextToBlocks['ast_Image'] = function (node, parent, bmttb) {
     if (!bmttb.blockMirror.configuration.imageMode) {

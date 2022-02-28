@@ -5,6 +5,7 @@
 BlockMirrorTextToBlocks.prototype['ast_FunctionDef'] = function (node, parent) {
     let name = node.name;
     let blockName = "procedures_defnoreturn";
+    let function_type = "procedures_callnoreturn";
 
     let values = {};
 
@@ -13,6 +14,7 @@ BlockMirrorTextToBlocks.prototype['ast_FunctionDef'] = function (node, parent) {
         if(element._astname === "Return"){
             if(element.value != null){
                 blockName = "procedures_defreturn";
+                function_type = "procedures_callreturn";
                 values["RETURN"] = this.convert(element.value, node);
             }
             tab.splice(i);
@@ -24,6 +26,10 @@ BlockMirrorTextToBlocks.prototype['ast_FunctionDef'] = function (node, parent) {
     for(let i = 0; i<node.args.args.length; i+=1){
         mutation[node.args.args[i].arg.v] = null;
     }
+
+    // Register functions
+    BlockMirrorTextToBlocks.prototype.LOCAL_FUNCTIONS[name] = 
+        BlockMirrorTextToBlocks.prototype.create_block_functionDef(name, mutation, function_type);
 
     return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {
             'NAME': Sk.ffi.remapToJs(name)
