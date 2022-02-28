@@ -57,7 +57,7 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
     var values = node.comparators;
     var result_block = this.convert(left, node);
 
-    // on cherche si  X % 2 == 0 ou  X % 2 == 1 <=> X est pair ou impair
+    // on cherche si  X 
     console.log(left.op.prototype._astname);
     if (left.op.prototype._astname === "Mod"){ // %
         console.log(left.right.n.v);
@@ -86,6 +86,15 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
                     },{});
                 }
             }     
+        }
+        if(left.right.n.v === 1){ // 1 <=> est entier
+            return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno, 
+            {
+                "PROPERTY": "WHOLE"
+            },
+            {
+                "NUMBER_TO_CHECK": BlockMirrorTextToBlocks.create_block("math_number", node.lineno, { "NUMBER_TO_CHECK": left.left.n.v},{},{})
+            },{});
         }
     }
     for (var i = 0; i < values.length; i += 1) {
