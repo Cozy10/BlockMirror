@@ -4,23 +4,30 @@
 
 BlockMirrorTextToBlocks.prototype['ast_FunctionDef'] = function (node, parent) {
     let name = node.name;
-    let args = node.args;
-    let body = node.body;
-    let decorator_list = node.decorator_list;
-    let returns = node.returns;
+    let returns = null;
+    let blockName = "procedures_defnoreturn";
 
     let values = {};
-    console.log(node);
-    
+
+    // Search return and remove all items after in the block
+    node.body.forEach((element, i, tab) => {
+        if(element._astname === "Return"){
+            returns = element.value;
+            blockName = "procedures_defreturn";
+            values["RETURN"] = this.convert(element.value, node);
+            tab.splice(i);
+        }
+    });
+
     // Args
     let mutation = {};
     for(let i = 0; i<node.args.args.length; i+=1){
         mutation[node.args.args[i].arg.v] = null;
     }
 
-    return BlockMirrorTextToBlocks.create_block("procedures_defnoreturn", node.lineno, {
+    return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {
             'NAME': Sk.ffi.remapToJs(name)
         }, values, {}, mutation, {
-            'STACK': this.convertBody(body, node)
+            'STACK': this.convertBody(node.body, node)
         });
 };
