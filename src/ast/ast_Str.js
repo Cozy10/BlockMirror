@@ -1,3 +1,7 @@
+/* 
+    Champ text basique
+*/
+
 BlockMirrorTextToBlocks.BLOCKS.push({
     "type": "TEXT",
     "message0": "%1",
@@ -8,6 +12,10 @@ BlockMirrorTextToBlocks.BLOCKS.push({
     "colour": BlockMirrorTextToBlocks.COLOR.TEXT,
     "extensions": ["text_quotes"]
 });
+
+/*
+    Chaine de caractère séparée par une tab ou retour à la ligne
+*/
 
 BlockMirrorTextToBlocks.BLOCKS.push({
     "type": "ast_StrChar",
@@ -22,6 +30,12 @@ BlockMirrorTextToBlocks.BLOCKS.push({
     "extensions": ["text_quotes"]
 });
 
+
+/*
+
+    Text sur plusieurs lignes
+    
+ */
 BlockMirrorTextToBlocks.BLOCKS.push({
     "type": "ast_StrMultiline",
     "message0": "%1",
@@ -33,6 +47,10 @@ BlockMirrorTextToBlocks.BLOCKS.push({
     "extensions": ["text_quotes"]
 });
 
+/*
+    Texte pour Documentation (man)
+    
+*/
 BlockMirrorTextToBlocks.BLOCKS.push({
     "type": "ast_StrDocstring",
     "message0": "Docstring: %1 %2",
@@ -86,6 +104,9 @@ BlockMirrorTextToBlocks.BLOCKS.push({
     "colour": BlockMirrorTextToBlocks.COLOR.TEXT,
     //"extensions": ["text_quotes"]
 });*/
+
+
+
 
 Blockly.Python['ast_Str'] = function (block) {
     // Text value
