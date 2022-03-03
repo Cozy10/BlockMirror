@@ -1,13 +1,11 @@
 BlockMirrorTextToBlocks.prototype.CONSTANTS = function (node, parent){
-    let value = node;
-    console.log(node);
     // identifier le golden ratio
-    if ( value.op != undefined && value.op.prototype._astname === "Div"){
-        if(value.right != undefined && value.right.n.v === 2){
-            if(value.left != undefined && value.left.op != undefined && value.left.op.prototype._astname === "Add"){
-                if ( value.left.left != undefined && value.left.left.n.v === 1){
-                    if( value.left.right != undefined && value.left.right.func != undefined && value.left.right.func.attr != undefined && value.left.right.func.attr.v === "sqrt"){
-                        if(value.left.right.args[0].n.v === 5){
+    if ( node.op != undefined && node.op.prototype._astname === "Div"){
+        if(node.right != undefined && node.right.n.v === 2){
+            if(node.left != undefined && node.left.op != undefined && node.left.op.prototype._astname === "Add"){
+                if ( node.left.left != undefined && node.left.left.n.v === 1){
+                    if( node.left.right != undefined && node.left.right.func != undefined && node.left.right.func.attr != undefined && node.left.right.func.attr.v === "sqrt"){
+                        if(node.left.right.args[0].n.v === 5){
                             return BlockMirrorTextToBlocks.create_block("math_constant", node.lineno, 
                             {
                                 "CONSTANT": "GOLDEN_RATIO"
@@ -35,5 +33,16 @@ BlockMirrorTextToBlocks.prototype.CONSTANTS = function (node, parent){
             },);
     }
 
+    let value = node.value;
+
+    if (value != undefined && value === Sk.builtin.bool.true$) {
+        return BlockMirrorTextToBlocks.create_block('logic_boolean', node.lineno, {
+            "BOOL": 'TRUE'
+        });
+    } else if (value != undefined && value === Sk.builtin.bool.false$) {
+        return BlockMirrorTextToBlocks.create_block('logic_boolean', node.lineno, {
+            "BOOL": 'FALSE'
+        });
+    }
     return undefined;
 }
