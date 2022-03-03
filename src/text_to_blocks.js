@@ -25,7 +25,6 @@ BlockMirrorTextToBlocks.prototype.convertSourceToCodeBlock = function (python_so
  *      source code or an error message and the code as a code-block.
  */
 BlockMirrorTextToBlocks.prototype.convertSource = function (filename, python_source) {
-    console.log(filename);
     let xml = document.createElement("xml");
     // Attempt parsing - might fail!
     let parse, ast = null, symbol_table, error;

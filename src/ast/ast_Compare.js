@@ -27,19 +27,6 @@ BlockMirrorTextToBlocks.COMPARES.forEach(function (boolop) {
     COMPARES_BLOCKLY_GENERATE[boolop[1]] = boolop[0];
 });
 
-BlockMirrorTextToBlocks.BLOCKS.push({
-    "type": "ast_Compare",
-    "message0": "%1 %2 %3",
-    "args0": [
-        {"type": "input_value", "name": "A"},
-        {"type": "field_dropdown", "name": "OP", "options": COMPARES_BLOCKLY_DISPLAY},
-        {"type": "input_value", "name": "B"}
-    ],
-    "inputsInline": true,
-    "output": null,
-    "colour": BlockMirrorTextToBlocks.COLOR.LOGIC
-});
-
 Blockly.Python['ast_Compare'] = function (block) {
     // Basic arithmetic operators, and power.
     var tuple = COMPARES_BLOCKLY_GENERATE[block.getFieldValue('OP')];
