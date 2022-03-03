@@ -51,7 +51,6 @@ BlockMirrorTextToBlocks.prototype.CONSTANTS = function (node, parent){
     }
 
     let value = node.value;
-
     if (value != undefined && value === Sk.builtin.bool.true$) {
         return BlockMirrorTextToBlocks.create_block('logic_boolean', node.lineno, {
             "BOOL": 'TRUE'
