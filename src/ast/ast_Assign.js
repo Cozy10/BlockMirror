@@ -100,8 +100,8 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
         values = this.convertElements("TARGET", targets, node);
     }
     values['VALUE'] = this.convert(value, node);
-    console.log(value);
-
+    
+    // identifier le golden ratio
     if ( value.op != undefined && value.op.prototype._astname === "Div"){
         if(value.right != undefined && value.right.n.v === 2){
             if(value.left != undefined && value.left.op != undefined && value.left.op.prototype._astname === "Add"){
