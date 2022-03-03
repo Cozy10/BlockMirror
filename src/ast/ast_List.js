@@ -171,32 +171,58 @@ Blockly.Python['ast_List'] = function (block) {
     var code = '[' + elements.join(', ') + ']';
     return [code, Blockly.Python.ORDER_ATOMIC];
 };
+
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["len"] = function(args, node){
     return {
         "name":"lists_length", // block type="text_print"
         "fields":{},        // tag field of the block <field ...>
         "values":{          
-            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
-        "statements":{
-            "Bonjour":BlockMirrorTextToBlocks.prototype.convert(args[0], node)
-        }     //tag statement
+        "statements":{}     //tag statement
     };
+}
+
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["first_index"] = function(args, node){
+    return {
+        "name":"lists_indexOf", // block type="text_print"
+        "fields":{
+            "END":"FIRST"
+        },        // tag field of the block <field ...>
+        "values":{
+            "VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            , "FIND":BlockMirrorTextToBlocks.prototype.convert(args[1], node) // recursive conversion for args[1]
+        },                  // tag value
+        "statements":{}     //tag statement
+    }
+}
+
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["lists_sort"] = function(args, node){
+    return {
+        "name":"lists_sort", // block type="text_print"
+        "fields":{
+            "TYPE":"NUMERIC"
+            , "DIRECTION":1
+        },        // tag field of the block <field ...>
+        "values":{
+            "LIST":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{}     //tag statement
+    }
 }
 
 BlockMirrorTextToBlocks.prototype['ast_List'] = function (node, parent) {
     var elts = node.elts;
-    var ctx = node.ctx;
 
     return BlockMirrorTextToBlocks.create_block(
-        "lists_create_with"//type
-    , node.lineno //balec
-    , {}//fields
-    ,
-        this.convertElements("ADD", elts, node)//value
-        ,
-        {}
+        "lists_create_with" // type
+        , node.lineno // line_number
+        , {} // fields
+        , this.convertElements("ADD", elts, node) //values
+        , {} // settings
         , {
-            "@items": elts.length //mutation
-        });
+            "@items": elts.length // mutations
+        }
+        , {} // statements
+        );
 }
