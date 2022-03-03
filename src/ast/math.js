@@ -319,8 +319,6 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math_isPrime"] = function(ar
     };
 };
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["min"] = function(args, node){ // Give node.args and node
-    console.log(args);
-    console.log(node);
     if (args[0].args != undefined && args[0].func != undefined && args[0].func.id != undefined && args[0].func.id.v === "max" ){
         return {
             "name":"math_constrain", // block type="text_print"
@@ -334,7 +332,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["min"] = function(args, node)
         };
     }
     return {
-        "name":"", // block type="text_print"
+        "name":"error_function_min_math_js", // block type="text_print"
         "fields":{},        // tag field of the block <field ...>
         "values":{},                  // tag value
         "statements":{}     //tag statement
