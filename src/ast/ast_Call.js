@@ -19,12 +19,19 @@ BlockMirrorTextToBlocks.prototype.getAsModule = function (node) {
 // function call: print() -> "print" ([message]) ; print
 // Module function: plt.show() -> "show plot" ([plot]) ; plt.show
 // Method call: "test".title() -> "make" [str] "title case" () ; .title ; isMethod = true
-
+function getModuleName(node_func){
+    if(node_func == undefined){
+        return undefined;
+    }
+    if(node_func.value.id != undefined){
+        return Sk.ffi.remapToJs(node_func.value.id);
+    }
+    return node_func.value._astname;
+}
 BlockMirrorTextToBlocks.prototype['ast_Call'] = function (node, parent) {
     let func = node.func;
     let args = node.args;
     let keywords = node.keywords;
-
     // Can we make any guesses about this based on its name?
     let signature = null;
     let isMethod = false;
@@ -34,18 +41,22 @@ BlockMirrorTextToBlocks.prototype['ast_Call'] = function (node, parent) {
     let name = "";
     let caller = null;
     let colour = BlockMirrorTextToBlocks.COLOR.FUNCTIONS;
-    let mModule = ((node.func.attr!=undefined) ? node.func.value.id.v : undefined);
+    let mModule = getModuleName(func);
     let blockDataFunc;
-   
+
     // Functions from an integrated module or function defined by user in blockly
     if(mModule === undefined){
-        blockDataFunc = BlockMirrorTextToBlocks.prototype.LOCAL_FUNCTIONS[node.func.id.v];
+        blockDataFunc = BlockMirrorTextToBlocks.prototype.LOCAL_FUNCTIONS[Sk.ffi.remapToJs(node.func.id)];
         if(blockDataFunc === undefined){
-            blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[node.func.id.v];
+            blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[Sk.ffi.remapToJs(node.func.id)];
         }
     }
+    else if(this.MODULES.includes(mModule)){
+        args = ((args == null) ? [node.func.value] : [node.func.value].concat(args));
+        blockDataFunc = BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS[mModule][Sk.ffi.remapToJs(node.func.attr.v)];
+    } 
     else{ // Integrated functions
-        blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[node.func.attr.v];
+        blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[Sk.ffi.remapToJs(node.func.attr)];
     }
     if(blockDataFunc !== undefined){
         let blockData = blockDataFunc(args, node);
