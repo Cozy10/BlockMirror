@@ -77,6 +77,7 @@ const JS_BLOCKMIRROR_FILES = [
     path.resolve(__dirname, 'src/ast/ast_Comment.js'),
     path.resolve(__dirname, 'src/ast/ast_Raw.js'),
     path.resolve(__dirname,'src/ast/math.js'),
+    path.resolve(__dirname,'src/ast/constants.js'),
     path.resolve(__dirname, 'modules/import/numpy/test.js')
 
 ];
