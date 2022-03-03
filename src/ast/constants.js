@@ -1,5 +1,4 @@
 BlockMirrorTextToBlocks.prototype.CONSTANTS = function (node, parent){
-    console.log(node);
     // identifier le golden ratio
     if ( node.op != undefined && node.op.prototype._astname === "Div"){
         if(node.right != undefined && node.right.n.v === 2){
