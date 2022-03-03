@@ -9,7 +9,8 @@
   "scripts": {
     "build": "webpack --mode production",
     "devbuild": "webpack --mode development",
-    "watch": "webpack --watch --mode development"
+    "watch": "webpack --watch --mode development",
+    "import_module": "node module_importer.js"
   },
   "repository": {
     "type": "git",

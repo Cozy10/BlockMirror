@@ -1,0 +1,15 @@
+{
+  "type": "test",
+  "message0": "Afficher %1",
+  "args0": [
+    {
+      "type": "input_value",
+      "name": "NAME",
+      "check": "Boolean"
+    }
+  ],
+  "inputsInline": true,
+  "output": null,
+  "tooltip": "",
+  "helpUrl": ""
+}

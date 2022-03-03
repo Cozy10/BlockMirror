@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const MergeIntoSingleFilePlugin = require('webpack-merge-and-include-globally');
 const babel = require("@babel/core");
 
@@ -75,7 +76,8 @@ const JS_BLOCKMIRROR_FILES = [
     path.resolve(__dirname, 'src/ast/ast_With.js'),
     path.resolve(__dirname, 'src/ast/ast_Comment.js'),
     path.resolve(__dirname, 'src/ast/ast_Raw.js'),
-    path.resolve(__dirname,'src/ast/math.js')
+    path.resolve(__dirname,'src/ast/math.js'),
+    path.resolve(__dirname, 'modules/import/numpy/test.js')
 
 ];
 
