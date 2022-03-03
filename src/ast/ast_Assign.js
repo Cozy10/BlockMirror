@@ -100,25 +100,6 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
         values = this.convertElements("TARGET", targets, node);
     }
     values['VALUE'] = this.convert(value, node);
-    console.log(value);
-
-    if ( value.op != undefined && value.op.prototype._astname === "Div"){
-        if(value.right != undefined && value.right.n.v === 2){
-            if(value.left != undefined && value.left.op != undefined && value.left.op.prototype._astname === "Add"){
-                if ( value.left.left != undefined && value.left.left.n.v === 1){
-                    if( value.left.right != undefined && value.left.right.func != undefined && value.left.right.func.attr.v === "sqrt"){
-                        if(value.left.right.args[0].n.v === 5){
-                            return BlockMirrorTextToBlocks.create_block("math_constant", node.lineno, 
-                            {
-                                "CONSTANT": "GOLDEN_RATIO"
-                            },
-                            {},{});
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     return BlockMirrorTextToBlocks.create_block("variables_set", node.lineno, fields,
         values,

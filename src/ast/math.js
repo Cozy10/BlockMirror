@@ -318,3 +318,23 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math_isPrime"] = function(ar
         "statements":{}     //tag statement
     };
 };
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["min"] = function(args, node){ // Give node.args and node
+    if (args[0].args != undefined && args[0].func != undefined && args[0].func.id != undefined && args[0].func.id.v === "max" ){
+        return {
+            "name":"math_constrain", // block type="text_print"
+            "fields":{},        // tag field of the block <field ...>
+            "values":{
+                "VALUE" : BlockMirrorTextToBlocks.prototype.convert(args[0].args[0],node),
+                "LOW": BlockMirrorTextToBlocks.prototype.convert(args[0].args[1],node) ,
+                "HIGH": BlockMirrorTextToBlocks.prototype.convert(args[1],node)
+            },                  // tag value
+            "statements":{}     //tag statement
+        };
+    }
+    return {
+        "name":"error_function_min_math_js", // block type="text_print"
+        "fields":{},        // tag field of the block <field ...>
+        "values":{},                  // tag value
+        "statements":{}     //tag statement
+    };
+};

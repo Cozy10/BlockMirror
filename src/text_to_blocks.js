@@ -25,7 +25,6 @@ BlockMirrorTextToBlocks.prototype.convertSourceToCodeBlock = function (python_so
  *      source code or an error message and the code as a code-block.
  */
 BlockMirrorTextToBlocks.prototype.convertSource = function (filename, python_source) {
-    console.log(filename);
     let xml = document.createElement("xml");
     // Attempt parsing - might fail!
     let parse, ast = null, symbol_table, error;
@@ -317,6 +316,11 @@ BlockMirrorTextToBlocks.prototype.isTopLevel = function (parent) {
 
 BlockMirrorTextToBlocks.prototype.convert = function (node, parent) {
     let functionName = 'ast_' + node._astname;
+    // Check if it's a constant
+    let constantBlock = BlockMirrorTextToBlocks.prototype.CONSTANTS(node, parent);
+    if(constantBlock != undefined){
+        return constantBlock;
+    }
     if (this[functionName] === undefined) {
         throw new Error("Could not find function: " + functionName);
     }
