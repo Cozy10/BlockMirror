@@ -64,6 +64,8 @@ BlockMirrorTextToBlocks.prototype['ast_Call'] = function (node, parent) {
             blockData.values, {}, blockData.mutations, blockData.statements);
     }
 
+
+    // To remove
     
     if (func._astname === 'Name') {
         message = name = Sk.ffi.remapToJs(func.id);
