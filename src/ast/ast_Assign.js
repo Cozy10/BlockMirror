@@ -1,90 +1,4 @@
-Blockly.Blocks['ast_Assign'] = {
-    init: function () {
-        this.setInputsInline(true);
-        this.setPreviousStatement(true, null);
-        this.setNextStatement(true, null);
-        this.setColour(BlockMirrorTextToBlocks.COLOR.VARIABLES);
-        this.targetCount_ = 1;
-        this.simpleTarget_ = true;
-        this.updateShape_();
-        Blockly.Extensions.apply("contextMenu_variableSetterGetter", this, false);
-    },
-    updateShape_: function () {
-        if (!this.getInput('VALUE')) {
-            this.appendDummyInput()
-                .appendField("set");
-            this.appendValueInput('VALUE')
-                .appendField('=');
-        }
-        let i = 0;
-        if (this.targetCount_ === 1 && this.simpleTarget_) {
-            this.setInputsInline(true);
-            if (!this.getInput('VAR_ANCHOR')) {
-                this.appendDummyInput('VAR_ANCHOR')
-                    .appendField(new Blockly.FieldVariable("variable"), "VAR");
-            }
-            this.moveInputBefore('VAR_ANCHOR', 'VALUE');
-        } else {
-            this.setInputsInline(true);
-            // Add new inputs.
-            for (; i < this.targetCount_; i++) {
-                if (!this.getInput('TARGET' + i)) {
-                    var input = this.appendValueInput('TARGET' + i);
-                    if (i !== 0) {
-                        input.appendField('and').setAlign(Blockly.ALIGN_RIGHT);
-                    }
-                }
-                this.moveInputBefore('TARGET' + i, 'VALUE');
-            }
-            // Kill simple VAR
-            if (this.getInput('VAR_ANCHOR')) {
-                this.removeInput('VAR_ANCHOR');
-            }
-        }
-        // Remove deleted inputs.
-        while (this.getInput('TARGET' + i)) {
-            this.removeInput('TARGET' + i);
-            i++;
-        }
-    },
-    /**
-     * Create XML to represent list inputs.
-     * @return {!Element} XML storage element.
-     * @this Blockly.Block
-     */
-    mutationToDom: function () {
-        var container = document.createElement('mutation');
-        container.setAttribute('targets', this.targetCount_);
-        container.setAttribute('simple', this.simpleTarget_);
-        return container;
-    },
-    /**
-     * Parse XML to restore the list inputs.
-     * @param {!Element} xmlElement XML storage element.
-     * @this Blockly.Block
-     */
-    domToMutation: function (xmlElement) {
-        this.targetCount_ = parseInt(xmlElement.getAttribute('targets'), 10);
-        this.simpleTarget_ = "true" === xmlElement.getAttribute('simple');
-        this.updateShape_();
-    },
-};
 
-Blockly.Python['ast_Assign'] = function (block) {
-    // Create a list with any number of elements of any type.
-    let value = Blockly.Python.valueToCode(block, 'VALUE',
-        Blockly.Python.ORDER_NONE) || Blockly.Python.blank;
-    let targets = new Array(block.targetCount_);
-    if (block.targetCount_ === 1 && block.simpleTarget_) {
-        targets[0] = Blockly.Python.variableDB_.getName(block.getFieldValue('VAR'), Blockly.Variables.NAME_TYPE);
-    } else {
-        for (var i = 0; i < block.targetCount_; i++) {
-            targets[i] = (Blockly.Python.valueToCode(block, 'TARGET' + i,
-                Blockly.Python.ORDER_NONE) || Blockly.Python.blank);
-        }
-    }
-    return targets.join(' = ') + " = " + value + "\n";
-};
 
 BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
     let targets = node.targets;
@@ -100,25 +14,6 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
         values = this.convertElements("TARGET", targets, node);
     }
     values['VALUE'] = this.convert(value, node);
-    console.log(value);
-
-    if ( value.op != undefined && value.op.prototype._astname === "Div"){
-        if(value.right != undefined && value.right.n.v === 2){
-            if(value.left != undefined && value.left.op != undefined && value.left.op.prototype._astname === "Add"){
-                if ( value.left.left != undefined && value.left.left.n.v === 1){
-                    if( value.left.right != undefined && value.left.right.func != undefined && value.left.right.func.attr.v === "sqrt"){
-                        if(value.left.right.args[0].n.v === 5){
-                            return BlockMirrorTextToBlocks.create_block("math_constant", node.lineno, 
-                            {
-                                "CONSTANT": "GOLDEN_RATIO"
-                            },
-                            {},{});
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     return BlockMirrorTextToBlocks.create_block("variables_set", node.lineno, fields,
         values,

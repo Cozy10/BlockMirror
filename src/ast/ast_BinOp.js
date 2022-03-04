@@ -86,6 +86,16 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
         {});
     }
 
+    if (left._astname == 'List'){
+        blockName = "lists_repeat"
+        return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {},
+            {
+                "ITEM": this.convert(left, node),
+                "NUM": this.convert(right, node)
+            },
+            {}, {}, {});
+    }
+
     return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {
         "OP": BlockMirrorTextToBlocks.CONVERT_BINOPS[op]
     }, {
