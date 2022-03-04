@@ -180,7 +180,8 @@ BlockMirrorTextToBlocks.prototype.addSliceDim = function (slice, i, values, muta
     }
 }
 
-BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function (node, parent) {
+// Ancien code de ast_Subscript
+/*BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function (node, parent) {
     let value = node.value;
     let slice = node.slice;
     let ctx = node.ctx;
@@ -199,4 +200,107 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function (node, parent) {
     }
     return BlockMirrorTextToBlocks.create_block("ast_Subscript", node.lineno, {},
         values, {"inline": "true"}, {"arg": mutations});
-};
+};*/
+
+BlockMirrorTextToBlocks.prototype['ast_Index'] = function(node, parent){
+    let value = node.value;
+    let lineno = node._parent.lineno;
+
+    return BlockMirrorTextToBlocks.create_block("math_number", lineno, {
+        "NUM": Sk.ffi.remapToJs(value.n.v)
+    });
+}
+
+BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
+    let value = node.value;
+    let at = node.slice;
+
+    // in list get # from end et in list get last
+    if(at.value._astname === 'UnaryOp'){
+        // in list get last
+        if(at.value.operand.n.v == 1){
+            return BlockMirrorTextToBlocks.create_block(
+                "lists_getIndex", // type
+                node.lineno, // line_number
+                {
+                    "MODE":"GET",
+                    "WHERE":"LAST"
+                }, // fields
+                {
+                    "VALUE":this.convert(value,node),
+                } //values
+                , {} // settings
+                , 
+                {
+                    "@statement":"false",
+                    "@at":"false" // mutations
+                }
+                , {} // statements
+                );
+        }
+        // in list get # from end
+        else{
+            return BlockMirrorTextToBlocks.create_block(
+                "lists_getIndex", // type
+                node.lineno, // line_number
+                {
+                    "MODE":"GET",
+                    "WHERE":"FROM_END"
+                }, // fields
+                {
+                    "VALUE":this.convert(value,node),
+                    "AT":this.convert(at.value.operand,node)
+                } //values
+                , {} // settings
+                , 
+                {
+                    "@statement":"false",
+                    "@at":"true" // mutations
+                }
+                , {} // statements
+                );
+        }
+        
+    }
+    // in list get first
+    if(at.value.n.v == 0){
+        return BlockMirrorTextToBlocks.create_block(
+            "lists_getIndex", // type
+            node.lineno, // line_number
+            {
+                "MODE":"GET",
+                "WHERE":"FIRST"
+            }, // fields
+            {
+                "VALUE":this.convert(node.value,node)
+            } //values
+            , {} // settings
+            , 
+            {
+                "@statement":"false",
+                "@at":"false" // mutations
+            }
+            , {} // statements
+            );
+    }
+    // in list get # from start
+    return BlockMirrorTextToBlocks.create_block(
+        "lists_getIndex", // type
+        node.lineno, // line_number
+        {
+            "MODE":"GET",
+            "WHERE":"FROM_START"
+        }, // fields
+        {
+            "VALUE":this.convert(node.value,node),
+            "AT":this.convert(node.slice,node)
+        } //values
+        , {} // settings
+        , 
+        {
+            "@statement":"false",
+            "@at":"true" // mutations
+        }
+        , {} // statements
+        );
+}
