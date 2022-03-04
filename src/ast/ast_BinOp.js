@@ -58,6 +58,24 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
     let right = node.right;
     let blockName = "math_arithmetic";
     
+    if(node.left.func != undefined && node.left.func.id.v === 'str'){
+        console.log(node.left.func.id.v);
+        console.log(typeof node.right.s.v);
+        if (node.right.s != undefined && typeof node.right.s.v === 'string'){
+            
+            blockName = "text_append";
+
+            console.log(node.left);
+            return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {
+                "VAR":  node.left.args[0].id.v
+            }, {
+                "TEXT": this.convert(node.right, node)
+            }, {
+            
+            });        
+        }
+    }
+
     if ( op === "Mod"){
         blockName = "math_modulo";
         return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {},
