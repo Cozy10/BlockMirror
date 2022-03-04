@@ -20,7 +20,7 @@ BlockMirrorTextToBlocks.prototype.getAsModule = function (node) {
 // Module function: plt.show() -> "show plot" ([plot]) ; plt.show
 // Method call: "test".title() -> "make" [str] "title case" () ; .title ; isMethod = true
 function getModuleName(node_func){
-    if(node_func == undefined){
+    if(node_func == undefined || node_func.value == undefined){
         return undefined;
     }
     if(node_func.value.id != undefined){
