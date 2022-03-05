@@ -216,16 +216,19 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["last_index"] = function(args
 
 // sort List
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["lists_sort"] = function(args, node){
+    var list = BlockMirrorTextToBlocks.prototype.convert(args[0], node);
+    var type = args[1].s.v;
+    var direction = (args[2].value.v == 0) ? 1 : -1;
     return {
-        "name":"lists_sort", // block type="text_print"
+        "name":"lists_sort",
         "fields":{
-            "TYPE":"NUMERIC"
-            , "DIRECTION":1
-        },        // tag field of the block <field ...>
+            "TYPE":type
+            , "DIRECTION":direction
+        },
         "values":{
-            "LIST":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
-        },                  // tag value
-        "statements":{}     //tag statement
+            "LIST":list
+        },
+        "statements":{}
     }
 }
 
