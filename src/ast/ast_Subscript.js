@@ -203,104 +203,123 @@ BlockMirrorTextToBlocks.prototype.addSliceDim = function (slice, i, values, muta
 };*/
 
 BlockMirrorTextToBlocks.prototype['ast_Index'] = function(node, parent){
-    let value = node.value;
-    let lineno = node._parent.lineno;
+    var value = node.value;
+    var lineno = node._parent.lineno;
 
     return BlockMirrorTextToBlocks.create_block("math_number", lineno, {
         "NUM": Sk.ffi.remapToJs(value.n.v)
     });
 }
 
-BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
-    let value = node.value;
-    let at = node.slice;
+BlockMirrorTextToBlocks.prototype['ast_Slice'] = function(node, parent){
+    return null;
+}
 
-    // in list get # from end et in list get last
-    if(at.value._astname === 'UnaryOp'){
-        // in list get last
-        if(at.value.operand.n.v == 1){
-            return BlockMirrorTextToBlocks.create_block(
-                "lists_getIndex", // type
-                node.lineno, // line_number
-                {
-                    "MODE":"GET",
-                    "WHERE":"LAST"
-                }, // fields
-                {
-                    "VALUE":this.convert(value,node),
-                } //values
-                , {} // settings
-                , 
-                {
-                    "@statement":"false",
-                    "@at":"false" // mutations
-                }
-                , {} // statements
-                );
+BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
+
+    var value = node.value;
+    var slice = node.slice;
+    // in list get sub-list from
+    if(slice._astname === 'Slice'){
+        let lower = slice.lower;
+        let upper = slice.upper;
+        let where1 = "FROM_START";
+        let where2 = "FROM_START";
+        let at1 = "true";
+        let at2 = "true";
+        if(lower != null && lower.op != undefined && lower.op.prototype._astname === 'USub'){
+            lower = lower.operand;
+            where1 = "FROM_END";
         }
-        // in list get # from end
+        if(upper != null && upper.op != undefined && upper.op.prototype._astname === 'USub'){
+            upper = upper.operand;
+            where2 = "FROM_END";
+        }
+        let values = {
+            "LIST":this.convert(value, node)
+        }
+        if(lower == null){
+            at1 = "false";
+            where1 = "FIRST";
+        }
         else{
-            return BlockMirrorTextToBlocks.create_block(
-                "lists_getIndex", // type
-                node.lineno, // line_number
-                {
-                    "MODE":"GET",
-                    "WHERE":"FROM_END"
-                }, // fields
-                {
-                    "VALUE":this.convert(value,node),
-                    "AT":this.convert(at.value.operand,node)
-                } //values
-                , {} // settings
-                , 
-                {
-                    "@statement":"false",
-                    "@at":"true" // mutations
-                }
-                , {} // statements
-                );
+            Object.assign(values, {"AT1":this.convert(lower, node)});
         }
-        
-    }
-    // in list get first
-    if(at.value.n.v == 0){
+        if(upper == null){
+            at2 = "false";
+            where2 = "LAST";
+        }
+        else{
+            Object.assign(values, {"AT2":this.convert(upper, node)});
+        }
+
         return BlockMirrorTextToBlocks.create_block(
-            "lists_getIndex", // type
+            "lists_getSublist", // type
             node.lineno, // line_number
             {
-                "MODE":"GET",
-                "WHERE":"FIRST"
+                "WHERE1":where1,
+                "WHERE2":where2
             }, // fields
-            {
-                "VALUE":this.convert(node.value,node)
-            } //values
+            values //values
             , {} // settings
             , 
             {
-                "@statement":"false",
-                "@at":"false" // mutations
+                "@at1":at1,
+                "@at2":at2 // mutations
             }
             , {} // statements
             );
     }
-    // in list get # from start
-    return BlockMirrorTextToBlocks.create_block(
-        "lists_getIndex", // type
-        node.lineno, // line_number
-        {
-            "MODE":"GET",
-            "WHERE":"FROM_START"
-        }, // fields
-        {
-            "VALUE":this.convert(node.value,node),
-            "AT":this.convert(node.slice,node)
-        } //values
-        , {} // settings
-        , 
-        {
-            "@statement":"false",
-            "@at":"true" // mutations
+
+    // in list get element from index
+    if(slice._astname === 'Index'){
+
+        // in list get # from start par defaut
+        let mode = "GET";
+        let where = "FROM_START";
+        let statement = "false";
+        let at = "true";
+        let values = {
+            "VALUE":this.convert(value,node)
         }
-        , {} // statements
-        );
+
+        // in list get # from end et in list get last
+        if(slice.value.op != undefined && slice.value.op.prototype._astname === 'USub'){
+            // in list get last
+            if(slice.value.operand.n.v == 1){
+                where = "LAST";
+                at = "false";
+            }
+            // in list get # from end
+            else{
+                where = "FROM_END";
+                Object.assign(values, {"AT":this.convert(slice.value.operand, node)});
+            }
+        }
+        // in list get first
+        else if(slice.value != undefined && slice.value.n.v == 0){
+            where = "FIRST";
+            at = "false";
+        }
+        else if(at == "true"){
+            Object.assign(values, {"AT":this.convert(slice.value, node)});
+        }
+
+        return BlockMirrorTextToBlocks.create_block(
+            "lists_getIndex", // type
+            node.lineno, // line_number
+            {
+                "MODE":mode,
+                "WHERE":where
+            }, // fields
+            values //values
+            , {} // settings
+            , 
+            {
+                "@statement":statement,
+                "@at":at // mutations
+            }
+            , {} // statements
+            );
+    }
 }
