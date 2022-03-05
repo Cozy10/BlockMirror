@@ -216,7 +216,6 @@ BlockMirrorTextToBlocks.prototype['ast_Slice'] = function(node, parent){
 }
 
 BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
-
     var value = node.value;
     var slice = node.slice;
     // in list get sub-list from
@@ -273,12 +272,13 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
 
     // in list get element from index
     if(slice._astname === 'Index'){
-
-        // in list get # from start par defaut
         let mode = "GET";
+        let at = "true";
         let where = "FROM_START";
         let statement = "false";
-        let at = "true";
+
+        // in list get # from start par defaut
+        
         let values = {
             "VALUE":this.convert(value,node)
         }
