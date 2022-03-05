@@ -241,7 +241,6 @@ BlockMirrorTextToBlocks.prototype.convertBody = function (node, parent) {
         var height = this.heights.shift();
         var originalSourceCode = this.getSourceCode(lineNumberInProgram, height);
         var newChild = this.convertStatement(node[i], originalSourceCode, parent);
-
         // Skip null blocks (e.g., imports)
         if (newChild == null) {
             continue;
@@ -250,7 +249,6 @@ BlockMirrorTextToBlocks.prototype.convertBody = function (node, parent) {
         skipped_line = distance > 1;
         previousLineInProgram = lineNumberInProgram;
         previousHeight = height;
-
         // Handle top-level expression blocks
         if (is_top_level && newChild.constructor === Array) {
             addPeer(newChild[0]);
@@ -326,6 +324,7 @@ BlockMirrorTextToBlocks.prototype.convert = function (node, parent) {
     }
     node._parent = parent;
     return this[functionName](node, parent);
+    ;
 };
 
 function arrayMax(array) {

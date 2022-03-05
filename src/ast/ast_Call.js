@@ -53,7 +53,7 @@ BlockMirrorTextToBlocks.prototype['ast_Call'] = function (node, parent) {
     }
     else if(this.MODULES.includes(mModule)){
         args = ((args == null) ? [node.func.value] : [node.func.value].concat(args));
-        blockDataFunc = BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS[mModule][Sk.ffi.remapToJs(node.func.attr.v)];
+        blockDataFunc = BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS[mModule][Sk.ffi.remapToJs(node.func.attr)];
     } 
     else{ // Integrated functions
         blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[Sk.ffi.remapToJs(node.func.attr)];
