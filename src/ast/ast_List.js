@@ -232,35 +232,32 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["lists_sort"] = function(args
     }
 }
 
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["pop"] = function(args, node){
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["pop"] = function(args, node){
     var value = args;
     var mode = "REMOVE";
     var where = "FROM_START";
     var at = "true";
     var statement = "false";
     var values = {"VALUE":BlockMirrorTextToBlocks.prototype.convert(node.func.value, node)};
-
     if(node._parent != undefined && node._parent._astname === 'Assign'){
         mode = "GET_REMOVE";
     }
 
-    if(args != null && args[0].op != undefined && args[0].op.prototype._astname === 'USub'){
+    if(args[1] != undefined && args[1].op != undefined && args[1].op.prototype._astname === 'USub'){
         where = "FROM_END";
-        value = args[0].operand;
+        value = args[1].operand;
     }
-    else if(args != null && args[0].n != undefined && args[0].n.v == 0){
+    else if(args[1] != undefined && args[1].n != undefined && args[1].n.v == 0){
         where = "FIRST";
         at = "false";
     }
-    else if(args == null){
+    else if(args[1] == undefined){
         where = "LAST";
         at = "false";
     }
-    if(args != null && where != "FROM_END"){
-        value = args[0];
+    if(args[1] != undefined && where != "FROM_END"){
+        value = args[1];
     }
-
-
     if(at == "true"){
         Object.assign(values, {"AT":BlockMirrorTextToBlocks.prototype.convert(value, node)})
     }
@@ -281,22 +278,22 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["pop"] = function(args, node)
     }
 }
 
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["insert"] = function(args, node){
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["insert"] = function(args, node){
     var value = args;
     var where = "FROM_START";
     var at = "true";
     var values = {"LIST":BlockMirrorTextToBlocks.prototype.convert(node.func.value, node)};
 
-    if(args != null && args[0].op != undefined && args[0].op.prototype._astname === 'USub'){
+    if(args[1] != undefined && args[1].op != undefined && args[1].op.prototype._astname === 'USub'){
         where = "FROM_END";
-        value = args[0].operand;
+        value = args[1].operand;
     }
-    else if(args != null && args[0].n != undefined && args[0].n.v == 0){
+    else if(args[1] != undefined && args[1].n != undefined && args[1].n.v == 0){
         where = "FIRST";
         at = "false";
     }
-    if(args != null && where != "FROM_END"){
-        value = args[0];
+    if(args[1] != undefined && where != "FROM_END"){
+        value = args[1];
     }
 
     if(at == "true"){
@@ -305,7 +302,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["insert"] = function(args, no
         }
         Object.assign(values, {"AT":BlockMirrorTextToBlocks.prototype.convert(value, node)});
     }
-    Object.assign(values, {"TO":BlockMirrorTextToBlocks.prototype.convert(args[1], node)});
+    Object.assign(values, {"TO":BlockMirrorTextToBlocks.prototype.convert(args[2], node)});
 
     return {
         "name":"lists_setIndex",
@@ -322,12 +319,12 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["insert"] = function(args, no
     }
 }
 
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["append"] = function(args, node){
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["append"] = function(args, node){
     var values = {
         "LIST":BlockMirrorTextToBlocks.prototype.convert(node.func.value, node)
     };
-    if(args != null){
-        Object.assign(values, {"TO":BlockMirrorTextToBlocks.prototype.convert(args[0], node)});
+    if(args[1] != undefined){
+        Object.assign(values, {"TO":BlockMirrorTextToBlocks.prototype.convert(args[1], node)});
     }
 
     return {
