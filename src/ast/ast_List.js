@@ -281,6 +281,70 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["pop"] = function(args, node)
     }
 }
 
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["insert"] = function(args, node){
+    var value = args;
+    var where = "FROM_START";
+    var at = "true";
+    var values = {"LIST":BlockMirrorTextToBlocks.prototype.convert(node.func.value, node)};
+
+    if(args != null && args[0].op != undefined && args[0].op.prototype._astname === 'USub'){
+        where = "FROM_END";
+        value = args[0].operand;
+    }
+    else if(args != null && args[0].n != undefined && args[0].n.v == 0){
+        where = "FIRST";
+        at = "false";
+    }
+    if(args != null && where != "FROM_END"){
+        value = args[0];
+    }
+
+    if(at == "true"){
+        if(where == "FROM_START"){
+            value.n.v += 1;
+        }
+        Object.assign(values, {"AT":BlockMirrorTextToBlocks.prototype.convert(value, node)});
+    }
+    Object.assign(values, {"TO":BlockMirrorTextToBlocks.prototype.convert(args[1], node)});
+
+    return {
+        "name":"lists_setIndex",
+        "fields":{
+            "MODE":"INSERT",
+            "WHERE":where
+        },
+        "values":values,
+        "settings":{},
+        "mutations":{
+            "@at":at
+        },
+        "statements":{}
+    }
+}
+
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["append"] = function(args, node){
+    var values = {
+        "LIST":BlockMirrorTextToBlocks.prototype.convert(node.func.value, node)
+    };
+    if(args != null){
+        Object.assign(values, {"TO":BlockMirrorTextToBlocks.prototype.convert(args[0], node)});
+    }
+
+    return {
+        "name":"lists_setIndex",
+        "fields":{
+            "MODE":"INSERT",
+            "WHERE":"LAST"
+        },
+        "values":values,
+        "settings":{},
+        "mutations":{
+            "@at":"false"
+        },
+        "statements":{}
+    }
+}
+
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS['lists_remove_random_item'] = function(args, node){
     var mode = "REMOVE";
 
