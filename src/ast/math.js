@@ -1,9 +1,10 @@
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"] = {};
 /*
 
 Fonction de base 
 
 */
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["sqrt"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["sqrt"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_single", // block type="text_print"
         "fields":{
@@ -15,7 +16,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["sqrt"] = function(args, node
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["fabs"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["fabs"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_single", // block type="text_print"
         "fields":{
@@ -27,7 +28,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["fabs"] = function(args, node
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["log"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["log"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_single", // block type="text_print"
         "fields":{
@@ -39,7 +40,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["log"] = function(args, node)
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["log10"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["log10"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_single", // block type="text_print"
         "fields":{
@@ -51,7 +52,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["log10"] = function(args, nod
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["exp"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["exp"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_single", // block type="text_print"
         "fields":{
@@ -63,7 +64,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["exp"] = function(args, node)
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["pow"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["pow"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_single", // block type="text_print"
         "fields":{
@@ -80,7 +81,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["pow"] = function(args, node)
 Fonction de trigo
 
 */
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["sin"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["sin"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_trig", // block type="text_print"
         "fields":{
@@ -92,7 +93,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["sin"] = function(args, node)
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["cos"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["cos"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_trig", // block type="text_print"
         "fields":{
@@ -104,7 +105,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["cos"] = function(args, node)
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["asin"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["asin"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_trig", // block type="text_print"
         "fields":{
@@ -116,7 +117,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["asin"] = function(args, node
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["acos"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["acos"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_trig", // block type="text_print"
         "fields":{
@@ -128,7 +129,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["acos"] = function(args, node
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["atan"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["atan"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_trig", // block type="text_print"
         "fields":{
@@ -140,7 +141,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["atan"] = function(args, node
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["atan2"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["atan2"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_atan2", // block type="text_print"
         "fields":{},        // tag field of the block <field ...>
@@ -156,7 +157,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["atan2"] = function(args, nod
 Fonctions pour arrondir
 
 */
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["round"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["round"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_round", // block type="text_print"
         "fields":{
@@ -168,7 +169,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["round"] = function(args, nod
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["ceil"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["ceil"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_round", // block type="text_print"
         "fields":{
@@ -180,7 +181,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["ceil"] = function(args, node
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["floor"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["floor"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_round", // block type="text_print"
         "fields":{
@@ -197,7 +198,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["floor"] = function(args, nod
 Opérations sur les listes
 
 */
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["sum"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["sum"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_on_list", // block type="text_print"
         "fields":{
@@ -209,7 +210,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["sum"] = function(args, node)
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["max"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["max"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_on_list", // block type="text_print"
         "fields":{
@@ -221,7 +222,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["max"] = function(args, node)
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math_mean"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["math_mean"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_on_list", // block type="text_print"
         "fields":{
@@ -233,7 +234,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math_mean"] = function(args,
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math_median"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["math_median"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_on_list", // block type="text_print"
         "fields":{
@@ -245,7 +246,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math_median"] = function(arg
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math_modes"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["math_modes"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_on_list", // block type="text_print"
         "fields":{
@@ -257,7 +258,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math_modes"] = function(args
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math_standard_deviation"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["math_standard_deviation"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_on_list", // block type="text_print"
         "fields":{
@@ -269,7 +270,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math_standard_deviation"] = 
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["choice"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["random"]["choice"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_on_list", // block type="text_print"
         "fields":{
@@ -286,7 +287,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["choice"] = function(args, no
 Fonction rand
 
 */
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["randint"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["randint"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_random_int", // block type="text_print"
         "fields":{},        // tag field of the block <field ...>
@@ -297,7 +298,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["randint"] = function(args, n
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["random"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["random"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_random_float", // block type="text_print"
         "fields":{},        // tag field of the block <field ...>
@@ -306,7 +307,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["random"] = function(args, no
     };
 };
 
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math_isPrime"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["math_isPrime"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_number_property", // block type="text_print"
         "fields":{
@@ -318,7 +319,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math_isPrime"] = function(ar
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["min"] = function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["min"] = function(args, node){ // Give node.args and node
     if (args[0].args != undefined && args[0].func != undefined && args[0].func.id != undefined && args[0].func.id.v === "max" ){
         return {
             "name":"math_constrain", // block type="text_print"

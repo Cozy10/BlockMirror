@@ -51,12 +51,12 @@ BlockMirrorTextToBlocks.prototype['ast_Call'] = function (node, parent) {
             blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[Sk.ffi.remapToJs(node.func.id)];
         }
     }
-    else if(this.MODULES.includes(mModule)){
+    else if(this.FUNCTIONS_BLOCKS[mModule] !== undefined){
+        blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[mModule][Sk.ffi.remapToJs(node.func.attr)];
+    }
+    else{ // Methods
         args = ((args == null) ? [node.func.value] : [node.func.value].concat(args));
-        blockDataFunc = BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS[mModule][Sk.ffi.remapToJs(node.func.attr)];
-    } 
-    else{ // Integrated functions
-        blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[Sk.ffi.remapToJs(node.func.attr)];
+        blockDataFunc = BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS[Sk.ffi.remapToJs(node.func.attr)];
     }
     if(blockDataFunc !== undefined){
         let blockData = blockDataFunc(args, node);

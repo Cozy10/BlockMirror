@@ -11,12 +11,8 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS = {
         };
     }
 };
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS = {
-    "Str": {}, // String module
-    "List": {} // Array module
-};
-BlockMirrorTextToBlocks.prototype.MODULES = ['Str', 'List'];
-BlockMirrorTextToBlocks.prototype.LOCAL_FUNCTIONS = {}
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS = {};
+BlockMirrorTextToBlocks.prototype.LOCAL_FUNCTIONS = {};
 
 BlockMirrorTextToBlocks.prototype.create_block_functionDef = function(name, mutation, type){
     return function(args, node){
