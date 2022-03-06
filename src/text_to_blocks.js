@@ -324,7 +324,6 @@ BlockMirrorTextToBlocks.prototype.convert = function (node, parent) {
     }
     node._parent = parent;
     return this[functionName](node, parent);
-    ;
 };
 
 function arrayMax(array) {

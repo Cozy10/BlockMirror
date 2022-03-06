@@ -1,4 +1,5 @@
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"] = {};
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["random"] = {};
 /*
 
 Fonction de base 
