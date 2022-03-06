@@ -365,7 +365,8 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS['lists_remove_random_item'] =
     }
 }
 
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS['choice'] = function(args, node){
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS['random'] = {};
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS['random']['choice'] = function(args, node){
     return {
         "name":"lists_getIndex",
         "fields":{

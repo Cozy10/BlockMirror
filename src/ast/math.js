@@ -1,5 +1,5 @@
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"] = {};
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["random"] = {};
+//BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["random"] = {};
 /*
 
 Fonction de base 
@@ -271,7 +271,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["math_standard_deviat
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["random"]["choice"] = function(args, node){ // Give node.args and node
+/*BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["random"]["choice"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_on_list", // block type="text_print"
         "fields":{
@@ -282,7 +282,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["random"]["choice"] = functio
         },                  // tag value
         "statements":{}     //tag statement
     };
-};
+};*/
 /*
 
 Fonction rand
