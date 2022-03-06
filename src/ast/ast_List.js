@@ -304,6 +304,23 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS['lists_remove_random_item'] =
     }
 }
 
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS['choice'] = function(args, node){
+    return {
+        "name":"lists_getIndex",
+        "fields":{
+            "MODE":"GET",
+            "WHERE":"RANDOM"
+        },
+        "values":{"VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node)},
+        "settings":{},
+        "mutations":{
+            "@statement":"false",
+            "@at":"false"
+        },
+        "statements":{}
+    }
+}
+
 BlockMirrorTextToBlocks.prototype['ast_List'] = function (node, parent) {
     var elts = node.elts;
 
