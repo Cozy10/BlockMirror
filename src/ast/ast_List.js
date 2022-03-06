@@ -232,6 +232,78 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["lists_sort"] = function(args
     }
 }
 
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["pop"] = function(args, node){
+    var value = args;
+    var mode = "REMOVE";
+    var where = "FROM_START";
+    var at = "true";
+    var statement = "false";
+    var values = {"VALUE":BlockMirrorTextToBlocks.prototype.convert(node.func.value, node)};
+
+    if(node._parent != undefined && node._parent._astname === 'Assign'){
+        mode = "GET_REMOVE";
+    }
+
+    if(args != null && args[0].op != undefined && args[0].op.prototype._astname === 'USub'){
+        where = "FROM_END";
+        value = args[0].operand;
+    }
+    else if(args != null && args[0].n != undefined && args[0].n.v == 0){
+        where = "FIRST";
+        at = "false";
+    }
+    else if(args == null){
+        where = "LAST";
+        at = "false";
+    }
+    if(args != null && where != "FROM_END"){
+        value = args[0];
+    }
+
+
+    if(at == "true"){
+        Object.assign(values, {"AT":BlockMirrorTextToBlocks.prototype.convert(value, node)})
+    }
+
+    return {
+        "name":"lists_getIndex",
+        "fields":{
+            "MODE":mode,
+            "WHERE":where
+        },
+        "values":values,
+        "settings":{},
+        "mutations":{
+            "@statement":statement,
+            "@at":at
+        },
+        "statements":{}
+    }
+}
+
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS['lists_remove_random_item'] = function(args, node){
+    var mode = "REMOVE";
+
+    if(node._parent != undefined && node._parent._astname === 'Assign'){
+        mode = "GET_REMOVE";
+    }
+
+    return {
+        "name":"lists_getIndex",
+        "fields":{
+            "MODE":mode,
+            "WHERE":"RANDOM"
+        },
+        "values":{"VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node)},
+        "settings":{},
+        "mutations":{
+            "@statement":"false",
+            "@at":"false"
+        },
+        "statements":{}
+    }
+}
+
 BlockMirrorTextToBlocks.prototype['ast_List'] = function (node, parent) {
     var elts = node.elts;
 
