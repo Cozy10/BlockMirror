@@ -14,7 +14,7 @@ BlockMirrorTextToBlocks.prototype['ast_UnaryOp'] = function (node, parent) {
     let operand = node.operand;
     if(op === "Not"){
         // List is empty (not len)
-        if(typeof operand.func.id.v !== 'undefined' && operand.func.id.v === 'len'){
+        if(typeof operand.func !== 'undefined' && operand.func.id.v === 'len'){
             return BlockMirrorTextToBlocks.create_block(
                 'lists_isEmpty',
                 node.lineno,
