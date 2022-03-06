@@ -26,18 +26,6 @@ var COMPARES_BLOCKLY_GENERATE = {};
 BlockMirrorTextToBlocks.COMPARES.forEach(function (boolop) {
     COMPARES_BLOCKLY_GENERATE[boolop[1]] = boolop[0];
 });
-
-Blockly.Python['ast_Compare'] = function (block) {
-    // Basic arithmetic operators, and power.
-    var tuple = COMPARES_BLOCKLY_GENERATE[block.getFieldValue('OP')];
-    var operator = ' ' + tuple + ' ';
-    var order = Blockly.Python.ORDER_RELATIONAL;
-    var argument0 = Blockly.Python.valueToCode(block, 'A', order) || Blockly.Python.blank;
-    var argument1 = Blockly.Python.valueToCode(block, 'B', order) || Blockly.Python.blank;
-    var code = argument0 + operator + argument1;
-    return [code, order];
-};
-
 BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
     var ops = node.ops;
     var left = node.left;
