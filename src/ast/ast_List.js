@@ -168,6 +168,50 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["append"] = function(args, node
     }
 }
 
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["split"] = function(args, node){
+    var values = {
+        "INPUT":BlockMirrorTextToBlocks.prototype.convert(args[0], node)
+    };
+    if(args[1] != undefined){
+        Object.assign(values, {"DELIM":BlockMirrorTextToBlocks.prototype.convert(args[1], node)});
+    }
+
+    return {
+        "name":"lists_split",
+        "fields":{
+            "MODE":"SPLIT"
+        },
+        "values":values,
+        "settings":{},
+        "mutations":{
+            "@mode":"SPLIT"
+        },
+        "statements":{}
+    }
+}
+
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["join"] = function(args, node){
+    var values = {
+        "INPUT":BlockMirrorTextToBlocks.prototype.convert(args[1], node)
+    };
+    if(args[0] != undefined){
+        Object.assign(values, {"DELIM":BlockMirrorTextToBlocks.prototype.convert(args[0], node)});
+    }
+
+    return {
+        "name":"lists_split",
+        "fields":{
+            "MODE":"JOIN"
+        },
+        "values":values,
+        "settings":{},
+        "mutations":{
+            "@mode":"JOIN"
+        },
+        "statements":{}
+    }
+}
+
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS['lists_remove_random_item'] = function(args, node){
     var mode = "REMOVE";
 
