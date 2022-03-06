@@ -223,103 +223,15 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["max"] = function(arg
         "statements":{}     //tag statement
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["math_mean"] = function(args, node){ // Give node.args and node
-    return {
-        "name":"math_on_list", // block type="text_print"
-        "fields":{
-            "OP":"AVERAGE"
-        },        // tag field of the block <field ...>
-        "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
-        },                  // tag value
-        "statements":{}     //tag statement
-    };
-};
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["math_median"] = function(args, node){ // Give node.args and node
-    return {
-        "name":"math_on_list", // block type="text_print"
-        "fields":{
-            "OP":"MEDIAN"
-        },        // tag field of the block <field ...>
-        "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
-        },                  // tag value
-        "statements":{}     //tag statement
-    };
-};
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["math_modes"] = function(args, node){ // Give node.args and node
-    return {
-        "name":"math_on_list", // block type="text_print"
-        "fields":{
-            "OP":"MODE"
-        },        // tag field of the block <field ...>
-        "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
-        },                  // tag value
-        "statements":{}     //tag statement
-    };
-};
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["math_standard_deviation"] = function(args, node){ // Give node.args and node
-    return {
-        "name":"math_on_list", // block type="text_print"
-        "fields":{
-            "OP":"STD_DEV"
-        },        // tag field of the block <field ...>
-        "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
-        },                  // tag value
-        "statements":{}     //tag statement
-    };
-};
-/*BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["random"]["choice"] = function(args, node){ // Give node.args and node
-    return {
-        "name":"math_on_list", // block type="text_print"
-        "fields":{
-            "OP":"RANDOM"
-        },        // tag field of the block <field ...>
-        "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
-        },                  // tag value
-        "statements":{}     //tag statement
-    };
-};*/
+
+
+
 /*
 
 Fonction rand
 
 */
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["randint"] = function(args, node){ // Give node.args and node
-    return {
-        "name":"math_random_int", // block type="text_print"
-        "fields":{},        // tag field of the block <field ...>
-        "values":{          
-            "FROM":BlockMirrorTextToBlocks.prototype.convert(args[0], node), // recursive conversion for args[0]
-            "TO":BlockMirrorTextToBlocks.prototype.convert(args[1], node) // recursive conversion for args[0]
-        },                  // tag value
-        "statements":{}     //tag statement
-    };
-};
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["random"] = function(args, node){ // Give node.args and node
-    return {
-        "name":"math_random_float", // block type="text_print"
-        "fields":{},        // tag field of the block <field ...>
-        "values":{},                  // tag value
-        "statements":{}     //tag statement
-    };
-};
 
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["math_isPrime"] = function(args, node){ // Give node.args and node
-    return {
-        "name":"math_number_property", // block type="text_print"
-        "fields":{
-            "PROPERTY": "PRIME"
-        },        // tag field of the block <field ...>
-        "values":{
-            "NUMBER_TO_CHECK": BlockMirrorTextToBlocks.prototype.convert(args[0], node)
-        },                  // tag value
-        "statements":{}     //tag statement
-    };
-};
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["min"] = function(args, node){ // Give node.args and node
     if (args[0].args != undefined && args[0].func != undefined && args[0].func.id != undefined && args[0].func.id.v === "max" ){
         return {
