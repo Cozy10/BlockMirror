@@ -86,14 +86,9 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
         {});
     }
 
+    // create list with item [...] repeated n times (voir ast_List)
     if (left._astname == 'List'){
-        blockName = "lists_repeat"
-        return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {},
-            {
-                "ITEM": this.convert(left, node),
-                "NUM": this.convert(right, node)
-            },
-            {}, {}, {});
+        return this.convert(left, node)
     }
 
     return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {

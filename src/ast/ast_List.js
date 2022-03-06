@@ -235,6 +235,16 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["lists_sort"] = function(args
 BlockMirrorTextToBlocks.prototype['ast_List'] = function (node, parent) {
     var elts = node.elts;
 
+    if (node._parent.op != undefined && node._parent.op.prototype._astname === 'Mult'){
+        let blockName = "lists_repeat"
+        return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {},
+            {
+                "ITEM": this.convert(elts[0], node),
+                "NUM": this.convert(node._parent.right, node)
+            },
+            {}, {}, {});
+    }
+
     return BlockMirrorTextToBlocks.create_block(
         "lists_create_with" // type
         , node.lineno // line_number
