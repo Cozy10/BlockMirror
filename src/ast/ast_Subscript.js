@@ -52,7 +52,6 @@ BlockMirrorTextToBlocks.prototype.addSliceDim = function (slice, i, values, muta
 BlockMirrorTextToBlocks.prototype['ast_Index'] = function(node, parent){
     var value = node.value;
     var lineno = node._parent.lineno;
-    console.log(node);
     return BlockMirrorTextToBlocks.create_block("math_number", lineno, {
         "NUM": this.convert(value, node)
     });
@@ -66,7 +65,7 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
     var value = node.value;
     var slice = node.slice;
     // in list get sub-list from
-    if(slice.value != undefined && slice._astname === 'Slice'){
+    if(slice._astname === 'Slice'){
         let lower = slice.lower;
         let upper = slice.upper;
         let where1 = "FROM_START";
@@ -133,7 +132,7 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
         // in list get # from end et in list get last
         if(slice.value.op != undefined && slice.value.op.prototype._astname === 'USub'){
             // in list get last
-            if(slice.value.operand.n.v == 1){
+            if(slice.value.operand.n != undefined && slice.value.operand.n.v == 1){
                 where = "LAST";
                 at = "false";
             }
