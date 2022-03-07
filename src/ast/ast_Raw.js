@@ -1,5 +1,5 @@
-/*BlockMirrorTextToBlocks.BLOCKS.push({
-    "type": "ast_Raw",
+BlockMirrorTextToBlocks.BLOCKS.push({
+    "type": "raw_code",
     "message0": "Code Block: %1 %2",
     "args0": [
         {"type": "input_dummy"},
@@ -8,7 +8,7 @@
     "colour": BlockMirrorTextToBlocks.COLOR.PYTHON,
     "previousStatement": null,
     "nextStatement": null,
-});*/
+});
 /*
 Blockly.Python['ast_Raw'] = function (block) {
     var code = block.getFieldValue('TEXT') + "\n";

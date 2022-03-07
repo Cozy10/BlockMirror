@@ -448,7 +448,7 @@ BlockMirrorTextToBlocks.create_block = function (type, lineNumber, fields, value
 
 BlockMirrorTextToBlocks.raw_block = function (txt) {
     // TODO: lineno as second parameter!
-    return BlockMirrorTextToBlocks.create_block("ast_Raw", 0, {"TEXT": txt});
+    return BlockMirrorTextToBlocks.create_block("raw_code", 0, {"TEXT": txt});
 };
 
 BlockMirrorTextToBlocks.BLOCKS = [];

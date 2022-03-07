@@ -48,6 +48,7 @@ function builtinRead(x) {
 // get a reference to your pre element for output
 // configure the output function
 // call Sk.importMainWithBody()
+var textToBlock = new BlockMirrorTextToBlocks();
 function runit() { 
    var prog = document.getElementById("yourcode").value; 
    Sk.configure({
@@ -60,7 +61,6 @@ function runit() {
         return Sk.builtinFiles["files"][filename];
     }
     });
-    textToBlock = new BlockMirrorTextToBlocks()
     xml = textToBlock.convertSource("__main__.py", prog);
     document.getElementById("output").innerHTML = xml.xml;
     let xmlDom = Blockly.Xml.textToDom(xml.xml);
