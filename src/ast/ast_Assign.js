@@ -23,14 +23,14 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
             index = index.operand;
             where = "FROM_END";
             // last
-            if(index.n.v == 1){
+            if(index.n != undefined && index.n.v == 1){
                 at = "false";
                 where = "LAST";
             }
         }
 
         // first
-        else if(index.n.v == 0){
+        else if(index.n != undefined && index.n.v == 0){
             at = "false";
             where = "FIRST";
         }
