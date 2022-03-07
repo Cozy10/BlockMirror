@@ -1,3 +1,36 @@
+
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS = {
+    "print": function(args, node){ // Give node.args and node
+        return {
+            "name":"text_print", // block type="text_print"
+            "fields":{},        // tag field of the block <field ...>
+            "values":{          
+                "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            },                  // tag value
+            "statements":{}     //tag statement
+        };
+    }
+};
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS = {};
+BlockMirrorTextToBlocks.prototype.LOCAL_FUNCTIONS = {};
+
+BlockMirrorTextToBlocks.prototype.create_block_functionDef = function(name, mutation, type){
+    return function(args, node){
+        let values = {};
+        args.forEach((arg, i)=>{
+            values["ARG"+i] = BlockMirrorTextToBlocks.prototype.convert(arg, node);
+        });
+        return {"name": type, // block type=name
+            "fields":{
+                "NAME":name
+            },        // tag field of the block <field ...>
+            "values":values,                  // tag value
+            "mutations":mutation,      //tag mutation
+            "statements":{}     //tag statement
+        };
+    };
+}
+
 BlockMirrorTextToBlocks['ast_Image'] = function (node, parent, bmttb) {
     if (!bmttb.blockMirror.configuration.imageMode) {
         throw "Not using image constructor";
@@ -278,70 +311,6 @@ BlockMirrorTextToBlocks.prototype.MODULE_FUNCTION_SIGNATURES = {
         }
     }
 };
-
-BlockMirrorTextToBlocks.prototype.FUNCTION_SIGNATURES['assert_equal'] =
-    BlockMirrorTextToBlocks.prototype.MODULE_FUNCTION_SIGNATURES['cisc108']['assert_equal'];
-
-function makeTurtleBlock(name, returns, values, message, aliases) {
-    BlockMirrorTextToBlocks.prototype.MODULE_FUNCTION_SIGNATURES['turtle'][name] = {
-        "returns": returns,
-        "simple": values,
-        "message": message,
-        colour: BlockMirrorTextToBlocks.COLOR.PLOTTING
-    };
-    if (aliases) {
-        aliases.forEach(function(alias) {
-            BlockMirrorTextToBlocks.prototype.MODULE_FUNCTION_SIGNATURES['turtle'][alias] =
-                BlockMirrorTextToBlocks.prototype.MODULE_FUNCTION_SIGNATURES['turtle'][name];
-        });
-    }
-}
-
-makeTurtleBlock("forward", false, ["amount"], "move turtle forward by", ["fd"]);
-makeTurtleBlock("backward", false, ["amount"], "move turtle backward by", ["bd"]);
-makeTurtleBlock("right", false, ["angle"], "turn turtle right by", ["rt"]);
-makeTurtleBlock("left", false, ["angle"], "turn turtle left by", ["lt"]);
-makeTurtleBlock("goto", false, ["x", "y"], "move turtle to position", ["setpos", "setposition"]);
-makeTurtleBlock("setx", false, ["x"], "set turtle's x position to ", []);
-makeTurtleBlock("sety", false, ["y"], "set turtle's y position to ", []);
-makeTurtleBlock("setheading", false, ["angle"], "set turtle's heading to ", ["seth"]);
-makeTurtleBlock("home", false, [], "move turtle to origin ", []);
-makeTurtleBlock("circle", false, ["radius"], "move the turtle in a circle ", []);
-makeTurtleBlock("dot", false, ["size", "color"], "turtle draws a dot ", []);
-makeTurtleBlock("stamp", true, [], "stamp a copy of the turtle shape ", []);
-makeTurtleBlock("clearstamp", false, ["stampid"], "delete stamp with id ", []);
-makeTurtleBlock("clearstamps", false, [], "delete all stamps ", []);
-makeTurtleBlock("undo", false, [], "undo last turtle action ", []);
-makeTurtleBlock("speed", true, ["x"], "set or get turtle speed", []);
-makeTurtleBlock("position", true, [], "get turtle's position ", ["pos"]);
-makeTurtleBlock("towards", true, ["x", "y"], "get the angle from the turtle to the point ", []);
-makeTurtleBlock("xcor", true, [], "get turtle's x position ", []);
-makeTurtleBlock("ycor", true, [], "get turtle's y position ", []);
-makeTurtleBlock("heading", true, [], "get turtle's heading ", []);
-makeTurtleBlock("distance", true, ["x", "y"], "get the distance from turtle's position to ", []);
-makeTurtleBlock("degrees", false, [], "set turtle mode to degrees", []);
-makeTurtleBlock("radians", false, [], "set turtle mode to radians", []);
-makeTurtleBlock("pendown", false, [], "pull turtle pen down ", ["pd", "down"]);
-makeTurtleBlock("penup", false, [], "pull turtle pen up ", ["pu", "up"]);
-// Skipped some
-makeTurtleBlock("pensize", false, [], "set or get the pen size ", ["width"]);
-// Skipped some
-makeTurtleBlock("pencolor", false, [], "set or get the pen color ", []);
-makeTurtleBlock("fillcolor", false, [], "set or get the fill color ", []);
-makeTurtleBlock("reset", false, [], "reset drawing", []);
-makeTurtleBlock("clear", false, [], "clear drawing", []);
-makeTurtleBlock("write", false, ["message"], "write text ", []);
-// Skipped some
-makeTurtleBlock("bgpic", false, ["url"], "set background to ", []);
-makeTurtleBlock("done", false, [], "start the turtle loop ", ["mainloop"]);
-makeTurtleBlock("setup", false, ["width", "height"], "set drawing area size ", []);
-makeTurtleBlock("title", false, ["message"], "set title of drawing area ", []);
-makeTurtleBlock("bye", false, [], "say goodbye to turtles ", []);
-
-
-BlockMirrorTextToBlocks.prototype.MODULE_FUNCTION_SIGNATURES['matplotlib.pyplot'] =
-    BlockMirrorTextToBlocks.prototype.MODULE_FUNCTION_SIGNATURES['plt'];
-
 BlockMirrorTextToBlocks.getFunctionBlock = function(name, values, module) {
     if (values === undefined) {
         values = {};

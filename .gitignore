@@ -86,3 +86,7 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+# Dist files
+dist/block_mirror.js
+dist/skulpt_parser.js

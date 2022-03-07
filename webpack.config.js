@@ -1,19 +1,21 @@
 const path = require('path');
+const fs = require('fs');
 const MergeIntoSingleFilePlugin = require('webpack-merge-and-include-globally');
 const babel = require("@babel/core");
+const modules_path = [path.resolve(__dirname, "modules/numpy/import")];
 
 // Blockly
 const JS_BLOCKLY_FILES = [
-    path.resolve(__dirname, '../blockly/blockly_compressed.js'),
-    path.resolve(__dirname, '../blockly/blocks_compressed.js'),
-    path.resolve(__dirname, '../blockly/msg/js/en.js'),
-    path.resolve(__dirname, '../blockly/python_compressed.js')
+    path.resolve(__dirname, 'ext_lib/blockly/blockly_compressed.js'),
+    path.resolve(__dirname, 'ext_lib/blockly/blocks_compressed.js'),
+    path.resolve(__dirname, 'ext_lib/blockly/msg/js/en.js'),
+    path.resolve(__dirname, 'ext_lib/blockly/python_compressed.js')
 ];
 
 // Skulpt
 const JS_SKULPT_FILES = [
-    path.resolve(__dirname, '../skulpt/dist/skulpt.js'),
-    path.resolve(__dirname, '../skulpt/dist/skulpt-stdlib.js'),
+    path.resolve(__dirname, 'ext_lib/skulpt/dist/skulpt.js'),
+    path.resolve(__dirname, 'ext_lib/skulpt/dist/skulpt-stdlib.js'),
 ];
 
 // Skulpt Parser
@@ -30,8 +32,9 @@ const JS_SKULPT_PARSER_FILES = [
 // BlockMirror
 const JS_BLOCKMIRROR_FILES = [
     path.resolve(__dirname, 'src/text_to_blocks.js'),
-    path.resolve(__dirname, 'src/ast/ast_functions.js'),
+
     // AST Handlers
+    path.resolve(__dirname, 'src/ast/ast_functions.js'),
     path.resolve(__dirname, 'src/ast/ast_For.js'),
     path.resolve(__dirname, 'src/ast/ast_If.js'),
     path.resolve(__dirname, 'src/ast/ast_While.js'),
@@ -73,8 +76,19 @@ const JS_BLOCKMIRROR_FILES = [
     path.resolve(__dirname, 'src/ast/ast_Import.js'),
     path.resolve(__dirname, 'src/ast/ast_With.js'),
     path.resolve(__dirname, 'src/ast/ast_Comment.js'),
-    path.resolve(__dirname, 'src/ast/ast_Raw.js')
-];
+    path.resolve(__dirname, 'src/ast/ast_Raw.js'),
+    path.resolve(__dirname,'src/ast/math.js'),
+    path.resolve(__dirname,'src/ast/constants.js'),
+    path.resolve(__dirname,'src/ast/random.js'),
+    path.resolve(__dirname,'src/ast/pythonDef.js'),
+].concat((() => { // Import modules files
+    let modules_import_path;
+    modules_path.forEach((module_path)=>{
+        files = fs.readdirSync(module_path);
+        modules_import_path = files.map(file => path.join(module_path, file));
+    });
+    return modules_import_path;
+})());
 
 const JS_FILES = [].concat(JS_BLOCKLY_FILES, JS_SKULPT_FILES,
     JS_BLOCKMIRROR_FILES)

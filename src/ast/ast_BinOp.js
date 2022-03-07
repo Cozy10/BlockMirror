@@ -1,3 +1,11 @@
+BlockMirrorTextToBlocks.CONVERT_BINOPS = { 
+    "Sub" : "MINUS",
+    "Add" : "ADD",
+    "Mult" : "MULTIPLY",
+    "Div" : "DIVIDE",
+    "Pow" : "POWER"
+};
+
 BlockMirrorTextToBlocks.BINOPS = [
     ["+", "Add", Blockly.Python.ORDER_ADDITIVE, 'Return the sum of the two numbers.', 'increase', 'by'],
     ["-", "Sub", Blockly.Python.ORDER_ADDITIVE, 'Return the difference of the two numbers.', 'decrease', 'by'],
@@ -44,54 +52,47 @@ BlockMirrorTextToBlocks.BINOPS.forEach(function (binop) {
     //Blockly.Constants.Math.TOOLTIPS_BY_OP[binop[1]] = binop[3];
 });
 
-BlockMirrorTextToBlocks.BLOCKS.push({
-    "type": "ast_BinOpFull",
-    "message0": "%1 %2 %3",
-    "args0": [
-        {"type": "input_value", "name": "A"},
-        {"type": "field_dropdown", "name": "OP", "options": BINOPS_BLOCKLY_DISPLAY_FULL},
-        {"type": "input_value", "name": "B"}
-    ],
-    "inputsInline": true,
-    "output": null,
-    "colour": BlockMirrorTextToBlocks.COLOR.MATH
-    //"extensions": ["math_op_tooltip"]
-});
-
-BlockMirrorTextToBlocks.BLOCKS.push({
-    "type": "ast_BinOp",
-    "message0": "%1 %2 %3",
-    "args0": [
-        {"type": "input_value", "name": "A"},
-        {"type": "field_dropdown", "name": "OP", "options": BINOPS_BLOCKLY_DISPLAY},
-        {"type": "input_value", "name": "B"}
-    ],
-    "inputsInline": true,
-    "output": null,
-    "colour": BlockMirrorTextToBlocks.COLOR.MATH
-    //"extensions": ["math_op_tooltip"]
-});
-
-Blockly.Python['ast_BinOp'] = function (block) {
-    // Basic arithmetic operators, and power.
-    var tuple = BINOPS_BLOCKLY_GENERATE[block.getFieldValue('OP')];
-    var operator = tuple[0]+" ";
-    var order = tuple[1];
-    var argument0 = Blockly.Python.valueToCode(block, 'A', order) || Blockly.Python.blank;
-    var argument1 = Blockly.Python.valueToCode(block, 'B', order) || Blockly.Python.blank;
-    var code = argument0 + operator + argument1;
-    return [code, order];
-};
-
 BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
     let left = node.left;
-    let op = node.op.name;
+    let op = node.op.prototype._astname;
     let right = node.right;
+    let blockName = "math_arithmetic";
+    
+    if(node.left.func != undefined && node.left.func.id.v === 'str'){
+        console.log(node.left.func.id.v);
+        console.log(typeof node.right.s.v);
+        if (node.right.s != undefined && typeof node.right.s.v === 'string'){
+            
+            blockName = "text_append";
 
-    let blockName = (BINOPS_SIMPLE.indexOf(op) >= 0) ? "ast_BinOp" : 'ast_BinOpFull';
+            console.log(node.left);
+            return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {
+                "VAR":  node.left.args[0].id.v
+            }, {
+                "TEXT": this.convert(node.right, node)
+            }, {
+            
+            });        
+        }
+    }
+
+    if ( op === "Mod"){
+        blockName = "math_modulo";
+        return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {},
+        {
+            "DIVIDEND": this.convert(left, node),
+            "DIVISOR": this.convert(right, node)
+        },
+        {});
+    }
+
+    // create list with item [...] repeated n times (voir ast_List)
+    if (left._astname == 'List'){
+        return this.convert(left, node)
+    }
 
     return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {
-        "OP": op
+        "OP": BlockMirrorTextToBlocks.CONVERT_BINOPS[op]
     }, {
         "A": this.convert(left, node),
         "B": this.convert(right, node)
@@ -100,5 +101,4 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
     });
 }
 
-Blockly.Python['ast_BinOpFull'] = Blockly.Python['ast_BinOp'];
-BlockMirrorTextToBlocks.prototype['ast_BinOpFull'] = BlockMirrorTextToBlocks.prototype['ast_BinOp'];
+BlockMirrorTextToBlocks.prototype['math_arithmetic'] = BlockMirrorTextToBlocks.prototype['ast_BinOp'];

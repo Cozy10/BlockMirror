@@ -25,7 +25,6 @@ BlockMirrorTextToBlocks.prototype.convertSourceToCodeBlock = function (python_so
  *      source code or an error message and the code as a code-block.
  */
 BlockMirrorTextToBlocks.prototype.convertSource = function (filename, python_source) {
-    console.log(filename);
     let xml = document.createElement("xml");
     // Attempt parsing - might fail!
     let parse, ast = null, symbol_table, error;
@@ -242,7 +241,6 @@ BlockMirrorTextToBlocks.prototype.convertBody = function (node, parent) {
         var height = this.heights.shift();
         var originalSourceCode = this.getSourceCode(lineNumberInProgram, height);
         var newChild = this.convertStatement(node[i], originalSourceCode, parent);
-
         // Skip null blocks (e.g., imports)
         if (newChild == null) {
             continue;
@@ -251,7 +249,6 @@ BlockMirrorTextToBlocks.prototype.convertBody = function (node, parent) {
         skipped_line = distance > 1;
         previousLineInProgram = lineNumberInProgram;
         previousHeight = height;
-
         // Handle top-level expression blocks
         if (is_top_level && newChild.constructor === Array) {
             addPeer(newChild[0]);
@@ -317,6 +314,11 @@ BlockMirrorTextToBlocks.prototype.isTopLevel = function (parent) {
 
 BlockMirrorTextToBlocks.prototype.convert = function (node, parent) {
     let functionName = 'ast_' + node._astname;
+    // Check if it's a constant
+    let constantBlock = BlockMirrorTextToBlocks.prototype.CONSTANTS(node, parent);
+    if(constantBlock != undefined){
+        return constantBlock;
+    }
     if (this[functionName] === undefined) {
         throw new Error("Could not find function: " + functionName);
     }
@@ -446,7 +448,7 @@ BlockMirrorTextToBlocks.create_block = function (type, lineNumber, fields, value
 
 BlockMirrorTextToBlocks.raw_block = function (txt) {
     // TODO: lineno as second parameter!
-    return BlockMirrorTextToBlocks.create_block("ast_Raw", 0, {"TEXT": txt});
+    return BlockMirrorTextToBlocks.create_block("raw_code", 0, {"TEXT": txt});
 };
 
 BlockMirrorTextToBlocks.BLOCKS = [];
