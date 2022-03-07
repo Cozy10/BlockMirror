@@ -10,30 +10,29 @@ fs.readdir(modules_path, (err, modules)=>{
         let module_path = path.join(modules_path, module);
         let json_path = path.join(module_path, 'json');
         let import_path = path.join(module_path, 'import');
-        fs.readdir(json_path, (err, files) => {
+        let content = genJSCreateModule(module)+'\n';
+        files = fs.readdirSync(json_path);
+        files.forEach((file) => {
+            data = fs.readFileSync(path.join(json_path, file));
+            let block = JSON.parse(data);
+            let func_name = file.split('.')[0];
+            let code = genJSCode(module_name, func_name, block);
+            content += code+'\n';
+        });
+        fs.writeFile(path.join(import_path, module_name+'.js'), content,{flag: 'w'}, err => {
             if (err) throw err;
-            files.forEach((file) => {
-                // Do whatever you want to do with the file
-                fs.readFile(path.join(json_path, file), (err, data) => {
-                    if (err) throw err;
-                    let block = JSON.parse(data);
-                    let func_name = file.split('.')[0];
-                    let code = genJSCode(func_name, block);                    
-                    fs.writeFile(path.join(import_path, func_name+'.js'), code,{flag: 'w'}, err => {
-                        if (err) throw err;
-                    });
-                });
-            });
-        })
+        });
     });
 })
-
-function genJSCode(func_name, block){
-    let content = create_block_func+'["'+func_name+'"]'+'=function(args,node){return{';
+function genJSCreateModule(module_name){
+    return create_block_func+'["'+module_name+'"]={};';
+}
+function genJSCode(module_name, func_name, block){
+    let content = create_block_func+'["'+module_name+'"]'+'["'+func_name+'"]'+'=function(args,node){return{';
     content+='"name":"'+block.type+'",';
     content+=genValues(block.args0);
     
-    content+="}}";
+    content+="}};";
     return content;
 }
 function genValues(args){
