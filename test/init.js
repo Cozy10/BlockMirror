@@ -42,25 +42,19 @@ function builtinRead(x) {
 }
 
 
-
-// Here's everything you need to run a python program in skulpt
-// grab the code from your textarea
-// get a reference to your pre element for output
-// configure the output function
-// call Sk.importMainWithBody()
 var textToBlock = new BlockMirrorTextToBlocks();
-function runit() { 
-   var prog = document.getElementById("yourcode").value; 
-   Sk.configure({
-    __future__: Sk.python3,
-    read: function (filename) {
-        if (Sk.builtinFiles === undefined ||
-            Sk.builtinFiles["files"][filename] === undefined) {
-            throw "File not found: '" + filename + "'";
-        }
-        return Sk.builtinFiles["files"][filename];
+Sk.configure({
+  __future__: Sk.python3,
+  read: function (filename) {
+    if (Sk.builtinFiles === undefined ||
+        Sk.builtinFiles["files"][filename] === undefined) {
+        throw "File not found: '" + filename + "'";
     }
-    });
+    return Sk.builtinFiles["files"][filename];
+  }
+});
+function runit() { 
+    var prog = document.getElementById("yourcode").value; 
     xml = textToBlock.convertSource("__main__.py", prog);
     document.getElementById("output").innerHTML = xml.xml;
     let xmlDom = Blockly.Xml.textToDom(xml.xml);
