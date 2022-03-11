@@ -46,6 +46,13 @@ BlockMirrorTextToBlocks.prototype['ast_Call'] = function (node, parent) {
 
     // Functions from an integrated module or function defined by user in blockly
     if(mModule === undefined){
+        // If it's a cast register his type in type and set foundType of the returned node to the type too
+        if(BlockMirrorTextToBlocks.CAST_TYPE[Sk.ffi.remapToJs(node.func.id)] != undefined){
+            node.args[0].type = BlockMirrorTextToBlocks.CAST_TYPE[Sk.ffi.remapToJs(node.func.id)];
+            let res = this.convert(node.args[0], node);
+            res.foundType = BlockMirrorTextToBlocks.CAST_TYPE[Sk.ffi.remapToJs(node.func.id)];
+            return res;
+        }
         blockDataFunc = BlockMirrorTextToBlocks.prototype.LOCAL_FUNCTIONS[Sk.ffi.remapToJs(node.func.id)];
         if(blockDataFunc === undefined){
             blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[Sk.ffi.remapToJs(node.func.id)];

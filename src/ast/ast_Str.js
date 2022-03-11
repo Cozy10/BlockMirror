@@ -48,6 +48,7 @@ BlockMirrorTextToBlocks.prototype.dedent = function (text, levels, isDocString) 
 BlockMirrorTextToBlocks.prototype['ast_Str'] = function (node, parent) {
     let s = node.s;
     let text = Sk.ffi.remapToJs(s);
+    let res;
     /*if (text.startsWith("http") && text.endsWith(".png")) {
         return BlockMirrorTextToBlocks.create_block("ast_Image", node.lineno, {}, {}, {},
             {"@src": text});
@@ -57,7 +58,9 @@ BlockMirrorTextToBlocks.prototype['ast_Str'] = function (node, parent) {
         let dedented = this.dedent(text, this.levelIndex - 1, true);
         return [BlockMirrorTextToBlocks.create_block("ast_StrDocstring", node.lineno, {"TEXT": dedented})];
     } else if (text.indexOf('\n') === -1) {
-        return BlockMirrorTextToBlocks.create_block("text", node.lineno, {"TEXT": text});
+        res = BlockMirrorTextToBlocks.create_block("text", node.lineno, {"TEXT": text});
+        res.foundType = BlockMirrorTextToBlocks.CAST_TYPE["str"];
+        return res;
     } else {
         let dedented = this.dedent(text, this.levelIndex - 1, false);
         return BlockMirrorTextToBlocks.create_block("ast_StrMultiline", node.lineno, {"TEXT": dedented});

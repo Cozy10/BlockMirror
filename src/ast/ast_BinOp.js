@@ -57,45 +57,60 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
     let op = node.op.prototype._astname;
     let right = node.right;
     let blockName = "math_arithmetic";
-    
-    if(node.left.func != undefined && node.left.func.id.v === 'str'){
-        console.log(node.left.func.id.v);
-        console.log(typeof node.right.s.v);
-        if (node.right.s != undefined && typeof node.right.s.v === 'string'){
-            
-            blockName = "text_append";
-
-            console.log(node.left);
-            return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {
-                "VAR":  node.left.args[0].id.v
-            }, {
-                "TEXT": this.convert(node.right, node)
-            }, {
-            
-            });        
-        }
-    }
-
-    if ( op === "Mod"){
-        blockName = "math_modulo";
-        return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {},
-        {
-            "DIVIDEND": this.convert(left, node),
-            "DIVISOR": this.convert(right, node)
-        },
-        {});
-    }
 
     // create list with item [...] repeated n times (voir ast_List)
     if (left._astname == 'List'){
         return this.convert(left, node)
     }
 
+    let leftNode = this.convert(left, node);
+    let rightNode = this.convert(right, node);
+    
+    // both left and right are String so String op
+    if(leftNode.foundType === "Str" && rightNode.foundType == "Str"){
+        let res, values, nodesComputed, blockGuess;
+        //the left node is already a text_join so create a new one with text on the right
+        if(leftNode.currentBlock === "text_join"){
+            nodesComputed = leftNode.nodesComputed.concat([rightNode]);
+            values = {};
+            nodesComputed.forEach((element, i)=>{
+                values['ADD'+i] = element;
+            });
+            blockGuess = leftNode.blockGuess;
+        }
+        else{
+            nodesComputed = [leftNode, rightNode];
+            values = {"ADD0":leftNode, "ADD1":rightNode};
+        }
+        res = BlockMirrorTextToBlocks.create_block("text_join", node.lineno, {}, values,
+            {}, {"@items":nodesComputed.length});
+        if(leftNode.variableName != undefined){ //Maybe it's an append op
+            blockGuess = "text_append";
+        }
+        res.blockGuess = blockGuess;
+        res.nodesComputed = nodesComputed;      //Save computed sub_block if we have to change block later
+        res.currentBlock = "text_join";         //Say we just finished a text_join block so don't do another one concat them
+        res.foundType = "Str";                  //We know the res type will be Str, could be usefull for later
+        return res;
+    }
+
+    if ( op === "Mod"){
+        blockName = "math_modulo";
+        return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {},
+        {
+            "DIVIDEND": leftNode,
+            "DIVISOR": rightNode
+        },
+        {});
+    }
+
+    
+
     return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {
         "OP": BlockMirrorTextToBlocks.CONVERT_BINOPS[op]
     }, {
-        "A": this.convert(left, node),
-        "B": this.convert(right, node)
+        "A": leftNode,
+        "B": rightNode
     }, {
         "inline": true
     });

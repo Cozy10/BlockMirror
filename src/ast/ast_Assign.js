@@ -6,6 +6,7 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
     let values;
     let fields = {};
     let simpleTarget = (targets.length === 1 && targets[0]._astname === 'Name');
+    let valueNode;
 
     // in list set #
     if(targets[0]._astname === 'Subscript'){
@@ -56,15 +57,41 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
             , {} // statements
             );
     }
-    
+    valueNode = this.convert(value, node)
     if (simpleTarget) {
+        // Check if it's append
+        console.log("test");
+        if(valueNode.blockGuess === "text_append"){
+            console.log("test2");
+            // Search if our variable is the first of the operation
+            if(valueNode.nodesComputed[0].variableName === Sk.ffi.remapToJs(targets[0].id)){
+                valueNode.nodesComputed.splice(0, 1);
+                let block;
+                if(valueNode.nodesComputed.length == 1){
+                    block = valueNode.nodesComputed[0];
+                }
+                else{
+                    let values = {};
+                    valueNode.nodesComputed.forEach((element, i)=>{
+                        values["ADD"+i] = element;
+                    });
+                    block = BlockMirrorTextToBlocks.create_block("text_join", node.lineno, {},
+                        values, {}, {"@items":valueNode.nodesComputed.length});
+                }
+                return BlockMirrorTextToBlocks.create_block("text_append", node.lineno, {
+                        "VAR":  Sk.ffi.remapToJs(targets[0].id)
+                    }, {
+                        "TEXT": block
+                    }, {});
+            }
+        }    
         values = {};
         fields['VAR'] = Sk.ffi.remapToJs(targets[0].id);
     } else {
         values = this.convertElements("TARGET", targets, node);
     }
-    values['VALUE'] = this.convert(value, node);
 
+    values['VALUE'] = valueNode;
     return BlockMirrorTextToBlocks.create_block("variables_set", node.lineno, fields,
         values,
         {
