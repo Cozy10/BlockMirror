@@ -3,6 +3,8 @@
     <head>
         <meta charset="utf-8">
         <title>Python2Blockly demo</title>
+        <link rel="stylesheet" href="style.css">
+
         <script src="../ext_lib/blockly/blockly_compressed.js"></script>
         <script src="../ext_lib/blockly/blocks_compressed.js"></script>
         <script src="../ext_lib/blockly/python_compressed.js"></script>
@@ -16,14 +18,22 @@
         <script src="init.js"></script> 
     </head>
     <body>
-    <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
-        <form> 
-            <textarea id="yourcode" cols="40" rows="10">import turtle
+       
+    <h1>
+    <span style=" text-align: center;">PYBLOCK</span>
+    </h1>
+
+    <div id="content">  
+        <textarea id="yourcode" cols="40" rows="10">import turtle
 print("Hello World") 
-            </textarea><br/> 
-            <button type="button" onclick="runit()">Convert</button> 
-        </form><br/>
-        <textarea id="output"></textarea>
+        </textarea> 
+        <textarea disabled id="output" cols="40" rows="10"></textarea>        
+        <div id="blocklyDiv"> </div>
+    </div>
+    <div id="button">
+        <button style="height: 40px;"
+    type="button" onclick="runit()">CONVERT !</button>
+    </div>
    </body>
    <script>
         var workspace = Blockly.inject('blocklyDiv', {toolbox: toolbox});
