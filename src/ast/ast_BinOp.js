@@ -82,7 +82,7 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
             nodesComputed = [leftNode, rightNode];
             values = {"ADD0":leftNode, "ADD1":rightNode};
         }
-        res = BlockMirrorTextToBlocks.create_block("text_join", node.lineno, "str", {}, values,
+        res = BlockMirrorTextToBlocks.create_block("text_join", node.lineno, "Str", {}, values,
             {}, {"@items":nodesComputed.length});
         if(leftNode.variableName != undefined){ //Maybe it's an append op
             blockGuess = "text_append";

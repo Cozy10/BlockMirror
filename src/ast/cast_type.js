@@ -1,4 +1,4 @@
-BlockMirrorTextToBlocks.CAST_TYPE = {
+BlockMirrorTextToBlocks.CAST_TYPE = { // cast_function : type
     "str":"Str",
     "int":"int",
     "float":"float",
@@ -7,7 +7,7 @@ BlockMirrorTextToBlocks.CAST_TYPE = {
 }
 
 BlockMirrorTextToBlocks.setVarType = (block, typeName)=>{
-    block.foundType = BlockMirrorTextToBlocks.CAST_TYPE[typeName];
+    block.foundType = typeName;
     return block;
 }
 BlockMirrorTextToBlocks.getVarType = (block)=>{

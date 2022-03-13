@@ -52,14 +52,14 @@ BlockMirrorTextToBlocks.prototype['ast_Str'] = function (node, parent) {
         return BlockMirrorTextToBlocks.create_block("ast_Image", node.lineno, {}, {}, {},
             {"@src": text});
     } else*/ if (this.isSingleChar(text)) {
-        return BlockMirrorTextToBlocks.create_block("ast_StrChar", node.lineno, "str", {"TEXT": text});
+        return BlockMirrorTextToBlocks.create_block("ast_StrChar", node.lineno, "Str", {"TEXT": text});
     } else if (this.isDocString(node, parent)) {
         let dedented = this.dedent(text, this.levelIndex - 1, true);
         return [BlockMirrorTextToBlocks.create_block("ast_StrDocstring", node.lineno, undefined, {"TEXT": dedented})];
     } else if (text.indexOf('\n') === -1) {
-        return BlockMirrorTextToBlocks.create_block("text", node.lineno, "str", {"TEXT": text});
+        return BlockMirrorTextToBlocks.create_block("text", node.lineno, "Str", {"TEXT": text});
     } else {
         let dedented = this.dedent(text, this.levelIndex - 1, false);
-        return BlockMirrorTextToBlocks.create_block("text", node.lineno, "str", {"TEXT": dedented});
+        return BlockMirrorTextToBlocks.create_block("text", node.lineno, "Str", {"TEXT": dedented});
     }
 };
