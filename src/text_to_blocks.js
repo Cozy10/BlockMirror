@@ -315,7 +315,6 @@ BlockMirrorTextToBlocks.prototype.isTopLevel = function (parent) {
 BlockMirrorTextToBlocks.prototype.convert = function (node, parent) {
     let functionName = 'ast_' + node._astname;
     // Check if it's a constant
-    console.log(functionName);
     let constantBlock = BlockMirrorTextToBlocks.prototype.CONSTANTS(node, parent);
     if(constantBlock != undefined){
         return constantBlock;

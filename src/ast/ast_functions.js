@@ -15,12 +15,14 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS = {
 BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS = {};
 BlockMirrorTextToBlocks.prototype.LOCAL_FUNCTIONS = {};
 
-BlockMirrorTextToBlocks.prototype.create_block_functionDef = function(name, mutation, returnType){
+BlockMirrorTextToBlocks.prototype.create_block_functionDef = function(name, mutation, type, returnType){
     return function(args, node){
         let values = {};
-        args.forEach((arg, i)=>{
-            values["ARG"+i] = BlockMirrorTextToBlocks.prototype.convert(arg, node);
-        });
+        if(args != null && args!= undefined){
+            args.forEach((arg, i)=>{
+                values["ARG"+i] = BlockMirrorTextToBlocks.prototype.convert(arg, node);
+            });
+        }
         return {"name": type, // block type=name
             "fields":{
                 "NAME":name
