@@ -18,7 +18,7 @@ BlockMirrorTextToBlocks.prototype['ast_Comment'] = function (txt, lineno) {
     /*if (commentText.length && commentText[0] === " ") {
         commentText = commentText.substring(1);
     }*/
-    return BlockMirrorTextToBlocks.create_block("ast_Comment", lineno, {
+    return BlockMirrorTextToBlocks.create_block("ast_Comment", lineno, undefined,{
         "BODY": commentText
     })
 };

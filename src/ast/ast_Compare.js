@@ -37,7 +37,8 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
         if(left.right.n != undefined && left.right.n.v === 2){ // 2
             if (ops[0].prototype._astname === "Eq"){ // ==
                 if(values[0] != undefined && values[0].n.v === 0){ // 0 <=> pair                    
-                    return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno, 
+                    return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno,
+                    "bool",
                     {
                         "PROPERTY": "EVEN"
                     },
@@ -46,7 +47,8 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
                     },{});
                 }
                 if(values[0] != undefined && values[0].n.v === 1) { // 1 <=> impair
-                    return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno, 
+                    return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno,
+                    "bool",
                     {
                         "PROPERTY": "ODD"
                     },
@@ -57,7 +59,8 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
             }
         }
         if(left.right.n != undefined && left.right.n.v === 1){ // 1 <=> est entier
-            return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno, 
+            return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno,
+            "bool",
             {
                 "PROPERTY": "WHOLE"
             },
@@ -69,6 +72,7 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
             if (ops[0].prototype._astname === "Eq"){ // ==
                 if(values[0].n != undefined && values[0].n.v === 0){ // 0 <=> divisible par                    
                     return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno, 
+                    "bool",
                     {
                         "PROPERTY": "DIVISIBLE_BY"
                     },
@@ -83,6 +87,7 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
     if (ops[0].prototype._astname === "Gt"){  // X >
         if(values[0] != undefined && values[0].n.v === 0){ // 0 <=> positif
             return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno, 
+            "bool",
             {
                 "PROPERTY": "POSITIVE"
             },
@@ -94,6 +99,7 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
     if (ops[0].prototype._astname === "Lt"){  // X <
         if(values[0] != undefined && values[0].n.v === 0){ // 0 <=> négatif
             return BlockMirrorTextToBlocks.create_block("math_number_property", node.lineno, 
+            "bool",
             {
                 "PROPERTY": "NEGATIVE"
             },
@@ -104,7 +110,8 @@ BlockMirrorTextToBlocks.prototype['ast_Compare'] = function (node, parent) {
     }    
     
     for (var i = 0; i < values.length; i += 1) {
-        result_block = BlockMirrorTextToBlocks.create_block("logic_compare", node.lineno, {
+        result_block = BlockMirrorTextToBlocks.create_block("logic_compare", node.lineno, 
+        "bool", {
             "OP": BlockMirrorTextToBlocks.CONVDICT[ops[i].prototype._astname]
         }, {
             "A": result_block,

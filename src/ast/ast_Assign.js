@@ -7,6 +7,7 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
     let fields = {};
     let simpleTarget = (targets.length === 1 && targets[0]._astname === 'Name');
     let valueNode;
+    let type = undefined;
 
     // in list set #
     if(targets[0]._astname === 'Subscript'){
@@ -44,6 +45,7 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
         return BlockMirrorTextToBlocks.create_block(
             "lists_setIndex", // type
             node.lineno, // line_number
+            BlockMirrorTextToBlocks.getVarType(set_values["LIST"]),
             {
                 "MODE":mode,
                 "WHERE":where
@@ -57,12 +59,10 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
             , {} // statements
             );
     }
-    valueNode = this.convert(value, node)
     if (simpleTarget) {
+        valueNode = this.convert(value, node);
         // Check if it's append
-        console.log("test");
         if(valueNode.blockGuess === "text_append"){
-            console.log("test2");
             // Search if our variable is the first of the operation
             if(valueNode.nodesComputed[0].variableName === Sk.ffi.remapToJs(targets[0].id)){
                 valueNode.nodesComputed.splice(0, 1);
@@ -75,10 +75,10 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
                     valueNode.nodesComputed.forEach((element, i)=>{
                         values["ADD"+i] = element;
                     });
-                    block = BlockMirrorTextToBlocks.create_block("text_join", node.lineno, {},
+                    block = BlockMirrorTextToBlocks.create_block("text_join", node.lineno, "str", {},
                         values, {}, {"@items":valueNode.nodesComputed.length});
                 }
-                return BlockMirrorTextToBlocks.create_block("text_append", node.lineno, {
+                return BlockMirrorTextToBlocks.create_block("text_append", node.lineno, "str", {
                         "VAR":  Sk.ffi.remapToJs(targets[0].id)
                     }, {
                         "TEXT": block
@@ -87,12 +87,14 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
         }    
         values = {};
         fields['VAR'] = Sk.ffi.remapToJs(targets[0].id);
+        values['VALUE'] = valueNode;
+        type = BlockMirrorTextToBlocks.getVarType(valueNode);
     } else {
         values = this.convertElements("TARGET", targets, node);
     }
 
-    values['VALUE'] = valueNode;
-    return BlockMirrorTextToBlocks.create_block("variables_set", node.lineno, fields,
+    return BlockMirrorTextToBlocks.create_block("variables_set", node.lineno, type,
+        fields,
         values,
         {
         }, {

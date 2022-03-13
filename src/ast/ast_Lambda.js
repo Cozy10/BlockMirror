@@ -11,7 +11,7 @@ BlockMirrorTextToBlocks.prototype['ast_Lambda'] = function (node, parent) {
         parsedArgs = this.parseArgs(args, values, node.lineno);
     }
 
-    return BlockMirrorTextToBlocks.create_block("ast_Lambda", node.lineno, {},
+    return BlockMirrorTextToBlocks.create_block("ast_Lambda", node.lineno, undefined, {},
         values,
         {
             "inline": "false"

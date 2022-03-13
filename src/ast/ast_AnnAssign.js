@@ -179,7 +179,7 @@ BlockMirrorTextToBlocks.prototype['ast_AnnAssign'] = function (node, parent) {
 
     if (target._astname === 'Name' && target.id.v !== Blockly.Python.blank && builtinAnnotation !== false) {
         mutations['@str'] = annotation._astname === 'Str'
-        return BlockMirrorTextToBlocks.create_block("ast_AnnAssign", node.lineno, {
+        return BlockMirrorTextToBlocks.create_block("ast_AnnAssign", node.lineno, undefined, {
                 'TARGET': target.id.v,
                 'ANNOTATION': builtinAnnotation,
             },
@@ -190,7 +190,7 @@ BlockMirrorTextToBlocks.prototype['ast_AnnAssign'] = function (node, parent) {
     } else {
         values['TARGET'] = this.convert(target, node);
         values['ANNOTATION'] = this.convert(annotation, node);
-        return BlockMirrorTextToBlocks.create_block("ast_AnnAssignFull", node.lineno, {},
+        return BlockMirrorTextToBlocks.create_block("ast_AnnAssignFull", node.lineno, undefined, {},
             values,
             {
                 "inline": "true",

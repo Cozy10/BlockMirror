@@ -3,7 +3,6 @@ BlockMirrorTextToBlocks.prototype['ast_For'] = function (node, parent) {
     var target = node.target;
     var iter = node.iter;
     var body = node.body;
-    var orelse = node.orelse;
     var fields = {};
     
     var blockName;
@@ -23,7 +22,7 @@ BlockMirrorTextToBlocks.prototype['ast_For'] = function (node, parent) {
         var by_block;
         // "for i in range(x, y)"
         if(iter.args.length == 2){
-          by_block = BlockMirrorTextToBlocks.create_block("math_number", node.lineno, {
+          by_block = BlockMirrorTextToBlocks.create_block("math_number", node.lineno, "int", {
               "NUM": 1
             });
         }
@@ -46,6 +45,6 @@ BlockMirrorTextToBlocks.prototype['ast_For'] = function (node, parent) {
       };
     }
 
-    return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, fields,
+    return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, undefined, fields,
       iter_val, {}, {}, bodies);
 }

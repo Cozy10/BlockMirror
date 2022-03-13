@@ -12,6 +12,6 @@ BlockMirrorTextToBlocks.prototype['ast_While'] = function (node, parent) {
         mode = "WHILE";
         values = {"BOOL" : this.convert(node.test, node)};
     }
-    return BlockMirrorTextToBlocks.create_block("controls_whileUntil", node.lineno, {"MODE":mode},
+    return BlockMirrorTextToBlocks.create_block("controls_whileUntil", node.lineno, undefined, {"MODE":mode},
         values, {}, {}, statements);
 };

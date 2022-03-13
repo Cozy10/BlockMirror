@@ -48,21 +48,18 @@ BlockMirrorTextToBlocks.prototype.dedent = function (text, levels, isDocString) 
 BlockMirrorTextToBlocks.prototype['ast_Str'] = function (node, parent) {
     let s = node.s;
     let text = Sk.ffi.remapToJs(s);
-    let res;
     /*if (text.startsWith("http") && text.endsWith(".png")) {
         return BlockMirrorTextToBlocks.create_block("ast_Image", node.lineno, {}, {}, {},
             {"@src": text});
     } else*/ if (this.isSingleChar(text)) {
-        return BlockMirrorTextToBlocks.create_block("ast_StrChar", node.lineno, {"TEXT": text});
+        return BlockMirrorTextToBlocks.create_block("ast_StrChar", node.lineno, "str", {"TEXT": text});
     } else if (this.isDocString(node, parent)) {
         let dedented = this.dedent(text, this.levelIndex - 1, true);
-        return [BlockMirrorTextToBlocks.create_block("ast_StrDocstring", node.lineno, {"TEXT": dedented})];
+        return [BlockMirrorTextToBlocks.create_block("ast_StrDocstring", node.lineno, undefined, {"TEXT": dedented})];
     } else if (text.indexOf('\n') === -1) {
-        res = BlockMirrorTextToBlocks.create_block("text", node.lineno, {"TEXT": text});
-        res.foundType = BlockMirrorTextToBlocks.CAST_TYPE["str"];
-        return res;
+        return BlockMirrorTextToBlocks.create_block("text", node.lineno, "str", {"TEXT": text});
     } else {
         let dedented = this.dedent(text, this.levelIndex - 1, false);
-        return BlockMirrorTextToBlocks.create_block("ast_StrMultiline", node.lineno, {"TEXT": dedented});
+        return BlockMirrorTextToBlocks.create_block("text", node.lineno, "str", {"TEXT": dedented});
     }
 };

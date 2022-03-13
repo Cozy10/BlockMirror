@@ -237,26 +237,31 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS['lists_remove_random_item'] =
 
 BlockMirrorTextToBlocks.prototype['ast_List'] = function (node, parent) {
     var elts = node.elts;
-
+    let block;
     if (node._parent.op != undefined && node._parent.op.prototype._astname === 'Mult'){
-        let blockName = "lists_repeat"
-        return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {},
-            {
-                "ITEM": this.convert(elts[0], node),
-                "NUM": this.convert(node._parent.right, node)
-            },
-            {}, {}, {});
+        let item = this.convert(elts[0], node);
+        block = BlockMirrorTextToBlocks.create_block(blockName, node.lineno, "list", {},
+        {
+            "ITEM": item,
+            "NUM": this.convert(node._parent.right, node)
+        },
+        {}, {}, {});
+        block.elementsType = BlockMirrorTextToBlocks.getVarType(item);
+        return block;
     }
-
-    return BlockMirrorTextToBlocks.create_block(
+    let values = this.convertElements("ADD", elts, node);
+    block = BlockMirrorTextToBlocks.create_block(
         "lists_create_with" // type
         , node.lineno // line_number
+        , "list"
         , {} // fields
-        , this.convertElements("ADD", elts, node) //values
+        , values //values
         , {} // settings
         , {
             "@items": elts.length // mutations
         }
         , {} // statements
         );
+    block.elementsType = BlockMirrorTextToBlocks.getVarType((values["ADD0"]));
+    return block;
 }

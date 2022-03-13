@@ -18,6 +18,7 @@ BlockMirrorTextToBlocks.prototype['ast_UnaryOp'] = function (node, parent) {
             return BlockMirrorTextToBlocks.create_block(
                 'lists_isEmpty',
                 node.lineno,
+                "bool",
                 {},
                 {
                     "VALUE":this.convert(operand.args[0], node)
@@ -27,7 +28,7 @@ BlockMirrorTextToBlocks.prototype['ast_UnaryOp'] = function (node, parent) {
                 {});
         }
         else{
-            return BlockMirrorTextToBlocks.create_block('logic_negate', node.lineno, {}, 
+            return BlockMirrorTextToBlocks.create_block('logic_negate', "bool", node.lineno, {}, 
         {
             "BOOL": this.convert(operand, node)
         }, {
@@ -35,12 +36,14 @@ BlockMirrorTextToBlocks.prototype['ast_UnaryOp'] = function (node, parent) {
         });
         }
     }
+    let num = this.convert(operand, node);
     return BlockMirrorTextToBlocks.create_block('math_single', node.lineno, 
+    BlockMirrorTextToBlocks.getVarType(num),
     {
         "OP" : BlockMirrorTextToBlocks.OPS[op]
     }, 
     {
-        "NUM": this.convert(operand, node)
+        "NUM": num
     }, 
     {});
 }
