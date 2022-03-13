@@ -7,6 +7,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["len"] = function(args, node)
             "VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{}     //tag statement
+        , "returnType": "int"
     };
 }
 
@@ -22,6 +23,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["first_index"] = function(arg
             , "FIND":BlockMirrorTextToBlocks.prototype.convert(args[1], node) // recursive conversion for args[1]
         },                  // tag value
         "statements":{}     //tag statement
+        , "returnType": "int"
     }
 }
 
@@ -37,6 +39,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["last_index"] = function(args
             , "FIND":BlockMirrorTextToBlocks.prototype.convert(args[1], node) // recursive conversion for args[1]
         },                  // tag value
         "statements":{}     //tag statement
+        , "returnType": "int"
     }
 }
 
@@ -54,7 +57,8 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["lists_sort"] = function(args
         "values":{
             "LIST":list
         },
-        "statements":{}
+        "statements":{},
+        "returnType":"list"
     }
 }
 
@@ -100,7 +104,8 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["pop"] = function(args, node){
             "@statement":statement,
             "@at":at
         },
-        "statements":{}
+        "statements":{},
+        "returnType": values['VALUE'].elementsType
     }
 }
 
@@ -141,7 +146,8 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["insert"] = function(args, node
         "mutations":{
             "@at":at
         },
-        "statements":{}
+        "statements":{},
+        "returnType": undefined
     }
 }
 
@@ -164,7 +170,8 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["append"] = function(args, node
         "mutations":{
             "@at":"false"
         },
-        "statements":{}
+        "statements":{},
+        "returnType": undefined
     }
 }
 
@@ -186,7 +193,8 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["split"] = function(args, node)
         "mutations":{
             "@mode":"SPLIT"
         },
-        "statements":{}
+        "statements":{},
+        "returnType": "list"
     }
 }
 
@@ -208,7 +216,8 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["join"] = function(args, node){
         "mutations":{
             "@mode":"JOIN"
         },
-        "statements":{}
+        "statements":{},
+        "returnType":"string"
     }
 }
 
@@ -231,7 +240,8 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS['lists_remove_random_item'] =
             "@statement":"false",
             "@at":"false"
         },
-        "statements":{}
+        "statements":{},
+        "returnType": undefined
     }
 }
 
