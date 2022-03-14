@@ -369,7 +369,7 @@ BlockMirrorTextToBlocks.prototype.getChunkHeights = function (node) {
     return lineNumbers;
 };
 
-BlockMirrorTextToBlocks.create_block = function (type, lineNumber, fields, values, settings, mutations, statements) {
+BlockMirrorTextToBlocks.create_block = function (type, lineNumber, python_type, fields, values, settings, mutations, statements) {
     var newBlock = document.createElement("block");
     // Settings
     newBlock.setAttribute("type", type);
@@ -443,7 +443,7 @@ BlockMirrorTextToBlocks.create_block = function (type, lineNumber, fields, value
             }
         }
     }
-    return newBlock;
+    return BlockMirrorTextToBlocks.setVarType(newBlock, python_type); // set the python type and return the block
 };
 
 BlockMirrorTextToBlocks.raw_block = function (txt) {

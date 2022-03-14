@@ -44,6 +44,7 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
         return BlockMirrorTextToBlocks.create_block(
             "lists_setIndex", // type
             node.lineno, // line_number
+            BlockMirrorTextToBlocks.getVarType(set_values["LIST"]),
             {
                 "MODE":mode,
                 "WHERE":where
@@ -57,12 +58,10 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
             , {} // statements
             );
     }
-    valueNode = this.convert(value, node)
     if (simpleTarget) {
+        valueNode = this.convert(value, node);
         // Check if it's append
-        console.log("test");
         if(valueNode.blockGuess === "text_append"){
-            console.log("test2");
             // Search if our variable is the first of the operation
             if(valueNode.nodesComputed[0].variableName === Sk.ffi.remapToJs(targets[0].id)){
                 valueNode.nodesComputed.splice(0, 1);
@@ -75,10 +74,10 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
                     valueNode.nodesComputed.forEach((element, i)=>{
                         values["ADD"+i] = element;
                     });
-                    block = BlockMirrorTextToBlocks.create_block("text_join", node.lineno, {},
+                    block = BlockMirrorTextToBlocks.create_block("text_join", node.lineno, "Str", {},
                         values, {}, {"@items":valueNode.nodesComputed.length});
                 }
-                return BlockMirrorTextToBlocks.create_block("text_append", node.lineno, {
+                return BlockMirrorTextToBlocks.create_block("text_append", node.lineno, "Str", {
                         "VAR":  Sk.ffi.remapToJs(targets[0].id)
                     }, {
                         "TEXT": block
@@ -87,12 +86,18 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
         }    
         values = {};
         fields['VAR'] = Sk.ffi.remapToJs(targets[0].id);
+        // save variable type
+        BlockMirrorTextToBlocks.Variables[fields['VAR']] = BlockMirrorTextToBlocks.getVarType(valueNode);
+        
+        values['VALUE'] = valueNode;
+        console.log(valueNode);
+        
     } else {
         values = this.convertElements("TARGET", targets, node);
     }
 
-    values['VALUE'] = valueNode;
-    return BlockMirrorTextToBlocks.create_block("variables_set", node.lineno, fields,
+    return BlockMirrorTextToBlocks.create_block("variables_set", node.lineno, undefined,
+        fields,
         values,
         {
         }, {

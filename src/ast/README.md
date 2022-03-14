@@ -15,9 +15,11 @@ de nouveaux blocks Blockly on utilise ceux déjà existants
 ## Obtenir les blocs des noeuds suivants
 BlockMirrorTextToBlocks.prototype.convert(node, node_parent)
 ## Créer un bloc
-BlockMirrorTextToBlocks.create_block(type, line_number, fields, values, settings, mutations, statements)
+BlockMirrorTextToBlocks.create_block(type, line_number, python_type, fields, values, settings, mutations, statements)
 
 type : le nom/type du bloc
+
+python_type : type of the return value of the block (set to undefined if you don't know or their is no return value)
 
 line_number : numéro de ligne (=node.lineno)
 

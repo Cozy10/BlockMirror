@@ -32,7 +32,7 @@ BlockMirrorTextToBlocks.prototype['ast_ClassDef'] = function (node, parent) {
         }
     }
 
-    return BlockMirrorTextToBlocks.create_block("ast_ClassDef", node.lineno, fields,
+    return BlockMirrorTextToBlocks.create_block("ast_ClassDef", node.lineno, undefined, fields,
         values,
         {
             "inline": "false"

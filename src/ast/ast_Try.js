@@ -43,6 +43,6 @@ BlockMirrorTextToBlocks.prototype['ast_Try'] = function (node, parent) {
 
     mutations["ARG"] = handledLevels;
 
-    return BlockMirrorTextToBlocks.create_block("ast_Try", node.lineno, fields,
+    return BlockMirrorTextToBlocks.create_block("ast_Try", node.lineno, undefined, fields,
         values, {}, mutations, statements);
 };

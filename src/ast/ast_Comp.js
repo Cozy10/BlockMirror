@@ -13,7 +13,7 @@ BlockMirrorTextToBlocks.COMP_SETTINGS = {
         if (kind === 'DictComp') {
             let key = node.key;
             let value = node.value;
-            elements["ELT"] = BlockMirrorTextToBlocks.create_block("ast_DictItem", node.lineno, {},
+            elements["ELT"] = BlockMirrorTextToBlocks.create_block("ast_DictItem", node.lineno, undefined, {},
                 {
                     "KEY": this.convert(key, node),
                     "VALUE": this.convert(value, node)
@@ -38,7 +38,7 @@ BlockMirrorTextToBlocks.COMP_SETTINGS = {
             let iter = generators[i].iter;
             let ifs = generators[i].ifs;
             let is_async = generators[i].is_async;
-            elements["GENERATOR" + g] = BlockMirrorTextToBlocks.create_block("ast_comprehensionFor", node.lineno, {},
+            elements["GENERATOR" + g] = BlockMirrorTextToBlocks.create_block("ast_comprehensionFor", node.lineno, undefined, {},
                 {
                     "ITER": this.convert(iter, node),
                     "TARGET": this.convert(target, node)
@@ -47,7 +47,7 @@ BlockMirrorTextToBlocks.COMP_SETTINGS = {
             g += 1;
             if (ifs) {
                 for (let j = 0; j < ifs.length; j++) {
-                    elements["GENERATOR" + g] = BlockMirrorTextToBlocks.create_block("ast_comprehensionIf", node.lineno, {},
+                    elements["GENERATOR" + g] = BlockMirrorTextToBlocks.create_block("ast_comprehensionIf", node.lineno, undefined, {},
                         {
                             "TEST": this.convert(ifs[j], node)
                         },
@@ -57,7 +57,7 @@ BlockMirrorTextToBlocks.COMP_SETTINGS = {
             }
         }
 
-        return BlockMirrorTextToBlocks.create_block("ast_" + kind, node.lineno, {},
+        return BlockMirrorTextToBlocks.create_block("ast_" + kind, node.lineno, undefined, {},
             elements,
             {
                 "inline": "false"

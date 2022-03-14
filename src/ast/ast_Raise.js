@@ -11,7 +11,7 @@ BlockMirrorTextToBlocks.prototype['ast_Raise'] = function (node, parent) {
         values['CAUSE'] = this.convert(cause, node);
         hasCause = true;
     }
-    return BlockMirrorTextToBlocks.create_block("ast_Raise", node.lineno, {}, values, {}, {
+    return BlockMirrorTextToBlocks.create_block("ast_Raise", node.lineno, undefined, {}, values, {}, {
         '@exc': hasExc,
         '@cause': hasCause
     });

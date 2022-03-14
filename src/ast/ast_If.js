@@ -9,10 +9,12 @@ BlockMirrorTextToBlocks.prototype['ast_If'] = function (node, parent) {
     // check if it's ifreturn block if immediatly follow by a return
     if(orelse != undefined && orelse.length == 0 && node.body[0]._astname == "Return"){
         let values = {"CONDITION": this.convert(test, node)}
+        let returnType;
         if(node.body[0].value != null){
-            values["VALUE"] = this.convert(node.body[0].value, node)
+            values["VALUE"] = this.convert(node.body[0].value, node);
+            returnType = BlockMirrorTextToBlocks.getVarType(values['VALUE']);
         }
-        return BlockMirrorTextToBlocks.create_block("procedures_ifreturn", node.lineno, {}, values);
+        return BlockMirrorTextToBlocks.create_block("procedures_ifreturn", node.lineno, returnType, {}, values);
     }
 
     let values = {"IF0": this.convert(test, node)};
@@ -36,8 +38,10 @@ BlockMirrorTextToBlocks.prototype['ast_If'] = function (node, parent) {
         }
         orelse = orelse[0].orelse;
     }
-
-    return BlockMirrorTextToBlocks.create_block("controls_if", node.lineno, {},
+    
+    return BlockMirrorTextToBlocks.create_block("controls_if", node.lineno,
+        BlockMirrorTextToBlocks.getVarType(values['IF0']),
+        {},
         values, {}, {
             "@else": hasOrelse,
             "@elseif": elifCount

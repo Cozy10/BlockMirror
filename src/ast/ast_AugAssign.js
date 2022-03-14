@@ -16,7 +16,7 @@ BlockMirrorTextToBlocks.prototype['ast_AugAssign'] = function (node, parent) {
 
     let allOptions = BINOPS_SIMPLE.indexOf(op) === -1;
 
-    return BlockMirrorTextToBlocks.create_block("ast_AugAssign", node.lineno, fields,
+    return BlockMirrorTextToBlocks.create_block("ast_AugAssign", node.lineno, undefined, fields,
         values,
         {
             "inline": "true",

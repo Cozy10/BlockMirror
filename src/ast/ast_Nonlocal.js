@@ -6,7 +6,7 @@ BlockMirrorTextToBlocks.prototype['ast_Nonlocal'] = function (node, parent) {
         fields["NAME" + i] = Sk.ffi.remapToJs(names[i]);
     }
 
-    return BlockMirrorTextToBlocks.create_block("ast_Nonlocal", node.lineno,
+    return BlockMirrorTextToBlocks.create_block("ast_Nonlocal", node.lineno, undefined,
         fields,
         {}, {
             "inline": "true",

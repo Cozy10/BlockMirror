@@ -12,16 +12,16 @@ BlockMirrorTextToBlocks.prototype['ast_With'] = function (node, parent) {
         let innerValues = {'CONTEXT':this.convert(items[i].context_expr, node)};
         if (hasRename) {
             innerValues['AS'] = this.convert(items[i].optional_vars, node);
-            values['ITEM'+i] = BlockMirrorTextToBlocks.create_block("ast_WithItemAs", node.lineno,
+            values['ITEM'+i] = BlockMirrorTextToBlocks.create_block("ast_WithItemAs", node.lineno, undefined,
                 {}, innerValues, this.LOCKED_BLOCK);
         } else {
-            values['ITEM'+i] = BlockMirrorTextToBlocks.create_block("ast_WithItem", node.lineno,
+            values['ITEM'+i] = BlockMirrorTextToBlocks.create_block("ast_WithItem", node.lineno, undefined,
                 {}, innerValues, this.LOCKED_BLOCK);
         }
     }
     mutations['as'] = renamedItems;
 
-    return BlockMirrorTextToBlocks.create_block("ast_With", node.lineno, {},
+    return BlockMirrorTextToBlocks.create_block("ast_With", node.lineno, {}, undefined,
         values,
         {
             "inline": "false"

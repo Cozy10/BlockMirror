@@ -82,6 +82,7 @@ const JS_BLOCKMIRROR_FILES = [
     path.resolve(__dirname,'src/ast/random.js'),
     path.resolve(__dirname,'src/ast/pythonDef.js'),
     path.resolve(__dirname, 'src/ast/cast_type.js'),
+    path.resolve(__dirname, 'src/ast/variable_type.js'),
 ].concat((() => { // Import modules files
     let modules_import_path;
     modules_path.forEach((module_path)=>{

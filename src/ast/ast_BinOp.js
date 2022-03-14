@@ -67,7 +67,7 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
     let rightNode = this.convert(right, node);
     
     // both left and right are String so String op
-    if(leftNode.foundType === "Str" && rightNode.foundType == "Str"){
+    if(BlockMirrorTextToBlocks.getVarType(leftNode) === "Str" && BlockMirrorTextToBlocks.getVarType(rightNode) === "Str"){
         let res, values, nodesComputed, blockGuess;
         //the left node is already a text_join so create a new one with text on the right
         if(leftNode.currentBlock === "text_join"){
@@ -82,7 +82,7 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
             nodesComputed = [leftNode, rightNode];
             values = {"ADD0":leftNode, "ADD1":rightNode};
         }
-        res = BlockMirrorTextToBlocks.create_block("text_join", node.lineno, {}, values,
+        res = BlockMirrorTextToBlocks.create_block("text_join", node.lineno, "Str", {}, values,
             {}, {"@items":nodesComputed.length});
         if(leftNode.variableName != undefined){ //Maybe it's an append op
             blockGuess = "text_append";
@@ -90,13 +90,12 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
         res.blockGuess = blockGuess;
         res.nodesComputed = nodesComputed;      //Save computed sub_block if we have to change block later
         res.currentBlock = "text_join";         //Say we just finished a text_join block so don't do another one concat them
-        res.foundType = "Str";                  //We know the res type will be Str, could be usefull for later
         return res;
     }
 
     if ( op === "Mod"){
         blockName = "math_modulo";
-        return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {},
+        return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, "int", {},
         {
             "DIVIDEND": leftNode,
             "DIVISOR": rightNode
@@ -104,10 +103,13 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
         {});
     }
 
-    
-
-    return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {
-        "OP": BlockMirrorTextToBlocks.CONVERT_BINOPS[op]
+    // Math op between 2 number so if one element is a float or it's a division result will be a float otherwise it's an int
+    let typeLeft = BlockMirrorTextToBlocks.getVarType(leftNode), typeRight = BlockMirrorTextToBlocks.getVarType(rightNode);
+    let block_op = BlockMirrorTextToBlocks.CONVERT_BINOPS[op];
+    let type = ( ((op === "DIVIDE") || (typeLeft === "float") || (typeRight === "float")) ? "float" : "int");
+    return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, 
+        type, {
+        "OP": block_op
     }, {
         "A": leftNode,
         "B": rightNode

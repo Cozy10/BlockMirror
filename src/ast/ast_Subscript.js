@@ -52,8 +52,9 @@ BlockMirrorTextToBlocks.prototype.addSliceDim = function (slice, i, values, muta
 BlockMirrorTextToBlocks.prototype['ast_Index'] = function(node, parent){
     var value = node.value;
     var lineno = node._parent.lineno;
-    return BlockMirrorTextToBlocks.create_block("math_number", lineno, {
-        "NUM": this.convert(value, node)
+    let num = this.convert(value, node);
+    return BlockMirrorTextToBlocks.create_block("math_number", lineno, BlockMirrorTextToBlocks.getVarType(num), {
+        "NUM": num
     });
 }
 
@@ -101,6 +102,7 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
         return BlockMirrorTextToBlocks.create_block(
             "lists_getSublist", // type
             node.lineno, // line_number
+            "list",
             {
                 "WHERE1":where1,
                 "WHERE2":where2
@@ -154,6 +156,7 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
         return BlockMirrorTextToBlocks.create_block(
             "lists_getIndex", // type
             node.lineno, // line_number
+            BlockMirrorTextToBlocks.Lists[BlockMirrorTextToBlocks.getName(values['VALUE'])],
             {
                 "MODE":mode,
                 "WHERE":where
