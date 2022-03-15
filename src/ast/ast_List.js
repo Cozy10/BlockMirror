@@ -1,15 +1,26 @@
 // length of List
+// length of List
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["len"] = function(args, node){
-    return {
-        "name":"lists_length", // block type="text_print"
-        "fields":{},        // tag field of the block <field ...>
-        "values":{          
-            "VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
-        },                  // tag value
-        "statements":{}     //tag statement
-        , "returnType": "int"
-    };
+    if(args[0]._astname === "Str")
+        return{
+            "name":"text_length", // block type="text_print"
+            "fields":{},        // tag field of the block <field ...>
+            "values":{          
+                "VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            },                  // tag value
+            "statements":{}     //tag statement
+        }
+    else
+        return {
+            "name":"lists_length", // block type="text_print"
+            "fields":{},        // tag field of the block <field ...>
+            "values":{          
+                "VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            },                  // tag value
+            "statements":{}     //tag statement
+        };
 }
+
 
 // in list find first occurrence of item
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["first_index"] = function(args, node){
