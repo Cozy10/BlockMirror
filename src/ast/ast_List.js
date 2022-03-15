@@ -1,5 +1,4 @@
-// length of List
-// length of List
+// length of List or String
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["len"] = function(args, node){
     if(args[0]._astname === "Str")
         return{
@@ -73,8 +72,8 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["lists_sort"] = function(args
     }
 }
 
+// in list get and remove, args[0] is the list, args[1] is the index
 BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["pop"] = function(args, node){
-    console.log(arg)
     var value = args;
     var mode = "REMOVE";
     var where = "FROM_START";
@@ -103,43 +102,24 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["pop"] = function(args, node){
     if(at == "true"){
         Object.assign(values, {"AT":BlockMirrorTextToBlocks.prototype.convert(value, node)})
     }
-    if(args[0]._astname === "Str"){
-        return {
-            "name":"text_charAt",
-            "fields":{
-                "MODE":mode,
-                "WHERE":where
-            },
-            "values":values,
-            "settings":{},
-            "mutations":{
-                "@statement":statement,
-                "@at":at
-            },
-            "statements":{},
-            "returnType": values['VALUE'].elementsType
-        }
-
-    }
-    else{
-        return {
-            "name":"lists_getIndex",
-            "fields":{
-                "MODE":mode,
-                "WHERE":where
-            },
-            "values":values,
-            "settings":{},
-            "mutations":{
-                "@statement":statement,
-                "@at":at
-            },
-            "statements":{},
-            "returnType": values['VALUE'].elementsType
-        }
+    return {
+        "name":"lists_getIndex",
+        "fields":{
+            "MODE":mode,
+            "WHERE":where
+        },
+        "values":values,
+        "settings":{},
+        "mutations":{
+            "@statement":statement,
+            "@at":at
+        },
+        "statements":{},
+        "returnType": values['VALUE'].elementsType
     }
 }
 
+// in list insert at, args[0] is the list, args[1] is the index
 BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["insert"] = function(args, node){
     var value = args;
     var where = "FROM_START";
@@ -182,6 +162,7 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["insert"] = function(args, node
     }
 }
 
+// in list insert at last, args[0] is the list
 BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["append"] = function(args, node){
     var values = {
         "LIST":BlockMirrorTextToBlocks.prototype.convert(node.func.value, node)
@@ -206,6 +187,7 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["append"] = function(args, node
     }
 }
 
+// make list from text args[0] with delimiter args[1]
 BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["split"] = function(args, node){
     var values = {
         "INPUT":BlockMirrorTextToBlocks.prototype.convert(args[0], node)
@@ -229,6 +211,7 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["split"] = function(args, node)
     }
 }
 
+// make text from list args[1] with delimiter args[0]
 BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["join"] = function(args, node){
     var values = {
         "INPUT":BlockMirrorTextToBlocks.prototype.convert(args[1], node)
@@ -252,33 +235,15 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["join"] = function(args, node){
     }
 }
 
+// in list args[0] remove or get and remove at random index
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS['lists_remove_random_item'] = function(args, node){
     var mode = "REMOVE";
-    console.log(args)
 
     if(node._parent != undefined && node._parent._astname === 'Assign'){
         mode = "GET_REMOVE";
     }
-    if(args[0]._astname === "Str"){
-        return {
-            "name":"text_charAt",
-            "fields":{
-                "MODE":mode,
-                "WHERE":"RANDOM"
-            },
-            "values":{"VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node)},
-            "settings":{},
-            "mutations":{
-                "@statement":"false",
-                "@at":"false"
-            },
-            "statements":{},
-            "returnType": undefined
-        
-    
-        }
-    }
-    else return {
+
+    return {
         "name":"lists_getIndex",
         "fields":{
             "MODE":mode,
