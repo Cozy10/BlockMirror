@@ -74,6 +74,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["lists_sort"] = function(args
 }
 
 BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["pop"] = function(args, node){
+    console.log(arg)
     var value = args;
     var mode = "REMOVE";
     var where = "FROM_START";
@@ -102,21 +103,40 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["pop"] = function(args, node){
     if(at == "true"){
         Object.assign(values, {"AT":BlockMirrorTextToBlocks.prototype.convert(value, node)})
     }
+    if(args[0]._astname === "Str"){
+        return {
+            "name":"text_charAt",
+            "fields":{
+                "MODE":mode,
+                "WHERE":where
+            },
+            "values":values,
+            "settings":{},
+            "mutations":{
+                "@statement":statement,
+                "@at":at
+            },
+            "statements":{},
+            "returnType": values['VALUE'].elementsType
+        }
 
-    return {
-        "name":"lists_getIndex",
-        "fields":{
-            "MODE":mode,
-            "WHERE":where
-        },
-        "values":values,
-        "settings":{},
-        "mutations":{
-            "@statement":statement,
-            "@at":at
-        },
-        "statements":{},
-        "returnType": values['VALUE'].elementsType
+    }
+    else{
+        return {
+            "name":"lists_getIndex",
+            "fields":{
+                "MODE":mode,
+                "WHERE":where
+            },
+            "values":values,
+            "settings":{},
+            "mutations":{
+                "@statement":statement,
+                "@at":at
+            },
+            "statements":{},
+            "returnType": values['VALUE'].elementsType
+        }
     }
 }
 
@@ -234,12 +254,31 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["join"] = function(args, node){
 
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS['lists_remove_random_item'] = function(args, node){
     var mode = "REMOVE";
+    console.log(args)
 
     if(node._parent != undefined && node._parent._astname === 'Assign'){
         mode = "GET_REMOVE";
     }
-
-    return {
+    if(args[0]._astname === "Str"){
+        return {
+            "name":"text_charAt",
+            "fields":{
+                "MODE":mode,
+                "WHERE":"RANDOM"
+            },
+            "values":{"VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node)},
+            "settings":{},
+            "mutations":{
+                "@statement":"false",
+                "@at":"false"
+            },
+            "statements":{},
+            "returnType": undefined
+        
+    
+        }
+    }
+    else return {
         "name":"lists_getIndex",
         "fields":{
             "MODE":mode,

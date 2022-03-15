@@ -94,7 +94,7 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["rfind"] = function(args, node)
         "statements":{}     //tag statement
     }
 }
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["TEXT"] = function(args, node){
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["upper"] = function(args, node){
     return {
         "name":"text_changeCase", // block type="text_print"
         "fields":{
@@ -102,7 +102,64 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["TEXT"] = function(args, node){
             , "DIRECTION":1
         },        // tag field of the block <field ...>
         "values":{
-            "LIST":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{}     //tag statement
+    }
+}
+
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["text_charAt"] = function(args, node){
+    return {
+        "name":"text_charAt", 
+        "fields":{
+            "TYPE":"STRING"
+            , "DIRECTION":1
+        },        // tag field of the block <field ...>
+        "values":{
+            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{}     //tag statement
+    }
+}
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["strip"] = function(args, node){
+    return {
+        "name":"text_trim", 
+        "fields":{
+            "TYPE":"STRING",
+            "MODE":"BOTH",
+            "DIRECTION":1
+        },        // tag field of the block <field ...>
+        "values":{
+            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{}     //tag statement
+    }
+}
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["text_prompt"] = function(args, node){
+    return {
+        "name":"text_prompt_ext", 
+        "fields":{
+            "MUTATION TYPE":"TEXT",
+            "FIELD NAME":"TYPE",
+            "DIRECTION":1
+        },        // tag field of the block <field ...>
+        "values":{
+            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{}     //tag statement
+    }
+}
+
+
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["text_prompt"] = function(args, node){
+    return {
+        "name":"text_prompt", // block type="text_print"
+        "fields":{
+            "TYPE":"STRING"
+            , "DIRECTION":1
+        },        // tag field of the block <field ...>
+        "values":{
+            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{}     //tag statement
     }
