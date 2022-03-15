@@ -149,6 +149,18 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["text_prompt"] = function(args,
         "statements":{}     //tag statement
     }
 }
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["text_join"] = function(args, node){
+    return {
+        "name":"text_prompt_ext", 
+        "fields":{
+            "MUTATION ITEMS ":2
+        },        // tag field of the block <field ...>
+        "values":{
+            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{}     //tag statement
+    }
+}
 
 
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["text_prompt"] = function(args, node){
