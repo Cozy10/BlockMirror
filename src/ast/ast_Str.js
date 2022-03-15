@@ -63,9 +63,13 @@ BlockMirrorTextToBlocks.prototype['ast_Str'] = function (node, parent) {
         return BlockMirrorTextToBlocks.create_block("text", node.lineno, "Str", {"TEXT": dedented});
     }
 };
-// in list find first occurrence of item
+
+// in text (args[0]) find first occurence of text (args[1])
 BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["find"] = function(args, node){
-    console.log(node)
+    var values = {"VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node)};
+    if(args[1] != undefined){
+        Object.assign(values, {"TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node)});
+    }
     return {
         "name":"text_indexOf", // block type="text_print"
         "fields":{
@@ -75,104 +79,74 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["find"] = function(args, node){
             "VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
             , "FIND":BlockMirrorTextToBlocks.prototype.convert(args[1], node) // recursive conversion for args[1]
         },                  // tag value
-        "returnType":"int",
-        "statements":{}     //tag statement
+        "statements":{},     //tag statement
+        "returnType":"int"
     }
 }
 
+// in text (args[0]) find last occurence of text (args[1])
 BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["rfind"] = function(args, node){
+    var values = {"VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node)};
+    if(args[1] != undefined){
+        Object.assign(values, {"TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node)});
+    }
     return {
         "name":"text_indexOf", // block type="text_print"
         "fields":{
             "END":"LAST"
         },        // tag field of the block <field ...>
-        "values":{
-            "VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
-            , "FIND":BlockMirrorTextToBlocks.prototype.convert(args[1], node) // recursive conversion for args[1]
-        },                  // tag value
-        "returnType":"int",
-        "statements":{}     //tag statement
+        "values":values,                  // tag value
+        "statements":{},     //tag statement
+        "returnType":"int"
     }
 }
+
+// to UPPER CASE from string, args[0] is the string
 BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["upper"] = function(args, node){
     return {
         "name":"text_changeCase", // block type="text_print"
         "fields":{
-            "TYPE":"STRING"
-            , "DIRECTION":1
+            "CASE":"UPPERCASE"
         },        // tag field of the block <field ...>
         "values":{
             "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
-        "statements":{}     //tag statement
+        "statements":{},     //tag statement
+        "returnType":"string"
     }
 }
 
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["text_charAt"] = function(args, node){
-    return {
-        "name":"text_charAt", 
-        "fields":{
-            "TYPE":"STRING"
-            , "DIRECTION":1
-        },        // tag field of the block <field ...>
-        "values":{
-            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
-        },                  // tag value
-        "statements":{}     //tag statement
-    }
-}
+// Trim spaces from both sides of string, args[0] is the string
 BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["strip"] = function(args, node){
     return {
         "name":"text_trim", 
         "fields":{
-            "TYPE":"STRING",
-            "MODE":"BOTH",
-            "DIRECTION":1
+            "MODE":"BOTH"
         },        // tag field of the block <field ...>
         "values":{
             "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
-        "statements":{}     //tag statement
-    }
-}
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["text_prompt"] = function(args, node){
-    return {
-        "name":"text_prompt_ext", 
-        "fields":{
-            "MUTATION TYPE":"TEXT",
-            "FIELD NAME":"TYPE",
-            "DIRECTION":1
-        },        // tag field of the block <field ...>
-        "values":{
-            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
-        },                  // tag value
-        "statements":{}     //tag statement
-    }
-}
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["text_join"] = function(args, node){
-    return {
-        "name":"text_prompt_ext", 
-        "fields":{
-            "MUTATION ITEMS ":2
-        },        // tag field of the block <field ...>
-        "values":{
-            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
-        },                  // tag value
-        "statements":{}     //tag statement
+        "statements":{},     //tag statement
+        "returnType":"string"
     }
 }
 
-
+// Prompt for text with message, args[0] is the message
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["text_prompt"] = function(args, node){
+    var values = {};
+    if(args != undefined){
+        Object.assign(values, {"TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node)});
+    }
     return {
-        "name":"text_prompt", // block type="text_print"
+        "name":"text_prompt_ext", // block type="text_print"
         "fields":{
-            "TYPE":"STRING"
-            , "DIRECTION":1
+            "TYPE":"TEXT"
         },        // tag field of the block <field ...>
-        "values":{
-            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
-        },                  // tag value
-        "statements":{}     //tag statement
+        "values":values,                  // tag value
+        "mutations":{
+            "@type":"TEXT"
+        },
+        "statements":{},     //tag statement
+        "returnType":"string"
     }
 }
