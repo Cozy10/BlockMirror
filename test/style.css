@@ -1,14 +1,23 @@
-#content {
-    
+body {
+    width: fit-content;
+    height: fit-content;
+}
+
+#title{
+    justify-content: space-around;
+    display: flex;
+    flex-direction: row;
+}
+#content {  
     flex-direction: row;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
 
 }
 #blocklyDiv {
     border: solid black 1px;
     height: 480px; 
-    width: 600px;
+    width: 490px;
 }
 
 #output{
@@ -38,4 +47,8 @@ h1 span:last-child {
     -webkit-text-stroke: 0.01em #94a0b9;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+textarea {
+    resize: none;
 }

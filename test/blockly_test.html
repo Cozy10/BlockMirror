@@ -3,6 +3,8 @@
     <head>
         <meta charset="utf-8">
         <title>PyBlock demo</title>
+        <link rel="icon" type="image/png" href="icon.png" />
+
         <link rel="stylesheet" href="style.css">
 
         <script src="../ext_lib/blockly/blockly_compressed.js"></script>
@@ -23,19 +25,29 @@
     <span style="display:flex;justify-content: center">PyBlock</span>
     </h1>
 
+    <div id="title">
+        <h2>Code python</h2>
+        <h2>XML blockly</h2>
+        <h2>Blockly</h2>
+    </div>
     <div id="content">  
-        <textarea id="yourcode" cols="40" rows="10">import turtle
-print("Hello World") 
+        <textarea id="yourcode" cols="45" rows="10">import turtle
+print("Hello World")
+
         </textarea> 
-        <textarea disabled id="output" cols="40" rows="10"></textarea>        
+        <textarea disabled id="output" cols="45" rows="10"></textarea>        
         <div id="blocklyDiv"> </div>
     </div>
+    <!--
     <div id="button">
-        <button style="height: 40px;"
-    type="button" onclick="runit()">CONVERT !</button>
+        <button style="height: 40px;"type="button" onclick="runit()">CONVERT !</button>
     </div>
+    -->
    </body>
-   <script>
+   <script>        
+
+        document.getElementById('yourcode').addEventListener('keyup', runit);
+
         var workspace = Blockly.inject('blocklyDiv', {toolbox: toolbox});
     </script>
 </html>
