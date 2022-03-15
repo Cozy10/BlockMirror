@@ -63,3 +63,47 @@ BlockMirrorTextToBlocks.prototype['ast_Str'] = function (node, parent) {
         return BlockMirrorTextToBlocks.create_block("text", node.lineno, "Str", {"TEXT": dedented});
     }
 };
+// in list find first occurrence of item
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["find"] = function(args, node){
+    console.log(node)
+    return {
+        "name":"text_indexOf", // block type="text_print"
+        "fields":{
+            "END":"FIRST"
+        },        // tag field of the block <field ...>
+        "values":{
+            "VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            , "FIND":BlockMirrorTextToBlocks.prototype.convert(args[1], node) // recursive conversion for args[1]
+        },                  // tag value
+        "returnType":"int",
+        "statements":{}     //tag statement
+    }
+}
+
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["rfind"] = function(args, node){
+    return {
+        "name":"text_indexOf", // block type="text_print"
+        "fields":{
+            "END":"LAST"
+        },        // tag field of the block <field ...>
+        "values":{
+            "VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            , "FIND":BlockMirrorTextToBlocks.prototype.convert(args[1], node) // recursive conversion for args[1]
+        },                  // tag value
+        "returnType":"int",
+        "statements":{}     //tag statement
+    }
+}
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["TEXT"] = function(args, node){
+    return {
+        "name":"text_changeCase", // block type="text_print"
+        "fields":{
+            "TYPE":"STRING"
+            , "DIRECTION":1
+        },        // tag field of the block <field ...>
+        "values":{
+            "LIST":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{}     //tag statement
+    }
+}
