@@ -5,7 +5,7 @@ BlockMirrorTextToBlocks.prototype['ast_Name'] = function (node, parent) {
         return null;
     } else {
         let res = BlockMirrorTextToBlocks.create_block('variables_get', node.lineno,
-            BlockMirrorTextToBlocks.Variables[id.v], {
+            BlockMirrorTextToBlocks.getVariable(id.v), {
                 "VAR": id.v
             });
         res.variableName = id.v;

@@ -6,12 +6,17 @@ BlockMirrorTextToBlocks.prototype['ast_For'] = function (node, parent) {
     var fields = {};
     
     var blockName;
-    var bodies = {'DO': this.convertBody(body, node)};
+    BlockMirrorTextToBlocks.incrementLevel();
+    BlockMirrorTextToBlocks.setVariable(Sk.ffi.remapToJs(target.id), "int");
+    BlockMirrorTextToBlocks.setVariableUsed(Sk.ffi.remapToJs(target.id), false);
+    let bodies = {'DO': this.convertBody(body, node)};
+    let varIsUsed = BlockMirrorTextToBlocks.isVariableUsed(Sk.ffi.remapToJs(target.id));
+    BlockMirrorTextToBlocks.decrementLevel();
     var iter_val;
     // for i in range(...)
     if (iter.func != undefined && iter.func.id.v === "range"){
       // "for i in range(x)" block repeat x times
-      if(iter.args.length == 1){
+      if(iter.args.length == 1 && !varIsUsed){
         blockName = "controls_repeat_ext";
         iter_val = {
           "TIMES": this.convert(iter.args[0], node)
@@ -19,22 +24,33 @@ BlockMirrorTextToBlocks.prototype['ast_For'] = function (node, parent) {
       }
       // for i in range(x, y, step)
       else{
-        var by_block;
-        // "for i in range(x, y)"
-        if(iter.args.length == 2){
+        let by_block;
+        let to_block;
+        // "for i in range(x, y)" or range(x) and i is used inside
+        if(iter.args.length < 3){
+          if(iter.args.length == 1){
+            to_block = BlockMirrorTextToBlocks.create_block("math_number", node.lineno, "int", {
+              "NUM": 0
+            });
+          }
+          else{
+            to_block = this.convert(iter.args[1], node);
+          }
           by_block = BlockMirrorTextToBlocks.create_block("math_number", node.lineno, "int", {
               "NUM": 1
             });
         }
         else{
+          to_block = this.convert(iter.args[1], node)
           by_block = this.convert(iter.args[2], node);
         }
         blockName = "controls_for";
         iter_val = {
           "FROM": this.convert(iter.args[0], node),
-          "TO": this.convert(iter.args[1], node),
+          "TO": to_block,
           "BY": by_block
         }
+        fields['VAR'] = Sk.ffi.remapToJs(target.id);
       }
     }
     else{

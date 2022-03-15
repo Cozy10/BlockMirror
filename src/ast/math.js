@@ -230,7 +230,6 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["sum"] = function(arg
 };
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["max"] = function(args, node){ // Give node.args and node
     let num_list = BlockMirrorTextToBlocks.prototype.convert(args[0], node);
-    console.log(num_list);
     return {
         "name":"math_on_list", // block type="text_print"
         "fields":{

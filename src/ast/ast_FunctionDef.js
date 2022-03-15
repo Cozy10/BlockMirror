@@ -10,7 +10,7 @@ BlockMirrorTextToBlocks.prototype['ast_FunctionDef'] = function (node, parent) {
     let returnType;
 
     let values = {};
-
+    BlockMirrorTextToBlocks.incrementLevel();
     // Search return and remove all items after in the block because useless
     node.body.forEach((element, i, tab) => {
         if(element._astname === "Return"){
@@ -34,9 +34,11 @@ BlockMirrorTextToBlocks.prototype['ast_FunctionDef'] = function (node, parent) {
     // Register functions
     BlockMirrorTextToBlocks.prototype.LOCAL_FUNCTIONS[name] = 
         BlockMirrorTextToBlocks.prototype.create_block_functionDef(name, mutation, function_type, returnType);
+    let stack = this.convertBody(node.body, node);
+    BlockMirrorTextToBlocks.decrementLevel();
     return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, undefined, {
             'NAME': Sk.ffi.remapToJs(name)
         }, values, {}, mutation, {
-            'STACK': this.convertBody(node.body, node)
+            'STACK': stack
         });
 };

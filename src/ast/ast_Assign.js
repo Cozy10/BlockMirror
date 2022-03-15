@@ -87,10 +87,9 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
         values = {};
         fields['VAR'] = Sk.ffi.remapToJs(targets[0].id);
         // save variable type
-        BlockMirrorTextToBlocks.Variables[fields['VAR']] = BlockMirrorTextToBlocks.getVarType(valueNode);
+        BlockMirrorTextToBlocks.setVariable(fields['VAR'], BlockMirrorTextToBlocks.getVarType(valueNode));
         
         values['VALUE'] = valueNode;
-        console.log(valueNode);
         
     } else {
         values = this.convertElements("TARGET", targets, node);
