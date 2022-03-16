@@ -13,19 +13,41 @@ BlockMirrorTextToBlocks.prototype['ast_UnaryOp'] = function (node, parent) {
     const op = node.op.prototype._astname;
     let operand = node.operand;
     if(op === "Not"){
-        // List is empty (not len)
+        // not len
         if(typeof operand.func !== 'undefined' && operand.func.id.v === 'len'){
-            return BlockMirrorTextToBlocks.create_block(
-                'lists_isEmpty',
-                node.lineno,
-                "bool",
-                {},
-                {
-                    "VALUE":this.convert(operand.args[0], node)
-                },
-                {},
-                {},
-                {});
+            let value_block;
+            if(operand.args[0] != undefined){
+                value_block  = BlockMirrorTextToBlocks.prototype.convert(operand.args[0], node);
+            }
+            // String is empty text, args[0] is the String
+            if(BlockMirrorTextToBlocks.getVarType(value_block) == 'Str'){
+                return BlockMirrorTextToBlocks.create_block(
+                    'text_isEmpty',
+                    node.lineno,
+                    "bool",
+                    {},
+                    {
+                        "VALUE":value_block
+                    },
+                    {},
+                    {},
+                    {});
+            }
+            // list is empty test, args[0] is the list
+            else{
+                return BlockMirrorTextToBlocks.create_block(
+                    'lists_isEmpty',
+                    node.lineno,
+                    "bool",
+                    {},
+                    {
+                        "VALUE":value_block
+                    },
+                    {},
+                    {},
+                    {});
+            }
+
         }
         else{
             return BlockMirrorTextToBlocks.create_block('logic_negate', "bool", node.lineno, {}, 
