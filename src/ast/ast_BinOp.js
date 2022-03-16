@@ -6,7 +6,7 @@ BlockMirrorTextToBlocks.CONVERT_BINOPS = {
     "Pow" : "POWER"
 };
 
-BlockMirrorTextToBlocks.createOpBlock = (op, left, right, returnType)=>{
+BlockMirrorTextToBlocks.createOpBlock = (op, left, right, returnType, node)=>{
     return BlockMirrorTextToBlocks.create_block("math_arithmetic", node.lineno, 
         returnType, {
         "OP": op
