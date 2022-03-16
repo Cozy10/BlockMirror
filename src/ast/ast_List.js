@@ -2,7 +2,7 @@
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["len"] = function(args, node){
     if(args[0]._astname === "Str")
         return{
-            "name":"text_length", // block type="text_print"
+            "name":"text_length", // block type="text_length"
             "fields":{},        // tag field of the block <field ...>
             "values":{          
                 "VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
@@ -11,7 +11,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["len"] = function(args, node)
         }
     else
         return {
-            "name":"lists_length", // block type="text_print"
+            "name":"lists_length", // block type="text_length"
             "fields":{},        // tag field of the block <field ...>
             "values":{          
                 "VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
@@ -24,7 +24,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["len"] = function(args, node)
 // in list find first occurrence of item
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["first_index"] = function(args, node){
     return {
-        "name":"lists_indexOf", // block type="text_print"
+        "name":"lists_indexOf",
         "fields":{
             "END":"FIRST"
         },        // tag field of the block <field ...>
@@ -40,7 +40,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["first_index"] = function(arg
 // in list find last occurence of item
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["last_index"] = function(args, node){
     return {
-        "name":"lists_indexOf", // block type="text_print"
+        "name":"lists_indexOf",
         "fields":{
             "END":"LAST"
         },        // tag field of the block <field ...>
