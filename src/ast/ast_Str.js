@@ -77,7 +77,13 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["find"] = function(args, node){
         },        // tag field of the block <field ...>
         "values":values,     // tag value
         "statements":{},     //tag statement
-        "returnType":"int"
+        "returnType":"int",
+        "parentBlock": (left)=>{
+            let res = BlockMirrorTextToBlocks.createOpBlock("MINUS", left, BlockMirrorTextToBlocks.createNumBlock(1, "int", node), "int", node); 
+            res.blockGuess = "find";
+            return res;
+        },
+        "guessType":"find"
     }
 }
 
@@ -94,7 +100,13 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["rfind"] = function(args, node)
         },        // tag field of the block <field ...>
         "values":values,                  // tag value
         "statements":{},     //tag statement
-        "returnType":"int"
+        "returnType":"int",
+        "parentBlock": (left)=>{
+            let res = BlockMirrorTextToBlocks.createOpBlock("MINUS", left, BlockMirrorTextToBlocks.createNumBlock(1, "int", node), "int", node); 
+            res.blockGuess = "find";
+            return res;
+        },
+        "guessType":"find"
     }
 }
 

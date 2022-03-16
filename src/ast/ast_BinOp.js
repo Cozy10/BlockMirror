@@ -136,6 +136,20 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
     // Math op between 2 number so if one element is a float or it's a division result will be a float otherwise it's an int
     let typeLeft = BlockMirrorTextToBlocks.getVarType(leftNode), typeRight = BlockMirrorTextToBlocks.getVarType(rightNode);
     let block_op = BlockMirrorTextToBlocks.CONVERT_BINOPS[op];
+
+    // check if 
+    if(block_op === "ADD" && leftNode.blockGuess === "find"){
+        if(right._astname === "Num"){
+            let num = Sk.ffi.remapToJs(right.n);
+            leftNode = leftNode.childNodes[1].childNodes[0];
+            if(num === 1){
+                return leftNode;
+            }
+            else{
+                rightNode = BlockMirrorTextToBlocks.createNumBlock(num-1, "int", node);
+            }
+        }
+    }
     let type = ( ((op === "DIVIDE") || (typeLeft === "float") || (typeRight === "float")) ? "float" : "int");
     return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, 
         type, {

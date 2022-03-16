@@ -38,8 +38,12 @@ BlockMirrorTextToBlocks.prototype['ast_Call'] = function (node, parent) {
     }
     if(blockDataFunc !== undefined){
         let blockData = blockDataFunc(args, node);
-        return BlockMirrorTextToBlocks.create_block(blockData.name, node.lineno, blockData.returnType, blockData.fields,
+        let block = BlockMirrorTextToBlocks.create_block(blockData.name, node.lineno, blockData.returnType, blockData.fields,
             blockData.values, {}, blockData.mutations, blockData.statements);
+        if(blockData.parentBlock != undefined){
+            block = blockData.parentBlock(block);
+        }
+        return block;
     }
     throw new Error("Could not find function: " + functionName);
 };
