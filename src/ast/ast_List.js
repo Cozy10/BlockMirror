@@ -1,11 +1,12 @@
 // length of List or String
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["len"] = function(args, node){
-    if(args[0]._astname === "Str")
+    let value_block  = BlockMirrorTextToBlocks.prototype.convert(args[0], node);
+    if(BlockMirrorTextToBlocks.getVarType(value_block))
         return{
             "name":"text_length", // block type="text_length"
             "fields":{},        // tag field of the block <field ...>
             "values":{          
-                "VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+                "VALUE": value_block// recursive conversion for args[0]
             },                  // tag value
             "statements":{}     //tag statement
         }
@@ -14,7 +15,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["len"] = function(args, node)
             "name":"lists_length", // block type="text_length"
             "fields":{},        // tag field of the block <field ...>
             "values":{          
-                "VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+                "VALUE":value_block // recursive conversion for args[0]
             },                  // tag value
             "statements":{}     //tag statement
         };
@@ -263,17 +264,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS['lists_remove_random_item'] =
 BlockMirrorTextToBlocks.prototype['ast_List'] = function (node, parent) {
     var elts = node.elts;
     let block;
-    if (node._parent.op != undefined && node._parent.op.prototype._astname === 'Mult'){
-        let item = this.convert(elts[0], node);
-        block = BlockMirrorTextToBlocks.create_block(blockName, node.lineno, "list", {},
-        {
-            "ITEM": item,
-            "NUM": this.convert(node._parent.right, node)
-        },
-        {}, {}, {});
-        block.elementsType = BlockMirrorTextToBlocks.getVarType(item);
-        return block;
-    }
+    
     let values = this.convertElements("ADD", elts, node);
     block = BlockMirrorTextToBlocks.create_block(
         "lists_create_with" // type
