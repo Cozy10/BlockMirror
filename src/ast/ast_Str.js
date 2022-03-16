@@ -68,17 +68,14 @@ BlockMirrorTextToBlocks.prototype['ast_Str'] = function (node, parent) {
 BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["find"] = function(args, node){
     var values = {"VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node)};
     if(args[1] != undefined){
-        Object.assign(values, {"TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node)});
+        Object.assign(values, {"FIND":BlockMirrorTextToBlocks.prototype.convert(args[1], node)});
     }
     return {
         "name":"text_indexOf", // block type="text_print"
         "fields":{
             "END":"FIRST"
         },        // tag field of the block <field ...>
-        "values":{
-            "VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
-            , "FIND":BlockMirrorTextToBlocks.prototype.convert(args[1], node) // recursive conversion for args[1]
-        },                  // tag value
+        "values":values,     // tag value
         "statements":{},     //tag statement
         "returnType":"int"
     }
@@ -88,7 +85,7 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["find"] = function(args, node){
 BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["rfind"] = function(args, node){
     var values = {"VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node)};
     if(args[1] != undefined){
-        Object.assign(values, {"TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node)});
+        Object.assign(values, {"FIND":BlockMirrorTextToBlocks.prototype.convert(args[1], node)});
     }
     return {
         "name":"text_indexOf", // block type="text_print"
@@ -98,6 +95,23 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["rfind"] = function(args, node)
         "values":values,                  // tag value
         "statements":{},     //tag statement
         "returnType":"int"
+    }
+}
+
+// in text get random letter, args[0] is the text
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["text_random_letter"] = function(args, node){
+    var values = {"VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node)};
+    return {
+        "name":"text_charAt", // block type="text_print"
+        "fields":{
+            "WHERE":"RANDOM",
+        },        // tag field of the block <field ...>
+        "values":values,                  // tag value
+        "statements":{},     //tag statement
+        "mutations":{
+            "@at":"false"
+        },
+        "returnType":"char"
     }
 }
 
