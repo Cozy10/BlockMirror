@@ -127,7 +127,7 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
         }
         else {
             blockName = "lists_getIndex";
-            foundType = BlockMirrorTextToBlocks.Lists[BlockMirrorTextToBlocks.getName(values['VALUE'])];
+            foundType = BlockMirrorTextToBlocks.Lists[BlockMirrorTextToBlocks.getName(valueNode)];
         }
         // in list get # from start par defaut
         
