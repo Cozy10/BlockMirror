@@ -27,28 +27,6 @@ BlockMirrorTextToBlocks.prototype.addSliceDim = function (slice, i, values, muta
     }
 }
 
-// Ancien code de ast_Subscript
-/*BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function (node, parent) {
-    let value = node.value;
-    let slice = node.slice;
-    let ctx = node.ctx;
-
-    let values = {'VALUE': this.convert(value, node)};
-    let mutations = [];
-
-    let sliceKind = slice._astname;
-    if (sliceKind === "ExtSlice") {
-        for (let i = 0; i < slice.dims.length; i += 1) {
-            let dim = slice.dims[i];
-            this.addSliceDim(dim, i, values, mutations, node);
-        }
-    } else {
-        this.addSliceDim(slice, 0, values, mutations, node);
-    }
-    return BlockMirrorTextToBlocks.create_block("ast_Subscript", node.lineno, {},
-        values, {"inline": "true"}, {"arg": mutations});
-};*/
-
 BlockMirrorTextToBlocks.prototype['ast_Index'] = function(node, parent){
     var value = node.value;
     var lineno = node._parent.lineno;
