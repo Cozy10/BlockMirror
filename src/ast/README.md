@@ -19,9 +19,9 @@ BlockMirrorTextToBlocks.create_block(type, line_number, python_type, fields, val
 
 type : le nom/type du bloc
 
-python_type : type of the return value of the block (set to undefined if you don't know or their is no return value)
-
 line_number : numéro de ligne (=node.lineno)
+
+python_type : type of the return value of the block (set to undefined if you don't know or their is no return value)
 
 fields : un objet de la forme :
 
