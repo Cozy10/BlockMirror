@@ -28,7 +28,7 @@ BlockMirrorTextToBlocks.prototype['ast_Call'] = function (node, parent) {
             blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[Sk.ffi.remapToJs(node.func.id)];
         }
     }
-    else if(this.FUNCTIONS_BLOCKS[mModule] !== undefined){
+    else if(BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[mModule] !== undefined){
         blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[mModule][Sk.ffi.remapToJs(node.func.attr)];
     }
     else{ // Methods
@@ -40,5 +40,6 @@ BlockMirrorTextToBlocks.prototype['ast_Call'] = function (node, parent) {
         return BlockMirrorTextToBlocks.create_block(blockData.name, node.lineno, blockData.returnType, blockData.fields,
             blockData.values, {}, blockData.mutations, blockData.statements);
     }
+    throw new Error("Could not find function: " + functionName);
 };
 

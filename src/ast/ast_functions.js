@@ -1,17 +1,20 @@
 
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS = {
-    "print": function(args, node){ // Give node.args and node
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS = {};
+
+BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["print"] = 
+    function(args, node){
         return {
-            "name":"text_print", // block type="text_print"
-            "fields":{},        // tag field of the block <field ...>
+            "name":"text_print", 
+            "fields":{},        
             "values":{          
-                "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
-            },                  // tag value
-            "statements":{},     //tag statement
+                "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) 
+            },
+            "statements":{},
             "returnType": undefined
         };
-    }
-};
+    };
+
+
 BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS = {};
 BlockMirrorTextToBlocks.prototype.LOCAL_FUNCTIONS = {};
 

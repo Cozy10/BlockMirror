@@ -35,9 +35,9 @@ BlockMirrorTextToBlocks.setVariableUsed = (varName, used)=>{
 // will be string
 BlockMirrorTextToBlocks.incrementLevel = () =>{
     BlockMirrorTextToBlocks.Local_Var.push({"used":{}, "type":{}});
+    BlockMirrorTextToBlocks.currentLevel += 1;
     // Copy reference to existing parameters (because they are objects) only so new created parameters will not propagate to subLevel
-    BlockMirrorTextToBlocks.Local_Var.type = {...BlockMirrorTextToBlocks.Local_Var[BlockMirrorTextToBlocks.currentLevel]};
-    BlockMirrorTextToBlocks.currentLevel+=1;
+    BlockMirrorTextToBlocks.Local_Var[BlockMirrorTextToBlocks.currentLevel] = {...BlockMirrorTextToBlocks.Local_Var[BlockMirrorTextToBlocks.currentLevel-1]};
 };
 BlockMirrorTextToBlocks.decrementLevel = ()=>{
     BlockMirrorTextToBlocks.Local_Var.pop();

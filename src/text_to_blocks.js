@@ -2,6 +2,8 @@ function BlockMirrorTextToBlocks() {
     this.hiddenImports = ["plt"];
     this.strictAnnotations = ['int', 'float', 'str', 'bool'];
     Blockly.defineBlocksWithJsonArray(BlockMirrorTextToBlocks.BLOCKS);
+    this.currentLevel = 0;
+    this.Local_Var = [{}];
 }
 
 BlockMirrorTextToBlocks.xmlToString = function (xml) {
@@ -314,6 +316,8 @@ BlockMirrorTextToBlocks.prototype.isTopLevel = function (parent) {
 
 BlockMirrorTextToBlocks.prototype.convert = function (node, parent) {
     let functionName = 'ast_' + node._astname;
+    console.log("Ici====================");
+    console.log(node);
     // Check if it's a constant
     let constantBlock = BlockMirrorTextToBlocks.prototype.CONSTANTS(node, parent);
     if(constantBlock != undefined){

@@ -6,15 +6,18 @@ BlockMirrorTextToBlocks.prototype['ast_For'] = function (node, parent) {
     var fields = {};
     
     var blockName;
-    BlockMirrorTextToBlocks.incrementLevel();
-    BlockMirrorTextToBlocks.setVariable(Sk.ffi.remapToJs(target.id), "int");
-    BlockMirrorTextToBlocks.setVariableUsed(Sk.ffi.remapToJs(target.id), false);
-    let bodies = {'DO': this.convertBody(body, node)};
-    let varIsUsed = BlockMirrorTextToBlocks.isVariableUsed(Sk.ffi.remapToJs(target.id));
-    BlockMirrorTextToBlocks.decrementLevel();
+    
+    let bodies;
+    
     var iter_val;
     // for i in range(...)
     if (iter.func != undefined && iter.func.id.v === "range"){
+      BlockMirrorTextToBlocks.incrementLevel();
+      BlockMirrorTextToBlocks.setVariable(Sk.ffi.remapToJs(target.id), "int");
+      BlockMirrorTextToBlocks.setVariableUsed(Sk.ffi.remapToJs(target.id), false);
+      bodies = {'DO': this.convertBody(body, node)};
+      let varIsUsed = BlockMirrorTextToBlocks.isVariableUsed(Sk.ffi.remapToJs(target.id));
+      BlockMirrorTextToBlocks.decrementLevel();
       // "for i in range(x)" block repeat x times
       if(iter.args.length == 1 && !varIsUsed){
         blockName = "controls_repeat_ext";
@@ -55,6 +58,9 @@ BlockMirrorTextToBlocks.prototype['ast_For'] = function (node, parent) {
     }
     else{
       blockName = 'controls_forEach';
+      BlockMirrorTextToBlocks.incrementLevel();
+      bodies = {'DO': this.convertBody(body, node)};
+      BlockMirrorTextToBlocks.decrementLevel();
       fields['VAR'] = Sk.ffi.remapToJs(target.id);
       iter_val = {
           "LIST": this.convert(iter, node)
