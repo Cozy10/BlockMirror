@@ -112,7 +112,7 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["upper"] = function(args, node)
             "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{},     //tag statement
-        "returnType":"string"
+        "returnType":"Str"
     }
 }
 
@@ -127,7 +127,7 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["strip"] = function(args, node)
             "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{},     //tag statement
-        "returnType":"string"
+        "returnType":"Str"
     }
 }
 
@@ -147,6 +147,6 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["text_prompt"] = function(arg
             "@type":"TEXT"
         },
         "statements":{},     //tag statement
-        "returnType":"string"
+        "returnType":"Str"
     }
 }

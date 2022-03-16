@@ -231,7 +231,7 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["join"] = function(args, node){
             "@mode":"JOIN"
         },
         "statements":{},
-        "returnType":"string"
+        "returnType":"Str"
     }
 }
 
