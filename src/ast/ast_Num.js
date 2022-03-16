@@ -6,6 +6,6 @@ BlockMirrorTextToBlocks.createNumBlock = (num, type)=>{
 
 BlockMirrorTextToBlocks.prototype['ast_Num'] = function (node, parent) {
     var n = node.n;
-    return BlockMirrorTextToBlocks.createNumBlock(Sk.ffi.remapToJS(n), "float");
+    return BlockMirrorTextToBlocks.createNumBlock(Sk.ffi.remapToJs(n), "float");
 }
 
