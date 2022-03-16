@@ -116,12 +116,72 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["upper"] = function(args, node)
     }
 }
 
+// to lower case from string, args[0] is the string
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["lower"] = function(args, node){
+    return {
+        "name":"text_changeCase", // block type="text_print"
+        "fields":{
+            "CASE":"LOWERCASE"
+        },        // tag field of the block <field ...>
+        "values":{
+            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{},     //tag statement
+        "returnType":"Str"
+    }
+}
+
+// to Title Case from string, args[0] is the string
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["title"] = function(args, node){
+    return {
+        "name":"text_changeCase", // block type="text_print"
+        "fields":{
+            "CASE":"TITLECASE"
+        },        // tag field of the block <field ...>
+        "values":{
+            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{},     //tag statement
+        "returnType":"Str"
+    }
+}
+
 // Trim spaces from both sides of string, args[0] is the string
 BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["strip"] = function(args, node){
     return {
         "name":"text_trim", 
         "fields":{
             "MODE":"BOTH"
+        },        // tag field of the block <field ...>
+        "values":{
+            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{},     //tag statement
+        "returnType":"Str"
+    }
+}
+
+// Trim spaces from left side of string, args[0] is the string
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["lstrip"] = function(args, node){
+    return {
+        "name":"text_trim", 
+        "fields":{
+            "MODE":"LEFT"
+        },        // tag field of the block <field ...>
+        "values":{
+            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+        },                  // tag value
+        "statements":{},     //tag statement
+        "returnType":"Str"
+    }
+}
+
+// Trim spaces from right side of string, args[0] is the string
+BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["rstrip"] = function(args, node){
+    return {
+        "name":"text_trim", 
+        "fields":{
+            "MODE":"RIGHT"
         },        // tag field of the block <field ...>
         "values":{
             "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
