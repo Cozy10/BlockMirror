@@ -197,6 +197,23 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["text_prompt"] = function(arg
     if(args != undefined){
         Object.assign(values, {"TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node)});
     }
+
+    // Prompt for number with message
+    if(node.python_type != undefined && node.python_type == "float"){
+        return {
+            "name":"text_prompt_ext", // block type="text_print"
+            "fields":{
+                "TYPE":"NUMBER"
+            },        // tag field of the block <field ...>
+            "values":values,                  // tag value
+            "mutations":{
+                "@type":"NUMBER"
+            },
+            "statements":{},     //tag statement
+            "returnType":"float"
+        }
+    }
+
     return {
         "name":"text_prompt_ext", // block type="text_print"
         "fields":{
