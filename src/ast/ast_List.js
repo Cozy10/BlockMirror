@@ -1,7 +1,7 @@
 // length of List or String
 BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["len"] = function(args, node){
     let value_block  = BlockMirrorTextToBlocks.prototype.convert(args[0], node);
-    if(BlockMirrorTextToBlocks.getVarType(value_block))
+    if(BlockMirrorTextToBlocks.getVarType(value_block) === "Str")
         return{
             "name":"text_length", // block type="text_length"
             "fields":{},        // tag field of the block <field ...>

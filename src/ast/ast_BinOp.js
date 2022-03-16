@@ -57,14 +57,32 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
     let op = node.op.prototype._astname;
     let right = node.right;
     let blockName = "math_arithmetic";
+    let leftNode = this.convert(left, node);
+    let rightNode = this.convert(right, node);
 
     // create list with item [...] repeated n times (voir ast_List)
+    if(BlockMirrorTextToBlocks.getVarType(leftNode) === "list" && op ==="Mult"){
+        let item;
+        if (left._astname ==="List"){
+            item = this.convert(left.elts[0], left);   
+        }
+        else{
+            item = leftNode;
+        }
+        let block = BlockMirrorTextToBlocks.create_block("lists_repeat", node.lineno, "list", {},
+            {
+                "ITEM": item,
+                "NUM": rightNode
+            },
+            {}, {}, {});
+        block.elementsType = BlockMirrorTextToBlocks.getVarType(item);
+        return block;
+    }
     if (left._astname == 'List'){
         return this.convert(left, node)
     }
 
-    let leftNode = this.convert(left, node);
-    let rightNode = this.convert(right, node);
+    
     
     // both left and right are String so String op
     if(BlockMirrorTextToBlocks.getVarType(leftNode) === "Str" && BlockMirrorTextToBlocks.getVarType(rightNode) === "Str"){
