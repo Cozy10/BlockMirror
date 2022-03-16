@@ -21,7 +21,8 @@ Sk.configure({
     return Sk.builtinFiles["files"][filename];
   }
 });
-function runit() { 
+function runit() {
+    BlockMirrorTextToBlocks.reset();
     var prog = document.getElementById("yourcode").value; 
     xml = textToBlock.convertSource("__main__.py", prog);
     document.getElementById("output").innerHTML = xml.xml;

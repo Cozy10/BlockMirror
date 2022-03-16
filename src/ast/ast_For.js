@@ -12,6 +12,7 @@ BlockMirrorTextToBlocks.prototype['ast_For'] = function (node, parent) {
     var iter_val;
     // for i in range(...)
     if (iter.func != undefined && iter.func.id.v === "range"){
+      let varUsedBefore = BlockMirrorTextToBlocks.isVariableUsed(Sk.ffi.remapToJs(target.id));
       BlockMirrorTextToBlocks.incrementLevel();
       BlockMirrorTextToBlocks.setVariable(Sk.ffi.remapToJs(target.id), "int");
       BlockMirrorTextToBlocks.setVariableUsed(Sk.ffi.remapToJs(target.id), false);
@@ -19,7 +20,7 @@ BlockMirrorTextToBlocks.prototype['ast_For'] = function (node, parent) {
       let varIsUsed = BlockMirrorTextToBlocks.isVariableUsed(Sk.ffi.remapToJs(target.id));
       BlockMirrorTextToBlocks.decrementLevel();
       // "for i in range(x)" block repeat x times
-      if(iter.args.length == 1 && !varIsUsed){
+      if(!varUsedBefore && iter.args.length == 1 && !varIsUsed){
         blockName = "controls_repeat_ext";
         iter_val = {
           "TIMES": this.convert(iter.args[0], node)

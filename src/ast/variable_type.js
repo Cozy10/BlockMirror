@@ -3,6 +3,11 @@ BlockMirrorTextToBlocks.Local_Var = [{}];
 BlockMirrorTextToBlocks.Lists = {};
 
 BlockMirrorTextToBlocks.currentLevel = 0;
+BlockMirrorTextToBlocks.reset = function(){
+    BlockMirrorTextToBlocks.Local_Var = [{}];
+    BlockMirrorTextToBlocks.Lists = {};
+    BlockMirrorTextToBlocks.currentLevel = 0;
+}
 
 BlockMirrorTextToBlocks.getVariable = (varName) => {
     if(BlockMirrorTextToBlocks.Local_Var[BlockMirrorTextToBlocks.currentLevel][varName] === undefined){
