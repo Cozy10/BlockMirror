@@ -46,6 +46,7 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
     // in list get sub-list from
     if(slice._astname === 'Slice'){
         let lower = slice.lower;
+        let lower_value;
         let upper = slice.upper;
         let where1 = "FROM_START";
         let where2 = "FROM_START";
@@ -71,6 +72,7 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
         }
         if(lower != null && lower.op != undefined && lower.op.prototype._astname === 'USub'){
             lower = lower.operand;
+            lower_value = this.convert(lower, node);
             where1 = "FROM_END";
         }
         if(upper != null && upper.op != undefined && upper.op.prototype._astname === 'USub'){
@@ -83,7 +85,17 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
             where1 = "FIRST";
         }
         else{
-            Object.assign(values, {"AT1":this.convert(lower, node)});
+            if(where1 != "FROM_END"){
+                if(lower._astname == 'Num'){
+                    lower.n.v += 1;
+                    lower_value = this.convert(lower, node);
+                }
+                else{
+                    let right = BlockMirrorTextToBlocks.createNumBlock(1, "int", node);
+                    lower_value = BlockMirrorTextToBlocks.createOpBlock("ADD", this.convert(lower, node), right, "int", node);
+                }
+            }
+            Object.assign(values, {"AT1":lower_value});
         }
         if(upper == null){
             at2 = "false";
@@ -154,7 +166,16 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
             at = "false";
         }
         else if(at == "true"){
-            Object.assign(values, {"AT":this.convert(slice.value, node)});
+            let value;
+            if(slice.value._astname == 'Num'){
+                slice.value.n.v += 1;
+                value = this.convert(slice.value, node);
+            }
+            else{
+                let right = BlockMirrorTextToBlocks.createNumBlock(1, "int", node);
+                value = BlockMirrorTextToBlocks.createOpBlock("ADD", this.convert(slice.value, node), right, "int", node);
+            }
+            Object.assign(values, {"AT":value});
         }
 
         let fields = {};

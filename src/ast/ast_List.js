@@ -87,7 +87,7 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["pop"] = function(args, node){
 
     if(args[1] != undefined && args[1].op != undefined && args[1].op.prototype._astname === 'USub'){
         where = "FROM_END";
-        value = args[1].operand;
+        value = BlockMirrorTextToBlocks.prototype.convert(args[1].operand, node);
     }
     else if(args[1] != undefined && args[1].n != undefined && args[1].n.v == 0){
         where = "FIRST";
@@ -98,10 +98,17 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["pop"] = function(args, node){
         at = "false";
     }
     if(args[1] != undefined && where != "FROM_END"){
-        value = args[1];
+        if(args[1]._astname == 'Num'){
+            args[1].n.v += 1;
+            value = BlockMirrorTextToBlocks.prototype.convert(args[1], node);
+        }
+        else{
+            let right = BlockMirrorTextToBlocks.createNumBlock(1, "int", node);
+            value = BlockMirrorTextToBlocks.createOpBlock("ADD", BlockMirrorTextToBlocks.prototype.convert(args[1], node), right, "int", node);
+        }
     }
     if(at == "true"){
-        Object.assign(values, {"AT":BlockMirrorTextToBlocks.prototype.convert(value, node)})
+        Object.assign(values, {"AT":value})
     }
     return {
         "name":"lists_getIndex",
@@ -120,7 +127,7 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["pop"] = function(args, node){
     }
 }
 
-// in list insert at, args[0] is the list, args[1] is the index
+// in list insert at, args[0] is the list, args[1] is the index, args[2] is the value
 BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["insert"] = function(args, node){
     var value = args;
     var where = "FROM_START";
@@ -129,7 +136,7 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["insert"] = function(args, node
 
     if(args[1] != undefined && args[1].op != undefined && args[1].op.prototype._astname === 'USub'){
         where = "FROM_END";
-        value = args[1].operand;
+        value = BlockMirrorTextToBlocks.prototype.convert(args[1].operand, node);
     }
     else if(args[1] != undefined && args[1].n != undefined && args[1].n.v == 0){
         where = "FIRST";
@@ -141,9 +148,16 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["insert"] = function(args, node
 
     if(at == "true"){
         if(where == "FROM_START"){
-            value.n.v += 1;
+            if(args[1]._astname == 'Num'){
+                args[1].n.v += 1;
+                value = BlockMirrorTextToBlocks.prototype.convert(args[1], node);
+            }
+            else{
+                let right = BlockMirrorTextToBlocks.createNumBlock(1, "int", node);
+                value = BlockMirrorTextToBlocks.createOpBlock("ADD", BlockMirrorTextToBlocks.prototype.convert(args[1], node), right, "int", node);
+            }
         }
-        Object.assign(values, {"AT":BlockMirrorTextToBlocks.prototype.convert(value, node)});
+        Object.assign(values, {"AT":value});
     }
     Object.assign(values, {"TO":BlockMirrorTextToBlocks.prototype.convert(args[2], node)});
 
