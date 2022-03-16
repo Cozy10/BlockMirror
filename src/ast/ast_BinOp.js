@@ -6,6 +6,18 @@ BlockMirrorTextToBlocks.CONVERT_BINOPS = {
     "Pow" : "POWER"
 };
 
+BlockMirrorTextToBlocks.createOpBlock = (op, left, right, returnType)=>{
+    return BlockMirrorTextToBlocks.create_block("math_arithmetic", node.lineno, 
+        returnType, {
+        "OP": op
+    }, {
+        "A": left,
+        "B": right
+    }, {
+        "inline": true
+    });
+}
+
 BlockMirrorTextToBlocks.BINOPS = [
     ["+", "Add", Blockly.Python.ORDER_ADDITIVE, 'Return the sum of the two numbers.', 'increase', 'by'],
     ["-", "Sub", Blockly.Python.ORDER_ADDITIVE, 'Return the difference of the two numbers.', 'decrease', 'by'],
