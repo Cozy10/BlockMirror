@@ -51,6 +51,24 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
         let where2 = "FROM_START";
         let at1 = "true";
         let at2 = "true";
+        let blockName;
+        let foundType;
+        let valueNode = this.convert(value, node);
+        let values;
+        if(BlockMirrorTextToBlocks.getVarType(valueNode) === "Str"){
+            blockName = "text_getSubstring";
+            foundType = "Str";
+            values = {
+                "STRING":valueNode
+            }
+        }
+        else{
+            blockName = "lists_getSublist";
+            foundType = "list";
+            values = {
+                "LIST":valueNode
+            }
+        }
         if(lower != null && lower.op != undefined && lower.op.prototype._astname === 'USub'){
             lower = lower.operand;
             where1 = "FROM_END";
@@ -59,9 +77,7 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
             upper = upper.operand;
             where2 = "FROM_END";
         }
-        let values = {
-            "LIST":this.convert(value, node)
-        }
+        
         if(lower == null){
             at1 = "false";
             where1 = "FIRST";
@@ -78,9 +94,9 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
         }
 
         return BlockMirrorTextToBlocks.create_block(
-            "lists_getSublist", // type
+            blockName, // type
             node.lineno, // line_number
-            "list",
+            foundType,
             {
                 "WHERE1":where1,
                 "WHERE2":where2
@@ -102,11 +118,21 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
         let at = "true";
         let where = "FROM_START";
         let statement = "false";
-
+        let blockName;
+        let valueNode = this.convert(value, node);
+        let foundType;
+        if(BlockMirrorTextToBlocks.getVarType(valueNode) === "Str"){
+            blockName = "text_charAt";
+            foundType = "char";
+        }
+        else {
+            blockName = "lists_getIndex";
+            foundType = BlockMirrorTextToBlocks.Lists[BlockMirrorTextToBlocks.getName(values['VALUE'])];
+        }
         // in list get # from start par defaut
         
         let values = {
-            "VALUE":this.convert(value,node)
+            "VALUE":valueNode
         }
 
         // in list get # from end et in list get last
@@ -132,9 +158,9 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
         }
 
         return BlockMirrorTextToBlocks.create_block(
-            "lists_getIndex", // type
+            blockName, // type
             node.lineno, // line_number
-            BlockMirrorTextToBlocks.Lists[BlockMirrorTextToBlocks.getName(values['VALUE'])],
+            foundType,
             {
                 "MODE":mode,
                 "WHERE":where

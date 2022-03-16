@@ -3,7 +3,8 @@ BlockMirrorTextToBlocks.CAST_TYPE = { // cast_function : type
     "int":"int",
     "float":"float",
     "bool":"bool",
-    "list":"list"
+    "list":"list",
+    "char":"char"
 }
 
 BlockMirrorTextToBlocks.setVarType = (block, typeName)=>{
