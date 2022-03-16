@@ -19,6 +19,7 @@ BlockMirrorTextToBlocks.prototype['ast_Call'] = function (node, parent) {
         // If it's a cast register his type
         if(BlockMirrorTextToBlocks.CAST_TYPE[Sk.ffi.remapToJs(node.func.id)] != undefined
         && node.args.length == 1){
+            node.args[0].python_type = BlockMirrorTextToBlocks.CAST_TYPE[Sk.ffi.remapToJs(node.func.id)];
             let res = this.convert(node.args[0], node);
             res = BlockMirrorTextToBlocks.setVarType(res, BlockMirrorTextToBlocks.CAST_TYPE[Sk.ffi.remapToJs(node.func.id)]);
             return res;
