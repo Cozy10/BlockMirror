@@ -157,14 +157,17 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
             Object.assign(values, {"AT":this.convert(slice.value, node)});
         }
 
+        let fields = {};
+        if(foundType != "char"){
+            Object.assign(fields, {"MODE":mode});
+        }
+        Object.assign(fields, {"WHERE":where});
+
         return BlockMirrorTextToBlocks.create_block(
             blockName, // type
             node.lineno, // line_number
             foundType,
-            {
-                "MODE":mode,
-                "WHERE":where
-            }, // fields
+            fields, // fields
             values //values
             , {} // settings
             , 
