@@ -28,29 +28,29 @@ PyBlock.prototype['ast_For'] = function (node, parent) {
       }
       // for i in range(x, y, step)
       else{
+        let from_block;
         let by_block;
         let to_block;
         // "for i in range(x, y)" or range(x) and i is used inside
         if(iter.args.length < 3){
           if(iter.args.length == 1){
-            to_block = PyBlock.create_block("math_number", node.lineno, "int", {
-              "NUM": 0
-            });
+            from_block = PyBlock.createNumBlock(0, "int", node);
+            to_block = this.convert(iter.args[0], node);
           }
           else{
+            from_block = this.convert(iter.args[0], node);
             to_block = this.convert(iter.args[1], node);
           }
-          by_block = PyBlock.create_block("math_number", node.lineno, "int", {
-              "NUM": 1
-            });
+          by_block = PyBlock.createNumBlock(1, "int", node);
         }
         else{
+          from_block = this.convert(iter.args[0], node);
           to_block = this.convert(iter.args[1], node)
           by_block = this.convert(iter.args[2], node);
         }
         blockName = "controls_for";
         iter_val = {
-          "FROM": this.convert(iter.args[0], node),
+          "FROM": from_block,
           "TO": to_block,
           "BY": by_block
         }

@@ -43,10 +43,7 @@
         <h2>Blockly</h2>
     </div>
     <div id="content">  
-        <textarea id="yourcode" cols="45" rows="10">import turtle
-print("Hello World")
-
-        </textarea> 
+        <textarea id="yourcode" cols="45" rows="10"></textarea> 
         <textarea disabled id="output" cols="45" rows="10"></textarea>        
         <div id="blocklyDiv"> </div>
     </div>
@@ -56,10 +53,31 @@ print("Hello World")
     </div>
     -->
    </body>
-   <script>        
-
-        document.getElementById('yourcode').addEventListener('keyup', runit);
+   <script>
+        document.getElementById('yourcode').value = 'def fonction(a):'+'\n'
++'  print(a)'+'\n'
++'  return "Un texte"'+'\n'
++'\n'
++'a = True'+'\n'
++'list = [1,2,3]'+'\n'
++'if (a == 2 and a != 2 or not a<4  and a):'+'\n'
++'  b = null'+'\n'
++'elif True:'+'\n'
++'  for i in range(10):'+'\n'
++'    print(i)'+'\n'
++'    if (list[i] == 2):'+'\n'
++'      break'+'\n'
++'    else:'+'\n'
++'      continue'+'\n'
++'    for i in range(2):'+'\n'
++'      pass'+'\n'
++'else:'+'\n'
++'  b = fonction(a)'+'\n'
++'  print(b[1])'+'\n'
++'a = b[0]'+'\n';
 
         var workspace = Blockly.inject('blocklyDiv', {});
+        document.getElementById('yourcode').oninput= runit;        
+        runit();
     </script>
 </html>
