@@ -57,7 +57,7 @@ function runit() {
         return Sk.builtinFiles["files"][filename];
     }
     });
-    textToBlock = new BlockMirrorTextToBlocks()
+    textToBlock = new PyBlock();
     xml = textToBlock.convertSource("__main__.py", prog);
     document.getElementById("output").innerHTML = xml.xml;
 } 

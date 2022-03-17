@@ -1,33 +1,56 @@
-BlockMirrorTextToBlocks.OPS = {
+PyBlock.OPS = {
     "USub" : "NEG"
 }
 
-BlockMirrorTextToBlocks.UNARYOPS = [
+PyBlock.UNARYOPS = [
     ["+", "UAdd", 'Do nothing to the number'],
     ["-", "USub", 'Make the number negative'],
     ["not", "Not", 'Return the logical opposite of the value.'],
     ["~", "Invert", 'Take the bit inversion of the number']
 ];
 
-BlockMirrorTextToBlocks.prototype['ast_UnaryOp'] = function (node, parent) {
+PyBlock.prototype['ast_UnaryOp'] = function (node, parent) {
     const op = node.op.prototype._astname;
     let operand = node.operand;
     if(op === "Not"){
-        // List is empty (not len)
+        // not len
         if(typeof operand.func !== 'undefined' && operand.func.id.v === 'len'){
-            return BlockMirrorTextToBlocks.create_block(
-                'lists_isEmpty',
-                node.lineno,
-                {},
-                {
-                    "VALUE":this.convert(operand.args[0], node)
-                },
-                {},
-                {},
-                {});
+            let value_block;
+            if(operand.args[0] != undefined){
+                value_block  = PyBlock.prototype.convert(operand.args[0], node);
+            }
+            // String is empty text, args[0] is the String
+            if(PyBlock.getVarType(value_block) == 'Str'){
+                return PyBlock.create_block(
+                    'text_isEmpty',
+                    node.lineno,
+                    "bool",
+                    {},
+                    {
+                        "VALUE":value_block
+                    },
+                    {},
+                    {},
+                    {});
+            }
+            // list is empty test, args[0] is the list
+            else{
+                return PyBlock.create_block(
+                    'lists_isEmpty',
+                    node.lineno,
+                    "bool",
+                    {},
+                    {
+                        "VALUE":value_block
+                    },
+                    {},
+                    {},
+                    {});
+            }
+
         }
         else{
-            return BlockMirrorTextToBlocks.create_block('logic_negate', node.lineno, {}, 
+            return PyBlock.create_block('logic_negate', "bool", node.lineno, {}, 
         {
             "BOOL": this.convert(operand, node)
         }, {
@@ -35,12 +58,14 @@ BlockMirrorTextToBlocks.prototype['ast_UnaryOp'] = function (node, parent) {
         });
         }
     }
-    return BlockMirrorTextToBlocks.create_block('math_single', node.lineno, 
+    let num = this.convert(operand, node);
+    return PyBlock.create_block('math_single', node.lineno, 
+    PyBlock.getVarType(num),
     {
-        "OP" : BlockMirrorTextToBlocks.OPS[op]
+        "OP" : PyBlock.OPS[op]
     }, 
     {
-        "NUM": this.convert(operand, node)
+        "NUM": num
     }, 
     {});
 }

@@ -1,25 +1,27 @@
 # Étape pour ajouter une nouvelle fonctions
 1. Insérer le code python dans la page test/index.html l'executer et voir quel est le type du bloc généré
-2. Allez voir dans le fichier contenant la fonction BlockMirrorTextToBlocks.prototype["type_du_bloc"]
+2. Allez voir dans le fichier contenant la fonction PyBlock.prototype["type_du_bloc"]
 si le bloc est de type ast_Call voir le paragraphe "Assigner une fonction à un bloc"
 3. Sinon modifier la fonction pour que dans ce cas elle créé le bloc de type et de formevoulu 
-via la fonction BlockMirrorTextToBlocks.create_block (voir le paragraphe "Créer un bloc")
+via la fonction PyBlock.create_block (voir le paragraphe "Créer un bloc")
 
-Astuce : Dans la fonction BlockMirrorTextToBlocks.prototype["type_du_bloc"] un console.log du node peut vous aider pour savoir où récupérer les valeurs que vous souhaitez. Merci de les enlever avant de push votre code
+Astuce : Dans la fonction PyBlock.prototype["type_du_bloc"] un console.log du node peut vous aider pour savoir où récupérer les valeurs que vous souhaitez. Merci de les enlever avant de push votre code
 
 # Inutile à supprimer
-Toutes les fonctions Blockly.Python et BlockMirrorTextToBlocks.BLOCKS car on ne crée pas
+Toutes les fonctions Blockly.Python et PyBlock.BLOCKS car on ne crée pas
 de nouveaux blocks Blockly on utilise ceux déjà existants
 
 # Helpers pour créer des blocs
 ## Obtenir les blocs des noeuds suivants
-BlockMirrorTextToBlocks.prototype.convert(node, node_parent)
+PyBlock.prototype.convert(node, node_parent)
 ## Créer un bloc
-BlockMirrorTextToBlocks.create_block(type, line_number, fields, values, settings, mutations, statements)
+PyBlock.create_block(type, line_number, python_type, fields, values, settings, mutations, statements)
 
 type : le nom/type du bloc
 
 line_number : numéro de ligne (=node.lineno)
+
+python_type : type of the return value of the block (set to undefined if you don't know or their is no return value)
 
 fields : un objet de la forme :
 

@@ -1,181 +1,63 @@
-// TODO: Support stuff like "append" where the message is after the value input
-// TODO: Handle updating function/method definition -> update call
-// TODO: Do a pretraversal to determine if a given function returns
-
-BlockMirrorTextToBlocks.prototype.getAsModule = function (node) {
-    if (node._astname === 'Name') {
-        return Sk.ffi.remapToJs(node.id);
-    } else if (node._astname === 'Attribute') {
-        let origin = this.getAsModule(node.value);
-        if (origin !== null) {
-            return origin + '.' + Sk.ffi.remapToJs(node.attr);
-        }
-    } else {
-        return null;
-    }
-};
-
-//                              messageBefore, message, name
-// function call: print() -> "print" ([message]) ; print
-// Module function: plt.show() -> "show plot" ([plot]) ; plt.show
-// Method call: "test".title() -> "make" [str] "title case" () ; .title ; isMethod = true
 function getModuleName(node_func){
     if(node_func == undefined || node_func.value == undefined){
         return undefined;
     }
     if(node_func.value.id != undefined){
-        return Sk.ffi.remapToJs(node_func.value.id);
+        let name = Sk.ffi.remapToJs(node_func.value.id);
+        let type = PyBlock.getVariable(name);
+        if(type != undefined){
+            return type;
+        }
+        if((typeof PyBlock.prototype.FUNCTIONS_BLOCKS[name]) == "undefined"){
+            return null;
+        }
+        return name;
     }
     return node_func.value._astname;
 }
-BlockMirrorTextToBlocks.prototype['ast_Call'] = function (node, parent) {
+PyBlock.prototype['ast_Call'] = function (node, parent) {
     let func = node.func;
     let args = node.args;
-    let keywords = node.keywords;
     // Can we make any guesses about this based on its name?
-    let signature = null;
-    let isMethod = false;
-    let module = null;
-    let premessage = "";
-    let message = "";
-    let name = "";
-    let caller = null;
-    let colour = BlockMirrorTextToBlocks.COLOR.FUNCTIONS;
     let mModule = getModuleName(func);
     let blockDataFunc;
+    let functionName;
 
     // Functions from an integrated module or function defined by user in blockly
     if(mModule === undefined){
-        blockDataFunc = BlockMirrorTextToBlocks.prototype.LOCAL_FUNCTIONS[Sk.ffi.remapToJs(node.func.id)];
+        functionName = Sk.ffi.remapToJs(node.func.id);
+        // If it's a cast register his type
+        if(PyBlock.CAST_TYPE[functionName] != undefined
+        && node.args.length == 1){
+            node.args[0].python_type = PyBlock.CAST_TYPE[functionName];
+            let res = this.convert(node.args[0], node);
+            res = PyBlock.setVarType(res, PyBlock.CAST_TYPE[functionName]);
+            return res;
+        }
+        blockDataFunc = PyBlock.prototype.LOCAL_FUNCTIONS[functionName];
         if(blockDataFunc === undefined){
-            blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[Sk.ffi.remapToJs(node.func.id)];
+            blockDataFunc = PyBlock.prototype.FUNCTIONS_BLOCKS[functionName];
         }
     }
-    else if(this.FUNCTIONS_BLOCKS[mModule] !== undefined){
-        blockDataFunc = BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS[mModule][Sk.ffi.remapToJs(node.func.attr)];
+    else if(PyBlock.prototype.FUNCTIONS_BLOCKS[mModule] !== undefined){
+        functionName = Sk.ffi.remapToJs(node.func.attr);
+        blockDataFunc = PyBlock.prototype.FUNCTIONS_BLOCKS[mModule][functionName];
     }
     else{ // Methods
+        functionName = Sk.ffi.remapToJs(node.func.attr);
         args = ((args == null) ? [node.func.value] : [node.func.value].concat(args));
-        blockDataFunc = BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS[Sk.ffi.remapToJs(node.func.attr)];
+        let methodsBlock = ((mModule === null) ? PyBlock.prototype.DEFAULT_METHODS_BLOCKS : PyBlock.prototype.METHODS_BLOCKS[mModule]);
+        blockDataFunc = methodsBlock[functionName];
     }
     if(blockDataFunc !== undefined){
         let blockData = blockDataFunc(args, node);
-        return BlockMirrorTextToBlocks.create_block(blockData.name, node.lineno, blockData.fields,
+        let block = PyBlock.create_block(blockData.name, node.lineno, blockData.returnType, blockData.fields,
             blockData.values, {}, blockData.mutations, blockData.statements);
+        if(blockData.parentBlock != undefined){
+            block = blockData.parentBlock(block);
+        }
+        return block;
     }
-
-
-    // To remove
-    
-    if (func._astname === 'Name') {
-        message = name = Sk.ffi.remapToJs(func.id);
-        if (name in this.FUNCTION_SIGNATURES) {
-            signature = this.FUNCTION_SIGNATURES[Sk.ffi.remapToJs(func.id)];
-        }
-    }
-    else if (func._astname === 'Attribute') {
-        isMethod = true;
-        caller = func.value;
-        let potentialModule = this.getAsModule(caller);
-        let attributeName = Sk.ffi.remapToJs(func.attr);
-        message = "." + attributeName;
-        if (potentialModule in this.MODULE_FUNCTION_SIGNATURES) {
-            signature = this.MODULE_FUNCTION_SIGNATURES[potentialModule][attributeName];
-            module = potentialModule;
-            message = name = potentialModule + message;
-            isMethod = false;
-        } else if (attributeName in this.METHOD_SIGNATURES) {
-            signature = this.METHOD_SIGNATURES[attributeName];
-            name = message;
-        } else {
-            name = message;
-        }
-    } 
-    else {
-        isMethod = true;
-        message = "";
-        name = "";
-        caller = func;
-        // (lambda x: x)()
-    }
-    let returns = true;
-
-    if (signature !== null && signature !== undefined) {
-        if (signature.custom) {
-            try {
-                return signature.custom(node, parent, this)
-            } catch (e) {
-                console.error(e);
-                // We tried to be fancy and failed, better fall back to default behavior!
-            }
-        }
-        if ('returns' in signature) {
-            returns = signature.returns;
-        }
-        if ('message' in signature) {
-            message = signature.message;
-        }
-        if ('premessage' in signature) {
-            premessage = signature.premessage;
-        }
-        if ('colour' in signature) {
-            colour = signature.colour;
-        }
-    }
-
-    returns = returns || (parent._astname !== 'Expr');
-
-    let argumentsNormal = {};
-    // TODO: do I need to be limiting only the *args* length, not keywords?
-    let argumentsMutation = {
-        "@arguments": (args !== null ? args.length : 0) +
-            (keywords !== null ? keywords.length : 0),
-        "@returns": returns,
-        "@parameters": true,
-        "@method": isMethod,
-        "@name": name,
-        "@message": message,
-        "@premessage": premessage,
-        "@colour": colour,
-        "@module": module || ""
-    };
-    // Handle arguments
-    let overallI = 0;
-    if (args !== null) {
-        for (let i = 0; i < args.length; i += 1, overallI += 1) {
-            argumentsNormal["ARG" + overallI] = this.convert(args[i], node);
-            argumentsMutation["UNKNOWN_ARG:" + overallI] = null;
-        }
-    }
-    if (keywords !== null) {
-        for (let i = 0; i < keywords.length; i += 1, overallI += 1) {
-            let keyword = keywords[i];
-            let arg = keyword.arg;
-            let value = keyword.value;
-            if (arg === null) {
-                argumentsNormal["ARG" + overallI] = this.convert(value, node);
-                argumentsMutation["KWARGS:" + overallI] = null;
-            } else {
-                argumentsNormal["ARG" + overallI] = this.convert(value, node);
-                argumentsMutation["KEYWORD:" + Sk.ffi.remapToJs(arg)] = null;
-            }
-        }
-    }
-    // Build actual block
-    let newBlock;
-    if (isMethod) {
-        argumentsNormal['FUNC'] = this.convert(caller, node);
-        newBlock = BlockMirrorTextToBlocks.create_block("ast_Call", node.lineno,
-            {}, argumentsNormal, {inline: true}, argumentsMutation);
-    } else {
-        newBlock = BlockMirrorTextToBlocks.create_block("ast_Call", node.lineno, {},
-            argumentsNormal, {inline: true}, argumentsMutation);
-    }
-    // Return as either statement or expression
-    if (returns) {
-        return newBlock;
-    } else {
-        return [newBlock];
-    }
+    throw new Error("Python undefined function " + functionName);
 };
 

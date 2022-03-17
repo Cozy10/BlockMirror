@@ -1,4 +1,4 @@
-BlockMirrorTextToBlocks.CONVERT_BINOPS = { 
+PyBlock.CONVERT_BINOPS = { 
     "Sub" : "MINUS",
     "Add" : "ADD",
     "Mult" : "MULTIPLY",
@@ -6,7 +6,19 @@ BlockMirrorTextToBlocks.CONVERT_BINOPS = {
     "Pow" : "POWER"
 };
 
-BlockMirrorTextToBlocks.BINOPS = [
+PyBlock.createOpBlock = (op, left, right, returnType, node)=>{
+    return PyBlock.create_block("math_arithmetic", node.lineno, 
+        returnType, {
+        "OP": op
+    }, {
+        "A": left,
+        "B": right
+    }, {
+        "inline": true
+    });
+}
+
+PyBlock.BINOPS = [
     ["+", "Add", Blockly.Python.ORDER_ADDITIVE, 'Return the sum of the two numbers.', 'increase', 'by'],
     ["-", "Sub", Blockly.Python.ORDER_ADDITIVE, 'Return the difference of the two numbers.', 'decrease', 'by'],
     ["*", "Mult", Blockly.Python.ORDER_MULTIPLICATIVE, 'Return the product of the two numbers.', 'multiply', 'by'],
@@ -31,74 +43,123 @@ BlockMirrorTextToBlocks.BINOPS = [
     'matrix multiply', 'by']
 ];
 var BINOPS_SIMPLE = ['Add', 'Sub', 'Mult', 'Div', 'Mod', 'Pow'];
-var BINOPS_BLOCKLY_DISPLAY_FULL = BlockMirrorTextToBlocks.BINOPS.map(
+var BINOPS_BLOCKLY_DISPLAY_FULL = PyBlock.BINOPS.map(
     binop => [binop[0], binop[1]]
 );
 var BINOPS_BLOCKLY_DISPLAY = BINOPS_BLOCKLY_DISPLAY_FULL.filter(
     binop => BINOPS_SIMPLE.indexOf(binop[1]) >= 0
 );
-BlockMirrorTextToBlocks.BINOPS_AUGASSIGN_DISPLAY_FULL =BlockMirrorTextToBlocks.BINOPS.map(
+PyBlock.BINOPS_AUGASSIGN_DISPLAY_FULL =PyBlock.BINOPS.map(
     binop => [binop[4], binop[1]]
 );
-BlockMirrorTextToBlocks.BINOPS_AUGASSIGN_DISPLAY = BlockMirrorTextToBlocks.BINOPS_AUGASSIGN_DISPLAY_FULL.filter(
+PyBlock.BINOPS_AUGASSIGN_DISPLAY = PyBlock.BINOPS_AUGASSIGN_DISPLAY_FULL.filter(
     binop => BINOPS_SIMPLE.indexOf(binop[1]) >= 0
 );
 
 var BINOPS_BLOCKLY_GENERATE = {};
-BlockMirrorTextToBlocks.BINOPS_AUGASSIGN_PREPOSITION = {};
-BlockMirrorTextToBlocks.BINOPS.forEach(function (binop) {
+PyBlock.BINOPS_AUGASSIGN_PREPOSITION = {};
+PyBlock.BINOPS.forEach(function (binop) {
     BINOPS_BLOCKLY_GENERATE[binop[1]] = [" " + binop[0], binop[2]];
-    BlockMirrorTextToBlocks.BINOPS_AUGASSIGN_PREPOSITION[binop[1]] = binop[5];
+    PyBlock.BINOPS_AUGASSIGN_PREPOSITION[binop[1]] = binop[5];
     //Blockly.Constants.Math.TOOLTIPS_BY_OP[binop[1]] = binop[3];
 });
 
-BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
+PyBlock.prototype['ast_BinOp'] = function (node, parent) {
     let left = node.left;
     let op = node.op.prototype._astname;
     let right = node.right;
     let blockName = "math_arithmetic";
-    
-    if(node.left.func != undefined && node.left.func.id.v === 'str'){
-        console.log(node.left.func.id.v);
-        console.log(typeof node.right.s.v);
-        if (node.right.s != undefined && typeof node.right.s.v === 'string'){
-            
-            blockName = "text_append";
-
-            console.log(node.left);
-            return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {
-                "VAR":  node.left.args[0].id.v
-            }, {
-                "TEXT": this.convert(node.right, node)
-            }, {
-            
-            });        
-        }
-    }
-
-    if ( op === "Mod"){
-        blockName = "math_modulo";
-        return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {},
-        {
-            "DIVIDEND": this.convert(left, node),
-            "DIVISOR": this.convert(right, node)
-        },
-        {});
-    }
+    let leftNode = this.convert(left, node);
+    let rightNode = this.convert(right, node);
 
     // create list with item [...] repeated n times (voir ast_List)
+    if(PyBlock.getVarType(leftNode) === "List" && op ==="Mult"){
+        let item;
+        if (left._astname ==="List"){
+            item = this.convert(left.elts[0], left);   
+        }
+        else{
+            item = leftNode;
+        }
+        let block = PyBlock.create_block("lists_repeat", node.lineno, "List", {},
+            {
+                "ITEM": item,
+                "NUM": rightNode
+            },
+            {}, {}, {});
+        block.elementsType = PyBlock.getVarType(item);
+        return block;
+    }
     if (left._astname == 'List'){
         return this.convert(left, node)
     }
 
-    return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {
-        "OP": BlockMirrorTextToBlocks.CONVERT_BINOPS[op]
+    
+    
+    // both left and right are String so String op
+    if(PyBlock.getVarType(leftNode) === "Str" && PyBlock.getVarType(rightNode) === "Str"){
+        let res, values, nodesComputed, blockGuess;
+        //the left node is already a text_join so create a new one with text on the right
+        if(leftNode.currentBlock === "text_join"){
+            nodesComputed = leftNode.nodesComputed.concat([rightNode]);
+            values = {};
+            nodesComputed.forEach((element, i)=>{
+                values['ADD'+i] = element;
+            });
+            blockGuess = leftNode.blockGuess;
+        }
+        else{
+            nodesComputed = [leftNode, rightNode];
+            values = {"ADD0":leftNode, "ADD1":rightNode};
+        }
+        res = PyBlock.create_block("text_join", node.lineno, "Str", {}, values,
+            {}, {"@items":nodesComputed.length});
+        if(leftNode.variableName != undefined){ //Maybe it's an append op
+            blockGuess = "text_append";
+        }
+        res.blockGuess = blockGuess;
+        res.nodesComputed = nodesComputed;      //Save computed sub_block if we have to change block later
+        res.currentBlock = "text_join";         //Say we just finished a text_join block so don't do another one concat them
+        return res;
+    }
+
+    if ( op === "Mod"){
+        blockName = "math_modulo";
+        return PyBlock.create_block(blockName, node.lineno, "int", {},
+        {
+            "DIVIDEND": leftNode,
+            "DIVISOR": rightNode
+        },
+        {});
+    }
+
+    // Math op between 2 number so if one element is a float or it's a division result will be a float otherwise it's an int
+    let typeLeft = PyBlock.getVarType(leftNode), typeRight = PyBlock.getVarType(rightNode);
+    let block_op = PyBlock.CONVERT_BINOPS[op];
+
+    // check if 
+    if(block_op === "ADD" && leftNode.blockGuess === "find"){
+        if(right._astname === "Num"){
+            let num = Sk.ffi.remapToJs(right.n);
+            leftNode = leftNode.childNodes[1].childNodes[0];
+            if(num === 1){
+                return leftNode;
+            }
+            else{
+                rightNode = PyBlock.createNumBlock(num-1, "int", node);
+            }
+        }
+    }
+    let type = ( ((op === "DIVIDE") || (typeLeft === "float") || (typeRight === "float")) ? "float" : "int");
+    return PyBlock.create_block(blockName, node.lineno, 
+        type, {
+        "OP": block_op
     }, {
-        "A": this.convert(left, node),
-        "B": this.convert(right, node)
+        "A": leftNode,
+        "B": rightNode
     }, {
         "inline": true
     });
 }
 
-BlockMirrorTextToBlocks.prototype['math_arithmetic'] = BlockMirrorTextToBlocks.prototype['ast_BinOp'];
+PyBlock.prototype['math_arithmetic'] = PyBlock.prototype['ast_BinOp'];

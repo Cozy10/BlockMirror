@@ -4,9 +4,9 @@
 //       doing something more complicated here with namespaces (probably make `os` the
 //       variable and have some kind of list of attributes. But that's in the fading zone.
 
-BlockMirrorTextToBlocks.prototype['ast_Import'] = function (node, parent) {
+PyBlock.prototype['ast_Import'] = function (node, parent) {
     return null;
 };
 
 // Alias ImportFrom because of big overlap
-BlockMirrorTextToBlocks.prototype['ast_ImportFrom'] = BlockMirrorTextToBlocks.prototype['ast_Import'];
+PyBlock.prototype['ast_ImportFrom'] = PyBlock.prototype['ast_Import'];

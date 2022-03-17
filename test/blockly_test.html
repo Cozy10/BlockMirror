@@ -2,7 +2,11 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>Python2Blockly demo</title>
+        <title>PyBlock demo</title>
+        <link rel="icon" type="image/png" href="icon.png" />
+
+        <link rel="stylesheet" href="style.css">
+
         <script src="../ext_lib/blockly/blockly_compressed.js"></script>
         <script src="../ext_lib/blockly/blocks_compressed.js"></script>
         <script src="../ext_lib/blockly/python_compressed.js"></script>
@@ -16,16 +20,64 @@
         <script src="init.js"></script> 
     </head>
     <body>
-    <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
-        <form> 
-            <textarea id="yourcode" cols="40" rows="10">import turtle
-print("Hello World") 
-            </textarea><br/> 
-            <button type="button" onclick="runit()">Convert</button> 
-        </form><br/>
-        <textarea id="output"></textarea>
+        
+    <div style="
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+">
+        <img src="icon.png" alt="logo" style="
+    width: 110px;
+    height: 125px;
+    margin-right: 45px;
+">     
+        <h1>
+            <span style="display:flex;justify-content: center">PyBlock</span>
+        </h1>
+    </div>
+        
+
+    <div id="title">
+        <h2>Code python</h2>
+        <h2>XML blockly</h2>
+        <h2>Blockly</h2>
+    </div>
+    <div id="content">  
+        <textarea id="yourcode" cols="45" rows="10"></textarea> 
+        <textarea disabled id="output" cols="45" rows="10"></textarea>        
+        <div id="blocklyDiv"> </div>
+    </div>
+    <!--
+    <div id="button">
+        <button style="height: 40px;"type="button" onclick="runit()">CONVERT !</button>
+    </div>
+    -->
    </body>
    <script>
-        var workspace = Blockly.inject('blocklyDiv', {toolbox: toolbox});
+        document.getElementById('yourcode').value = 'def fonction(a):'+'\n'
++'  print(a)'+'\n'
++'  return "Un texte"'+'\n'
++'\n'
++'a = True'+'\n'
++'list = [1,2,3]'+'\n'
++'if (a == 2 and a != 2 or not a<4  and a):'+'\n'
++'  b = null'+'\n'
++'elif True:'+'\n'
++'  for i in range(10):'+'\n'
++'    print(i)'+'\n'
++'    if (list[i] == 2):'+'\n'
++'      break'+'\n'
++'    else:'+'\n'
++'      continue'+'\n'
++'    for i in range(2):'+'\n'
++'      pass'+'\n'
++'else:'+'\n'
++'  b = fonction(a)'+'\n'
++'  print(b[1])'+'\n'
++'a = b[0]'+'\n';
+
+        var workspace = Blockly.inject('blocklyDiv', {});
+        document.getElementById('yourcode').oninput= runit;        
+        runit();
     </script>
 </html>

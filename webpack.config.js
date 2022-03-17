@@ -35,6 +35,7 @@ const JS_BLOCKMIRROR_FILES = [
 
     // AST Handlers
     path.resolve(__dirname, 'src/ast/ast_functions.js'),
+    path.resolve(__dirname, 'src/ast/cast_type.js'),
     path.resolve(__dirname, 'src/ast/ast_For.js'),
     path.resolve(__dirname, 'src/ast/ast_If.js'),
     path.resolve(__dirname, 'src/ast/ast_While.js'),
@@ -81,6 +82,7 @@ const JS_BLOCKMIRROR_FILES = [
     path.resolve(__dirname,'src/ast/constants.js'),
     path.resolve(__dirname,'src/ast/random.js'),
     path.resolve(__dirname,'src/ast/pythonDef.js'),
+    path.resolve(__dirname, 'src/ast/variable_type.js'),
 ].concat((() => { // Import modules files
     let modules_import_path;
     modules_path.forEach((module_path)=>{

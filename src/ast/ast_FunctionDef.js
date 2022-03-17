@@ -2,21 +2,24 @@
 
 // The mutator container
 
-BlockMirrorTextToBlocks.prototype['ast_FunctionDef'] = function (node, parent) {
+PyBlock.prototype['ast_FunctionDef'] = function (node, parent) {
     let name = node.name;
     let blockName = "procedures_defnoreturn";
     let function_type = "procedures_callnoreturn";
-    let returnValue = undefined;
+    let returnNode;
+    let returnType;
 
     let values = {};
-
+    PyBlock.incrementLevel();
     // Search return and remove all items after in the block because useless
     node.body.forEach((element, i, tab) => {
         if(element._astname === "Return"){
             if(element.value != null){
                 blockName = "procedures_defreturn";
                 function_type = "procedures_callreturn";
-                returnValue = element.value;
+                returnNode = this.convert(element.value, node);
+                returnType = PyBlock.getVarType(returnNode);
+                values["RETURN"] = returnNode;
             }
             tab.splice(i);
         }
@@ -29,12 +32,13 @@ BlockMirrorTextToBlocks.prototype['ast_FunctionDef'] = function (node, parent) {
     }
 
     // Register functions
-    BlockMirrorTextToBlocks.prototype.LOCAL_FUNCTIONS[name] = 
-        BlockMirrorTextToBlocks.prototype.create_block_functionDef(name, mutation, function_type);
-    values = ((returnValue === undefined) ? {} : {"RETURN" : this.convert(returnValue, node)});
-    return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, {
+    PyBlock.prototype.LOCAL_FUNCTIONS[name] = 
+        PyBlock.prototype.create_block_functionDef(name, mutation, function_type, returnType);
+    let stack = this.convertBody(node.body, node);
+    PyBlock.decrementLevel();
+    return PyBlock.create_block(blockName, node.lineno, undefined, {
             'NAME': Sk.ffi.remapToJs(name)
         }, values, {}, mutation, {
-            'STACK': this.convertBody(node.body, node)
+            'STACK': stack
         });
 };

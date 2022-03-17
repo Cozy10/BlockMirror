@@ -1,6 +1,6 @@
 
 
-BlockMirrorTextToBlocks.prototype['ast_Expr'] = function (node, parent) {
+PyBlock.prototype['ast_Expr'] = function (node, parent) {
     var value = node.value;
     var converted = this.convert(value, node);
 
