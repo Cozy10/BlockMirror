@@ -16,6 +16,7 @@ PyBlock.prototype.FUNCTIONS_BLOCKS["print"] =
 
 
 PyBlock.prototype.METHODS_BLOCKS = {};
+PyBlock.prototype.DEFAULT_METHODS_BLOCKS = {};
 PyBlock.prototype.LOCAL_FUNCTIONS = {};
 
 PyBlock.prototype.create_block_functionDef = function(name, mutation, type, returnType){

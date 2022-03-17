@@ -3,7 +3,15 @@ function getModuleName(node_func){
         return undefined;
     }
     if(node_func.value.id != undefined){
-        return Sk.ffi.remapToJs(node_func.value.id);
+        let name = Sk.ffi.remapToJs(node_func.value.id);
+        let type = PyBlock.getVariable(name);
+        if(type != undefined){
+            return type;
+        }
+        if((typeof PyBlock.prototype.FUNCTIONS_BLOCKS[name]) == "undefined"){
+            return null;
+        }
+        return name;
     }
     return node_func.value._astname;
 }
@@ -13,28 +21,33 @@ PyBlock.prototype['ast_Call'] = function (node, parent) {
     // Can we make any guesses about this based on its name?
     let mModule = getModuleName(func);
     let blockDataFunc;
+    let functionName;
 
     // Functions from an integrated module or function defined by user in blockly
     if(mModule === undefined){
+        functionName = Sk.ffi.remapToJs(node.func.id);
         // If it's a cast register his type
-        if(PyBlock.CAST_TYPE[Sk.ffi.remapToJs(node.func.id)] != undefined
+        if(PyBlock.CAST_TYPE[functionName] != undefined
         && node.args.length == 1){
-            node.args[0].python_type = PyBlock.CAST_TYPE[Sk.ffi.remapToJs(node.func.id)];
+            node.args[0].python_type = PyBlock.CAST_TYPE[functionName];
             let res = this.convert(node.args[0], node);
-            res = PyBlock.setVarType(res, PyBlock.CAST_TYPE[Sk.ffi.remapToJs(node.func.id)]);
+            res = PyBlock.setVarType(res, PyBlock.CAST_TYPE[functionName]);
             return res;
         }
-        blockDataFunc = PyBlock.prototype.LOCAL_FUNCTIONS[Sk.ffi.remapToJs(node.func.id)];
+        blockDataFunc = PyBlock.prototype.LOCAL_FUNCTIONS[functionName];
         if(blockDataFunc === undefined){
-            blockDataFunc = PyBlock.prototype.FUNCTIONS_BLOCKS[Sk.ffi.remapToJs(node.func.id)];
+            blockDataFunc = PyBlock.prototype.FUNCTIONS_BLOCKS[functionName];
         }
     }
     else if(PyBlock.prototype.FUNCTIONS_BLOCKS[mModule] !== undefined){
-        blockDataFunc = PyBlock.prototype.FUNCTIONS_BLOCKS[mModule][Sk.ffi.remapToJs(node.func.attr)];
+        functionName = Sk.ffi.remapToJs(node.func.attr);
+        blockDataFunc = PyBlock.prototype.FUNCTIONS_BLOCKS[mModule][functionName];
     }
     else{ // Methods
+        functionName = Sk.ffi.remapToJs(node.func.attr);
         args = ((args == null) ? [node.func.value] : [node.func.value].concat(args));
-        blockDataFunc = PyBlock.prototype.METHODS_BLOCKS[Sk.ffi.remapToJs(node.func.attr)];
+        let methodsBlock = ((mModule === null) ? PyBlock.prototype.DEFAULT_METHODS_BLOCKS : PyBlock.prototype.METHODS_BLOCKS[mModule]);
+        blockDataFunc = methodsBlock[functionName];
     }
     if(blockDataFunc !== undefined){
         let blockData = blockDataFunc(args, node);
@@ -45,6 +58,6 @@ PyBlock.prototype['ast_Call'] = function (node, parent) {
         }
         return block;
     }
-    throw new Error("Could not find function: " + functionName);
+    throw new Error("Python undefined function " + functionName);
 };
 

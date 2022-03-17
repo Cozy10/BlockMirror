@@ -65,7 +65,7 @@ PyBlock.prototype['ast_Subscript'] = function(node, parent){
         }
         else{
             blockName = "lists_getSublist";
-            foundType = "list";
+            foundType = "List";
             values = {
                 "LIST":valueNode
             }

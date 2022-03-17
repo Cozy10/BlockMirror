@@ -69,12 +69,12 @@ PyBlock.prototype.FUNCTIONS_BLOCKS["lists_sort"] = function(args, node){
             "LIST":list
         },
         "statements":{},
-        "returnType":"list"
+        "returnType":"List"
     }
 }
 
 // in list get and remove, args[0] is the list, args[1] is the index
-PyBlock.prototype.METHODS_BLOCKS["pop"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["List"]["pop"] = function(args, node){
     var value = args;
     var mode = "REMOVE";
     var where = "FROM_START";
@@ -128,7 +128,7 @@ PyBlock.prototype.METHODS_BLOCKS["pop"] = function(args, node){
 }
 
 // in list insert at, args[0] is the list, args[1] is the index, args[2] is the value
-PyBlock.prototype.METHODS_BLOCKS["insert"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["List"]["insert"] = function(args, node){
     var value = args;
     var where = "FROM_START";
     var at = "true";
@@ -178,7 +178,7 @@ PyBlock.prototype.METHODS_BLOCKS["insert"] = function(args, node){
 }
 
 // in list insert at last, args[0] is the list
-PyBlock.prototype.METHODS_BLOCKS["append"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["List"]["append"] = function(args, node){
     var values = {
         "LIST":PyBlock.prototype.convert(node.func.value, node)
     };
@@ -203,7 +203,7 @@ PyBlock.prototype.METHODS_BLOCKS["append"] = function(args, node){
 }
 
 // make list from text args[0] with delimiter args[1]
-PyBlock.prototype.METHODS_BLOCKS["split"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["Str"]["split"] = function(args, node){
     var values = {
         "INPUT":PyBlock.prototype.convert(args[0], node)
     };
@@ -222,12 +222,12 @@ PyBlock.prototype.METHODS_BLOCKS["split"] = function(args, node){
             "@mode":"SPLIT"
         },
         "statements":{},
-        "returnType": "list"
+        "returnType": "List"
     }
 }
 
 // make text from list args[1] with delimiter args[0]
-PyBlock.prototype.METHODS_BLOCKS["join"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["Str"]["join"] = function(args, node){
     var values = {
         "INPUT":PyBlock.prototype.convert(args[1], node)
     };
@@ -283,7 +283,7 @@ PyBlock.prototype['ast_List'] = function (node, parent) {
     block = PyBlock.create_block(
         "lists_create_with" // type
         , node.lineno // line_number
-        , "list"
+        , "List"
         , {} // fields
         , values //values
         , {} // settings

@@ -3,10 +3,12 @@ PyBlock.CAST_TYPE = { // cast_function : type
     "int":"int",
     "float":"float",
     "bool":"bool",
-    "list":"list",
+    "list":"List",
     "char":"char"
 }
-
+for(const type in PyBlock.CAST_TYPE){
+    PyBlock.prototype.METHODS_BLOCKS[PyBlock.CAST_TYPE[type]] = {};
+}
 PyBlock.setVarType = (block, typeName)=>{
     block.foundType = typeName;
     return block;

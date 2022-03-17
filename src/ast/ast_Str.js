@@ -65,7 +65,7 @@ PyBlock.prototype['ast_Str'] = function (node, parent) {
 };
 
 // in text (args[0]) find first occurence of text (args[1])
-PyBlock.prototype.METHODS_BLOCKS["find"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["Str"]["find"] = function(args, node){
     var values = {"VALUE":PyBlock.prototype.convert(args[0], node)};
     if(args[1] != undefined){
         Object.assign(values, {"FIND":PyBlock.prototype.convert(args[1], node)});
@@ -88,7 +88,7 @@ PyBlock.prototype.METHODS_BLOCKS["find"] = function(args, node){
 }
 
 // in text (args[0]) find last occurence of text (args[1])
-PyBlock.prototype.METHODS_BLOCKS["rfind"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["Str"]["rfind"] = function(args, node){
     var values = {"VALUE":PyBlock.prototype.convert(args[0], node)};
     if(args[1] != undefined){
         Object.assign(values, {"FIND":PyBlock.prototype.convert(args[1], node)});
@@ -128,7 +128,7 @@ PyBlock.prototype.FUNCTIONS_BLOCKS["text_random_letter"] = function(args, node){
 }
 
 // to UPPER CASE from string, args[0] is the string
-PyBlock.prototype.METHODS_BLOCKS["upper"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["Str"]["upper"] = function(args, node){
     return {
         "name":"text_changeCase", // block type="text_print"
         "fields":{
@@ -143,7 +143,7 @@ PyBlock.prototype.METHODS_BLOCKS["upper"] = function(args, node){
 }
 
 // to lower case from string, args[0] is the string
-PyBlock.prototype.METHODS_BLOCKS["lower"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["Str"]["lower"] = function(args, node){
     return {
         "name":"text_changeCase", // block type="text_print"
         "fields":{
@@ -158,7 +158,7 @@ PyBlock.prototype.METHODS_BLOCKS["lower"] = function(args, node){
 }
 
 // to Title Case from string, args[0] is the string
-PyBlock.prototype.METHODS_BLOCKS["title"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["Str"]["title"] = function(args, node){
     return {
         "name":"text_changeCase", // block type="text_print"
         "fields":{
@@ -188,7 +188,7 @@ PyBlock.prototype.METHODS_BLOCKS["strip"] = function(args, node){
 }
 
 // Trim spaces from left side of string, args[0] is the string
-PyBlock.prototype.METHODS_BLOCKS["lstrip"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["Str"]["lstrip"] = function(args, node){
     return {
         "name":"text_trim", 
         "fields":{

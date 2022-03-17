@@ -73,7 +73,7 @@ PyBlock.prototype['ast_BinOp'] = function (node, parent) {
     let rightNode = this.convert(right, node);
 
     // create list with item [...] repeated n times (voir ast_List)
-    if(PyBlock.getVarType(leftNode) === "list" && op ==="Mult"){
+    if(PyBlock.getVarType(leftNode) === "List" && op ==="Mult"){
         let item;
         if (left._astname ==="List"){
             item = this.convert(left.elts[0], left);   
@@ -81,7 +81,7 @@ PyBlock.prototype['ast_BinOp'] = function (node, parent) {
         else{
             item = leftNode;
         }
-        let block = PyBlock.create_block("lists_repeat", node.lineno, "list", {},
+        let block = PyBlock.create_block("lists_repeat", node.lineno, "List", {},
             {
                 "ITEM": item,
                 "NUM": rightNode

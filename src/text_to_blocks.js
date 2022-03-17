@@ -3,7 +3,12 @@ function PyBlock() {
     this.strictAnnotations = ['int', 'float', 'str', 'bool'];
     Blockly.defineBlocksWithJsonArray(PyBlock.BLOCKS);
     this.currentLevel = 0;
-    this.Local_Var = [{}];
+    PyBlock.prototype.DEFAULT_METHODS_BLOCKS = {};
+    for (const module in PyBlock.prototype.METHODS_BLOCKS){
+        for(const func in PyBlock.prototype.METHODS_BLOCKS[module]){
+            PyBlock.prototype.DEFAULT_METHODS_BLOCKS[func] = PyBlock.prototype.METHODS_BLOCKS[module][func];
+        }
+    }
 }
 
 PyBlock.xmlToString = function (xml) {
