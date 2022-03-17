@@ -1,7 +1,7 @@
 // length of List or String
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["len"] = function(args, node){
-    let value_block  = BlockMirrorTextToBlocks.prototype.convert(args[0], node);
-    if(BlockMirrorTextToBlocks.getVarType(value_block) === "Str")
+PyBlock.prototype.FUNCTIONS_BLOCKS["len"] = function(args, node){
+    let value_block  = PyBlock.prototype.convert(args[0], node);
+    if(PyBlock.getVarType(value_block) === "Str")
         return{
             "name":"text_length", // block type="text_length"
             "fields":{},        // tag field of the block <field ...>
@@ -23,15 +23,15 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["len"] = function(args, node)
 
 
 // in list find first occurrence of item
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["first_index"] = function(args, node){
+PyBlock.prototype.FUNCTIONS_BLOCKS["first_index"] = function(args, node){
     return {
         "name":"lists_indexOf",
         "fields":{
             "END":"FIRST"
         },        // tag field of the block <field ...>
         "values":{
-            "VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
-            , "FIND":BlockMirrorTextToBlocks.prototype.convert(args[1], node) // recursive conversion for args[1]
+            "VALUE":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
+            , "FIND":PyBlock.prototype.convert(args[1], node) // recursive conversion for args[1]
         },                  // tag value
         "statements":{}     //tag statement
         , "returnType": "int"
@@ -39,15 +39,15 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["first_index"] = function(arg
 }
 
 // in list find last occurence of item
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["last_index"] = function(args, node){
+PyBlock.prototype.FUNCTIONS_BLOCKS["last_index"] = function(args, node){
     return {
         "name":"lists_indexOf",
         "fields":{
             "END":"LAST"
         },        // tag field of the block <field ...>
         "values":{
-            "VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
-            , "FIND":BlockMirrorTextToBlocks.prototype.convert(args[1], node) // recursive conversion for args[1]
+            "VALUE":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
+            , "FIND":PyBlock.prototype.convert(args[1], node) // recursive conversion for args[1]
         },                  // tag value
         "statements":{}     //tag statement
         , "returnType": "int"
@@ -55,8 +55,8 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["last_index"] = function(args
 }
 
 // sort List
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["lists_sort"] = function(args, node){
-    var list = BlockMirrorTextToBlocks.prototype.convert(args[0], node);
+PyBlock.prototype.FUNCTIONS_BLOCKS["lists_sort"] = function(args, node){
+    var list = PyBlock.prototype.convert(args[0], node);
     var type = args[1].s.v;
     var direction = (args[2].value.v == 0) ? 1 : -1;
     return {
@@ -74,20 +74,20 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["lists_sort"] = function(args
 }
 
 // in list get and remove, args[0] is the list, args[1] is the index
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["pop"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["pop"] = function(args, node){
     var value = args;
     var mode = "REMOVE";
     var where = "FROM_START";
     var at = "true";
     var statement = "false";
-    var values = {"VALUE":BlockMirrorTextToBlocks.prototype.convert(node.func.value, node)};
+    var values = {"VALUE":PyBlock.prototype.convert(node.func.value, node)};
     if(node._parent != undefined && node._parent._astname === 'Assign'){
         mode = "GET_REMOVE";
     }
 
     if(args[1] != undefined && args[1].op != undefined && args[1].op.prototype._astname === 'USub'){
         where = "FROM_END";
-        value = BlockMirrorTextToBlocks.prototype.convert(args[1].operand, node);
+        value = PyBlock.prototype.convert(args[1].operand, node);
     }
     else if(args[1] != undefined && args[1].n != undefined && args[1].n.v == 0){
         where = "FIRST";
@@ -100,11 +100,11 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["pop"] = function(args, node){
     if(args[1] != undefined && where != "FROM_END"){
         if(args[1]._astname == 'Num'){
             args[1].n.v += 1;
-            value = BlockMirrorTextToBlocks.prototype.convert(args[1], node);
+            value = PyBlock.prototype.convert(args[1], node);
         }
         else{
-            let right = BlockMirrorTextToBlocks.createNumBlock(1, "int", node);
-            value = BlockMirrorTextToBlocks.createOpBlock("ADD", BlockMirrorTextToBlocks.prototype.convert(args[1], node), right, "int", node);
+            let right = PyBlock.createNumBlock(1, "int", node);
+            value = PyBlock.createOpBlock("ADD", PyBlock.prototype.convert(args[1], node), right, "int", node);
         }
     }
     if(at == "true"){
@@ -128,15 +128,15 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["pop"] = function(args, node){
 }
 
 // in list insert at, args[0] is the list, args[1] is the index, args[2] is the value
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["insert"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["insert"] = function(args, node){
     var value = args;
     var where = "FROM_START";
     var at = "true";
-    var values = {"LIST":BlockMirrorTextToBlocks.prototype.convert(node.func.value, node)};
+    var values = {"LIST":PyBlock.prototype.convert(node.func.value, node)};
 
     if(args[1] != undefined && args[1].op != undefined && args[1].op.prototype._astname === 'USub'){
         where = "FROM_END";
-        value = BlockMirrorTextToBlocks.prototype.convert(args[1].operand, node);
+        value = PyBlock.prototype.convert(args[1].operand, node);
     }
     else if(args[1] != undefined && args[1].n != undefined && args[1].n.v == 0){
         where = "FIRST";
@@ -150,16 +150,16 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["insert"] = function(args, node
         if(where == "FROM_START"){
             if(args[1]._astname == 'Num'){
                 args[1].n.v += 1;
-                value = BlockMirrorTextToBlocks.prototype.convert(args[1], node);
+                value = PyBlock.prototype.convert(args[1], node);
             }
             else{
-                let right = BlockMirrorTextToBlocks.createNumBlock(1, "int", node);
-                value = BlockMirrorTextToBlocks.createOpBlock("ADD", BlockMirrorTextToBlocks.prototype.convert(args[1], node), right, "int", node);
+                let right = PyBlock.createNumBlock(1, "int", node);
+                value = PyBlock.createOpBlock("ADD", PyBlock.prototype.convert(args[1], node), right, "int", node);
             }
         }
         Object.assign(values, {"AT":value});
     }
-    Object.assign(values, {"TO":BlockMirrorTextToBlocks.prototype.convert(args[2], node)});
+    Object.assign(values, {"TO":PyBlock.prototype.convert(args[2], node)});
 
     return {
         "name":"lists_setIndex",
@@ -178,12 +178,12 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["insert"] = function(args, node
 }
 
 // in list insert at last, args[0] is the list
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["append"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["append"] = function(args, node){
     var values = {
-        "LIST":BlockMirrorTextToBlocks.prototype.convert(node.func.value, node)
+        "LIST":PyBlock.prototype.convert(node.func.value, node)
     };
     if(args[1] != undefined){
-        Object.assign(values, {"TO":BlockMirrorTextToBlocks.prototype.convert(args[1], node)});
+        Object.assign(values, {"TO":PyBlock.prototype.convert(args[1], node)});
     }
 
     return {
@@ -203,12 +203,12 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["append"] = function(args, node
 }
 
 // make list from text args[0] with delimiter args[1]
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["split"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["split"] = function(args, node){
     var values = {
-        "INPUT":BlockMirrorTextToBlocks.prototype.convert(args[0], node)
+        "INPUT":PyBlock.prototype.convert(args[0], node)
     };
     if(args[1] != undefined){
-        Object.assign(values, {"DELIM":BlockMirrorTextToBlocks.prototype.convert(args[1], node)});
+        Object.assign(values, {"DELIM":PyBlock.prototype.convert(args[1], node)});
     }
 
     return {
@@ -227,12 +227,12 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["split"] = function(args, node)
 }
 
 // make text from list args[1] with delimiter args[0]
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["join"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["join"] = function(args, node){
     var values = {
-        "INPUT":BlockMirrorTextToBlocks.prototype.convert(args[1], node)
+        "INPUT":PyBlock.prototype.convert(args[1], node)
     };
     if(args[0] != undefined){
-        Object.assign(values, {"DELIM":BlockMirrorTextToBlocks.prototype.convert(args[0], node)});
+        Object.assign(values, {"DELIM":PyBlock.prototype.convert(args[0], node)});
     }
 
     return {
@@ -251,7 +251,7 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["join"] = function(args, node){
 }
 
 // in list args[0] remove or get and remove at random index
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS['lists_remove_random_item'] = function(args, node){
+PyBlock.prototype.FUNCTIONS_BLOCKS['lists_remove_random_item'] = function(args, node){
     var mode = "REMOVE";
 
     if(node._parent != undefined && node._parent._astname === 'Assign'){
@@ -264,7 +264,7 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS['lists_remove_random_item'] =
             "MODE":mode,
             "WHERE":"RANDOM"
         },
-        "values":{"VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node)},
+        "values":{"VALUE":PyBlock.prototype.convert(args[0], node)},
         "settings":{},
         "mutations":{
             "@statement":"false",
@@ -275,12 +275,12 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS['lists_remove_random_item'] =
     }
 }
 
-BlockMirrorTextToBlocks.prototype['ast_List'] = function (node, parent) {
+PyBlock.prototype['ast_List'] = function (node, parent) {
     var elts = node.elts;
     let block;
     
     let values = this.convertElements("ADD", elts, node);
-    block = BlockMirrorTextToBlocks.create_block(
+    block = PyBlock.create_block(
         "lists_create_with" // type
         , node.lineno // line_number
         , "list"
@@ -292,6 +292,6 @@ BlockMirrorTextToBlocks.prototype['ast_List'] = function (node, parent) {
         }
         , {} // statements
         );
-    block.elementsType = BlockMirrorTextToBlocks.getVarType((values["ADD0"]));
+    block.elementsType = PyBlock.getVarType((values["ADD0"]));
     return block;
 }

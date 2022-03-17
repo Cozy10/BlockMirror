@@ -1,83 +1,83 @@
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"] = {};
-//BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["random"] = {};
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"] = {};
+//PyBlock.prototype.FUNCTIONS_BLOCKS["random"] = {};
 /*
 
 Fonction de base 
 
 */
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["sqrt"] = function(args, node){ // Give node.args and node
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["sqrt"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_single", // block type="text_print"
         "fields":{
             "OP":"ROOT"
         },        // tag field of the block <field ...>
         "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "NUM":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{},     //tag statement
         "returnType":"float"
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["fabs"] = function(args, node){ // Give node.args and node
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["fabs"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_single", // block type="text_print"
         "fields":{
             "OP":"ABS"
         },        // tag field of the block <field ...>
         "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "NUM":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{},     //tag statement
         "returnType": "float"
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["log"] = function(args, node){ // Give node.args and node
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["log"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_single", // block type="text_print"
         "fields":{
             "OP":"LN"
         },        // tag field of the block <field ...>
         "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "NUM":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{},     //tag statement
         "returnType":"float"
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["log10"] = function(args, node){ // Give node.args and node
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["log10"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_single", // block type="text_print"
         "fields":{
             "OP":"LOG10"
         },        // tag field of the block <field ...>
         "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "NUM":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{},     //tag statement
         "returnType":"float"
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["exp"] = function(args, node){ // Give node.args and node
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["exp"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_single", // block type="text_print"
         "fields":{
             "OP":"EXP"
         },        // tag field of the block <field ...>
         "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "NUM":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{},     //tag statement
         "returnType": "float"
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["pow"] = function(args, node){ // Give node.args and node
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["pow"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_single", // block type="text_print"
         "fields":{
             "OP":"POW10"
         },        // tag field of the block <field ...>
         "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[1], node) // recursive conversion for args[0]
+            "NUM":PyBlock.prototype.convert(args[1], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{},     //tag statement
         "returnType":"float"
@@ -88,78 +88,78 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["pow"] = function(arg
 Fonction de trigo
 
 */
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["sin"] = function(args, node){ // Give node.args and node
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["sin"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_trig", // block type="text_print"
         "fields":{
             "OP":"SIN"
         },        // tag field of the block <field ...>
         "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "NUM":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{},     //tag statement
         "returnType":"float"
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["cos"] = function(args, node){ // Give node.args and node
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["cos"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_trig", // block type="text_print"
         "fields":{
             "OP":"COS"
         },        // tag field of the block <field ...>
         "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "NUM":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{},     //tag statement
         "returnType":"float"
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["asin"] = function(args, node){ // Give node.args and node
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["asin"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_trig", // block type="text_print"
         "fields":{
             "OP":"ASIN"
         },        // tag field of the block <field ...>
         "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "NUM":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{},     //tag statement
         "returnType":"float"
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["acos"] = function(args, node){ // Give node.args and node
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["acos"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_trig", // block type="text_print"
         "fields":{
             "OP":"ACOS"
         },        // tag field of the block <field ...>
         "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "NUM":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{}     //tag statement
         , "returnType":"float"
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["atan"] = function(args, node){ // Give node.args and node
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["atan"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_trig", // block type="text_print"
         "fields":{
             "OP":"ATAN"
         },        // tag field of the block <field ...>
         "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "NUM":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{}     //tag statement
         , "returnType":"float"
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["atan2"] = function(args, node){ // Give node.args and node
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["atan2"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_atan2", // block type="text_print"
         "fields":{},        // tag field of the block <field ...>
         "values":{          
-            "X":BlockMirrorTextToBlocks.prototype.convert(args[0], node), // recursive conversion for args[0]
-            "Y":BlockMirrorTextToBlocks.prototype.convert(args[1], node) // recursive conversion for args[0]
+            "X":PyBlock.prototype.convert(args[0], node), // recursive conversion for args[0]
+            "Y":PyBlock.prototype.convert(args[1], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{}     //tag statement
         , "returnType":"float"
@@ -170,40 +170,40 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["atan2"] = function(a
 Fonctions pour arrondir
 
 */
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["round"] = function(args, node){ // Give node.args and node
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["round"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_round", // block type="text_print"
         "fields":{
             "OP":"ROUND"
         },        // tag field of the block <field ...>
         "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "NUM":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{}     //tag statement
         , "returnType":"int"
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["ceil"] = function(args, node){ // Give node.args and node
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["ceil"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_round", // block type="text_print"
         "fields":{
             "OP":"ROUNDUP"
         },        // tag field of the block <field ...>
         "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "NUM":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{}     //tag statement
         , "returnType":"int"
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["floor"] = function(args, node){ // Give node.args and node
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["floor"] = function(args, node){ // Give node.args and node
     return {
         "name":"math_round", // block type="text_print"
         "fields":{
             "OP":"ROUNDDOWN"
         },        // tag field of the block <field ...>
         "values":{          
-            "NUM":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "NUM":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{}     //tag statement
         , "returnType":"int"
@@ -214,8 +214,8 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["floor"] = function(a
 Opérations sur les listes
 
 */
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["sum"] = function(args, node){ // Give node.args and node
-    let num_list = BlockMirrorTextToBlocks.prototype.convert(args[0], node);
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["sum"] = function(args, node){ // Give node.args and node
+    let num_list = PyBlock.prototype.convert(args[0], node);
     return {
         "name":"math_on_list", // block type="text_print"
         "fields":{
@@ -228,8 +228,8 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["sum"] = function(arg
         , "returnType": ((num_list.elementsType !== "int") ? "float":"int")
     };
 };
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["max"] = function(args, node){ // Give node.args and node
-    let num_list = BlockMirrorTextToBlocks.prototype.convert(args[0], node);
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["max"] = function(args, node){ // Give node.args and node
+    let num_list = PyBlock.prototype.convert(args[0], node);
     return {
         "name":"math_on_list", // block type="text_print"
         "fields":{
@@ -245,14 +245,14 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["max"] = function(arg
 
 
 
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["math"]["min"] = function(args, node){ // Give node.args and node
+PyBlock.prototype.FUNCTIONS_BLOCKS["math"]["min"] = function(args, node){ // Give node.args and node
     if (args[0].args != undefined && args[0].func != undefined && args[0].func.id != undefined && args[0].func.id.v === "max" ){
-        let nodes = [BlockMirrorTextToBlocks.prototype.convert(args[0].args[0],node),
-            BlockMirrorTextToBlocks.prototype.convert(args[0].args[1],node),
-            BlockMirrorTextToBlocks.prototype.convert(args[1],node)];
+        let nodes = [PyBlock.prototype.convert(args[0].args[0],node),
+            PyBlock.prototype.convert(args[0].args[1],node),
+            PyBlock.prototype.convert(args[1],node)];
         let type = "int";
         nodes.forEach((element =>{
-            if(BlockMirrorTextToBlocks.getVarType(element) === "float"){
+            if(PyBlock.getVarType(element) === "float"){
                 type = "float";
                 return;
             }

@@ -1,11 +1,11 @@
-BlockMirrorTextToBlocks.BLOCKS.push({
+PyBlock.BLOCKS.push({
     "type": "raw_code",
     "message0": "Code Block: %1 %2",
     "args0": [
         {"type": "input_dummy"},
         {"type": "field_multilinetext", "name": "TEXT", "value": ''}
     ],
-    "colour": BlockMirrorTextToBlocks.COLOR.PYTHON,
+    "colour": PyBlock.COLOR.PYTHON,
     "previousStatement": null,
     "nextStatement": null,
 });

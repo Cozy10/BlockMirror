@@ -1,4 +1,4 @@
-BlockMirrorTextToBlocks.CONVERT_BINOPS = { 
+PyBlock.CONVERT_BINOPS = { 
     "Sub" : "MINUS",
     "Add" : "ADD",
     "Mult" : "MULTIPLY",
@@ -6,8 +6,8 @@ BlockMirrorTextToBlocks.CONVERT_BINOPS = {
     "Pow" : "POWER"
 };
 
-BlockMirrorTextToBlocks.createOpBlock = (op, left, right, returnType, node)=>{
-    return BlockMirrorTextToBlocks.create_block("math_arithmetic", node.lineno, 
+PyBlock.createOpBlock = (op, left, right, returnType, node)=>{
+    return PyBlock.create_block("math_arithmetic", node.lineno, 
         returnType, {
         "OP": op
     }, {
@@ -18,7 +18,7 @@ BlockMirrorTextToBlocks.createOpBlock = (op, left, right, returnType, node)=>{
     });
 }
 
-BlockMirrorTextToBlocks.BINOPS = [
+PyBlock.BINOPS = [
     ["+", "Add", Blockly.Python.ORDER_ADDITIVE, 'Return the sum of the two numbers.', 'increase', 'by'],
     ["-", "Sub", Blockly.Python.ORDER_ADDITIVE, 'Return the difference of the two numbers.', 'decrease', 'by'],
     ["*", "Mult", Blockly.Python.ORDER_MULTIPLICATIVE, 'Return the product of the two numbers.', 'multiply', 'by'],
@@ -43,28 +43,28 @@ BlockMirrorTextToBlocks.BINOPS = [
     'matrix multiply', 'by']
 ];
 var BINOPS_SIMPLE = ['Add', 'Sub', 'Mult', 'Div', 'Mod', 'Pow'];
-var BINOPS_BLOCKLY_DISPLAY_FULL = BlockMirrorTextToBlocks.BINOPS.map(
+var BINOPS_BLOCKLY_DISPLAY_FULL = PyBlock.BINOPS.map(
     binop => [binop[0], binop[1]]
 );
 var BINOPS_BLOCKLY_DISPLAY = BINOPS_BLOCKLY_DISPLAY_FULL.filter(
     binop => BINOPS_SIMPLE.indexOf(binop[1]) >= 0
 );
-BlockMirrorTextToBlocks.BINOPS_AUGASSIGN_DISPLAY_FULL =BlockMirrorTextToBlocks.BINOPS.map(
+PyBlock.BINOPS_AUGASSIGN_DISPLAY_FULL =PyBlock.BINOPS.map(
     binop => [binop[4], binop[1]]
 );
-BlockMirrorTextToBlocks.BINOPS_AUGASSIGN_DISPLAY = BlockMirrorTextToBlocks.BINOPS_AUGASSIGN_DISPLAY_FULL.filter(
+PyBlock.BINOPS_AUGASSIGN_DISPLAY = PyBlock.BINOPS_AUGASSIGN_DISPLAY_FULL.filter(
     binop => BINOPS_SIMPLE.indexOf(binop[1]) >= 0
 );
 
 var BINOPS_BLOCKLY_GENERATE = {};
-BlockMirrorTextToBlocks.BINOPS_AUGASSIGN_PREPOSITION = {};
-BlockMirrorTextToBlocks.BINOPS.forEach(function (binop) {
+PyBlock.BINOPS_AUGASSIGN_PREPOSITION = {};
+PyBlock.BINOPS.forEach(function (binop) {
     BINOPS_BLOCKLY_GENERATE[binop[1]] = [" " + binop[0], binop[2]];
-    BlockMirrorTextToBlocks.BINOPS_AUGASSIGN_PREPOSITION[binop[1]] = binop[5];
+    PyBlock.BINOPS_AUGASSIGN_PREPOSITION[binop[1]] = binop[5];
     //Blockly.Constants.Math.TOOLTIPS_BY_OP[binop[1]] = binop[3];
 });
 
-BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
+PyBlock.prototype['ast_BinOp'] = function (node, parent) {
     let left = node.left;
     let op = node.op.prototype._astname;
     let right = node.right;
@@ -73,7 +73,7 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
     let rightNode = this.convert(right, node);
 
     // create list with item [...] repeated n times (voir ast_List)
-    if(BlockMirrorTextToBlocks.getVarType(leftNode) === "list" && op ==="Mult"){
+    if(PyBlock.getVarType(leftNode) === "list" && op ==="Mult"){
         let item;
         if (left._astname ==="List"){
             item = this.convert(left.elts[0], left);   
@@ -81,13 +81,13 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
         else{
             item = leftNode;
         }
-        let block = BlockMirrorTextToBlocks.create_block("lists_repeat", node.lineno, "list", {},
+        let block = PyBlock.create_block("lists_repeat", node.lineno, "list", {},
             {
                 "ITEM": item,
                 "NUM": rightNode
             },
             {}, {}, {});
-        block.elementsType = BlockMirrorTextToBlocks.getVarType(item);
+        block.elementsType = PyBlock.getVarType(item);
         return block;
     }
     if (left._astname == 'List'){
@@ -97,7 +97,7 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
     
     
     // both left and right are String so String op
-    if(BlockMirrorTextToBlocks.getVarType(leftNode) === "Str" && BlockMirrorTextToBlocks.getVarType(rightNode) === "Str"){
+    if(PyBlock.getVarType(leftNode) === "Str" && PyBlock.getVarType(rightNode) === "Str"){
         let res, values, nodesComputed, blockGuess;
         //the left node is already a text_join so create a new one with text on the right
         if(leftNode.currentBlock === "text_join"){
@@ -112,7 +112,7 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
             nodesComputed = [leftNode, rightNode];
             values = {"ADD0":leftNode, "ADD1":rightNode};
         }
-        res = BlockMirrorTextToBlocks.create_block("text_join", node.lineno, "Str", {}, values,
+        res = PyBlock.create_block("text_join", node.lineno, "Str", {}, values,
             {}, {"@items":nodesComputed.length});
         if(leftNode.variableName != undefined){ //Maybe it's an append op
             blockGuess = "text_append";
@@ -125,7 +125,7 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
 
     if ( op === "Mod"){
         blockName = "math_modulo";
-        return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, "int", {},
+        return PyBlock.create_block(blockName, node.lineno, "int", {},
         {
             "DIVIDEND": leftNode,
             "DIVISOR": rightNode
@@ -134,8 +134,8 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
     }
 
     // Math op between 2 number so if one element is a float or it's a division result will be a float otherwise it's an int
-    let typeLeft = BlockMirrorTextToBlocks.getVarType(leftNode), typeRight = BlockMirrorTextToBlocks.getVarType(rightNode);
-    let block_op = BlockMirrorTextToBlocks.CONVERT_BINOPS[op];
+    let typeLeft = PyBlock.getVarType(leftNode), typeRight = PyBlock.getVarType(rightNode);
+    let block_op = PyBlock.CONVERT_BINOPS[op];
 
     // check if 
     if(block_op === "ADD" && leftNode.blockGuess === "find"){
@@ -146,12 +146,12 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
                 return leftNode;
             }
             else{
-                rightNode = BlockMirrorTextToBlocks.createNumBlock(num-1, "int", node);
+                rightNode = PyBlock.createNumBlock(num-1, "int", node);
             }
         }
     }
     let type = ( ((op === "DIVIDE") || (typeLeft === "float") || (typeRight === "float")) ? "float" : "int");
-    return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, 
+    return PyBlock.create_block(blockName, node.lineno, 
         type, {
         "OP": block_op
     }, {
@@ -162,4 +162,4 @@ BlockMirrorTextToBlocks.prototype['ast_BinOp'] = function (node, parent) {
     });
 }
 
-BlockMirrorTextToBlocks.prototype['math_arithmetic'] = BlockMirrorTextToBlocks.prototype['ast_BinOp'];
+PyBlock.prototype['math_arithmetic'] = PyBlock.prototype['ast_BinOp'];

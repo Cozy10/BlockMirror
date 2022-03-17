@@ -1,6 +1,6 @@
 
 
-BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
+PyBlock.prototype['ast_Assign'] = function (node, parent) {
     let targets = node.targets;
     let value = node.value;
     let values;
@@ -41,10 +41,10 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
         }
 
         Object.assign(set_values, {"TO":this.convert(value, node)});
-        return BlockMirrorTextToBlocks.create_block(
+        return PyBlock.create_block(
             "lists_setIndex", // type
             node.lineno, // line_number
-            BlockMirrorTextToBlocks.getVarType(set_values["LIST"]),
+            PyBlock.getVarType(set_values["LIST"]),
             {
                 "MODE":mode,
                 "WHERE":where
@@ -74,10 +74,10 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
                     valueNode.nodesComputed.forEach((element, i)=>{
                         values["ADD"+i] = element;
                     });
-                    block = BlockMirrorTextToBlocks.create_block("text_join", node.lineno, "Str", {},
+                    block = PyBlock.create_block("text_join", node.lineno, "Str", {},
                         values, {}, {"@items":valueNode.nodesComputed.length});
                 }
-                return BlockMirrorTextToBlocks.create_block("text_append", node.lineno, "Str", {
+                return PyBlock.create_block("text_append", node.lineno, "Str", {
                         "VAR":  Sk.ffi.remapToJs(targets[0].id)
                     }, {
                         "TEXT": block
@@ -87,7 +87,7 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
         values = {};
         fields['VAR'] = Sk.ffi.remapToJs(targets[0].id);
         // save variable type
-        BlockMirrorTextToBlocks.setVariable(fields['VAR'], BlockMirrorTextToBlocks.getVarType(valueNode));
+        PyBlock.setVariable(fields['VAR'], PyBlock.getVarType(valueNode));
         
         values['VALUE'] = valueNode;
         
@@ -95,7 +95,7 @@ BlockMirrorTextToBlocks.prototype['ast_Assign'] = function (node, parent) {
         values = this.convertElements("TARGET", targets, node);
     }
 
-    return BlockMirrorTextToBlocks.create_block("variables_set", node.lineno, undefined,
+    return PyBlock.create_block("variables_set", node.lineno, undefined,
         fields,
         values,
         {

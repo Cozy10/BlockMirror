@@ -1,19 +1,19 @@
-function BlockMirrorTextToBlocks() {
+function PyBlock() {
     this.hiddenImports = ["plt"];
     this.strictAnnotations = ['int', 'float', 'str', 'bool'];
-    Blockly.defineBlocksWithJsonArray(BlockMirrorTextToBlocks.BLOCKS);
+    Blockly.defineBlocksWithJsonArray(PyBlock.BLOCKS);
     this.currentLevel = 0;
     this.Local_Var = [{}];
 }
 
-BlockMirrorTextToBlocks.xmlToString = function (xml) {
+PyBlock.xmlToString = function (xml) {
     return new XMLSerializer().serializeToString(xml);
 };
 
-BlockMirrorTextToBlocks.prototype.convertSourceToCodeBlock = function (python_source) {
+PyBlock.prototype.convertSourceToCodeBlock = function (python_source) {
     var xml = document.createElement("xml");
-    xml.appendChild(BlockMirrorTextToBlocks.raw_block(python_source));
-    return BlockMirrorTextToBlocks.xmlToString(xml);
+    xml.appendChild(PyBlock.raw_block(python_source));
+    return PyBlock.xmlToString(xml);
 };
 
 /**
@@ -26,7 +26,7 @@ BlockMirrorTextToBlocks.prototype.convertSourceToCodeBlock = function (python_so
  * @returns {Object} An object which will either have the converted
  *      source code or an error message and the code as a code-block.
  */
-BlockMirrorTextToBlocks.prototype.convertSource = function (filename, python_source) {
+PyBlock.prototype.convertSource = function (filename, python_source) {
     let xml = document.createElement("xml");
     // Attempt parsing - might fail!
     let parse, ast = null, symbol_table, error;
@@ -37,9 +37,9 @@ BlockMirrorTextToBlocks.prototype.convertSource = function (filename, python_sou
     while (ast === null) {
         if (python_source.trim() === "") {
             if (badChunks.length) {
-                xml.appendChild(BlockMirrorTextToBlocks.raw_block(badChunks.join("\n")));
+                xml.appendChild(PyBlock.raw_block(badChunks.join("\n")));
             }
-            return {"xml": BlockMirrorTextToBlocks.xmlToString(xml),
+            return {"xml": PyBlock.xmlToString(xml),
                     "error": null,
                     rawXml: xml};
         }
@@ -57,8 +57,8 @@ BlockMirrorTextToBlocks.prototype.convertSource = function (filename, python_sou
                 python_source = this.source.join("\n");
             } else {
                 //console.error(e);
-                xml.appendChild(BlockMirrorTextToBlocks.raw_block(originalSource));
-                return {"xml": BlockMirrorTextToBlocks.xmlToString(xml), "error": error, "rawXml": xml};
+                xml.appendChild(PyBlock.raw_block(originalSource));
+                return {"xml": PyBlock.xmlToString(xml), "error": error, "rawXml": xml};
             }
         }
     }
@@ -79,10 +79,10 @@ BlockMirrorTextToBlocks.prototype.convertSource = function (filename, python_sou
         }
     }
     if (badChunks.length) {
-        xml.appendChild(BlockMirrorTextToBlocks.raw_block(badChunks.join("\n")));
+        xml.appendChild(PyBlock.raw_block(badChunks.join("\n")));
     }
     return {
-        "xml": BlockMirrorTextToBlocks.xmlToString(xml),
+        "xml": PyBlock.xmlToString(xml),
         "error": null,
         "lineMap": this.lineMap,
         'comments': this.comments,
@@ -90,7 +90,7 @@ BlockMirrorTextToBlocks.prototype.convertSource = function (filename, python_sou
     };
 };
 
-BlockMirrorTextToBlocks.prototype.recursiveMeasure = function (node, nextBlockLine) {
+PyBlock.prototype.recursiveMeasure = function (node, nextBlockLine) {
     if (node === undefined) {
         return;
     }
@@ -127,13 +127,13 @@ BlockMirrorTextToBlocks.prototype.recursiveMeasure = function (node, nextBlockLi
     }
 };
 
-BlockMirrorTextToBlocks.prototype.measureNode = function (node) {
+PyBlock.prototype.measureNode = function (node) {
     this.heights = [];
     this.recursiveMeasure(node, this.source.length - 1);
     this.heights.shift();
 };
 
-BlockMirrorTextToBlocks.prototype.getSourceCode = function (frm, to) {
+PyBlock.prototype.getSourceCode = function (frm, to) {
     var lines = this.source.slice(frm - 1, to);
     // Strip out any starting indentation.
     if (lines.length > 0) {
@@ -145,7 +145,7 @@ BlockMirrorTextToBlocks.prototype.getSourceCode = function (frm, to) {
     return lines.join("\n");
 };
 
-BlockMirrorTextToBlocks.prototype.convertBody = function (node, parent) {
+PyBlock.prototype.convertBody = function (node, parent) {
     this.levelIndex += 1;
     let is_top_level = this.isTopLevel(parent);
     // Empty body, return nothing
@@ -307,17 +307,17 @@ BlockMirrorTextToBlocks.prototype.convertBody = function (node, parent) {
     return children;
 };
 
-BlockMirrorTextToBlocks.prototype.TOP_LEVEL_NODES = ['Module', 'Expression', 'Interactive', 'Suite'];
+PyBlock.prototype.TOP_LEVEL_NODES = ['Module', 'Expression', 'Interactive', 'Suite'];
 
-BlockMirrorTextToBlocks.prototype.isTopLevel = function (parent) {
+PyBlock.prototype.isTopLevel = function (parent) {
 
     return !parent || this.TOP_LEVEL_NODES.indexOf(parent._astname) !== -1;
 };
 
-BlockMirrorTextToBlocks.prototype.convert = function (node, parent) {
+PyBlock.prototype.convert = function (node, parent) {
     let functionName = 'ast_' + node._astname;
     // Check if it's a constant
-    let constantBlock = BlockMirrorTextToBlocks.prototype.CONSTANTS(node, parent);
+    let constantBlock = PyBlock.prototype.CONSTANTS(node, parent);
     if(constantBlock != undefined){
         return constantBlock;
     }
@@ -340,18 +340,18 @@ function arrayMin(array) {
     });
 }
 
-BlockMirrorTextToBlocks.prototype.convertStatement = function (node, full_source, parent) {
+PyBlock.prototype.convertStatement = function (node, full_source, parent) {
     try {
         return this.convert(node, parent);
     } catch (e) {
         let heights = this.getChunkHeights(node);
         let extractedSource = this.getSourceCode(arrayMin(heights), arrayMax(heights));
         console.error(e);
-        return BlockMirrorTextToBlocks.raw_block(extractedSource);
+        return PyBlock.raw_block(extractedSource);
     }
 };
 
-BlockMirrorTextToBlocks.prototype.getChunkHeights = function (node) {
+PyBlock.prototype.getChunkHeights = function (node) {
     let lineNumbers = [];
     if (node.hasOwnProperty("lineno")) {
         lineNumbers.push(node.lineno);
@@ -371,7 +371,7 @@ BlockMirrorTextToBlocks.prototype.getChunkHeights = function (node) {
     return lineNumbers;
 };
 
-BlockMirrorTextToBlocks.create_block = function (type, lineNumber, python_type, fields, values, settings, mutations, statements) {
+PyBlock.create_block = function (type, lineNumber, python_type, fields, values, settings, mutations, statements) {
     var newBlock = document.createElement("block");
     // Settings
     newBlock.setAttribute("type", type);
@@ -445,33 +445,33 @@ BlockMirrorTextToBlocks.create_block = function (type, lineNumber, python_type, 
             }
         }
     }
-    return BlockMirrorTextToBlocks.setVarType(newBlock, python_type); // set the python type and return the block
+    return PyBlock.setVarType(newBlock, python_type); // set the python type and return the block
 };
 
-BlockMirrorTextToBlocks.raw_block = function (txt) {
+PyBlock.raw_block = function (txt) {
     // TODO: lineno as second parameter!
-    return BlockMirrorTextToBlocks.create_block("raw_code", 0, {"TEXT": txt});
+    return PyBlock.create_block("raw_code", 0, {"TEXT": txt});
 };
 
-BlockMirrorTextToBlocks.BLOCKS = [];
+PyBlock.BLOCKS = [];
 
-BlockMirrorTextToBlocks.prototype['ast_Module'] = function (node) {
+PyBlock.prototype['ast_Module'] = function (node) {
     return this.convertBody(node.body, node);
 };
 
-BlockMirrorTextToBlocks.prototype['ast_Interactive'] = function (node) {
+PyBlock.prototype['ast_Interactive'] = function (node) {
     return this.convertBody(node.body, node);
 };
 
-BlockMirrorTextToBlocks.prototype['ast_Expression'] = BlockMirrorTextToBlocks.prototype['ast_Interactive'];
-BlockMirrorTextToBlocks.prototype['ast_Suite'] = BlockMirrorTextToBlocks.prototype['ast_Module'];
+PyBlock.prototype['ast_Expression'] = PyBlock.prototype['ast_Interactive'];
+PyBlock.prototype['ast_Suite'] = PyBlock.prototype['ast_Module'];
 
-BlockMirrorTextToBlocks.prototype['ast_Pass'] = function () {
+PyBlock.prototype['ast_Pass'] = function () {
     return null; //block("controls_pass");
 };
 
 
-BlockMirrorTextToBlocks.prototype.convertElements = function (key, values, parent) {
+PyBlock.prototype.convertElements = function (key, values, parent) {
     var output = {};
     for (var i = 0; i < values.length; i++) {
         output[key + i] = this.convert(values[i], parent);
@@ -481,13 +481,13 @@ BlockMirrorTextToBlocks.prototype.convertElements = function (key, values, paren
 
 Blockly.Python['blank'] = '___';
 
-BlockMirrorTextToBlocks.prototype.LOCKED_BLOCK = {
+PyBlock.prototype.LOCKED_BLOCK = {
     "inline": "true",
     'deletable': "false",
     "movable": "false"
 };
 
-BlockMirrorTextToBlocks.COLOR = {
+PyBlock.COLOR = {
     VARIABLES: 225,
     FUNCTIONS: 210,
     OO: 240,

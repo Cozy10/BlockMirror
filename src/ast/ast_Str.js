@@ -1,19 +1,19 @@
-BlockMirrorTextToBlocks.prototype.isSingleChar = function (text) {
+PyBlock.prototype.isSingleChar = function (text) {
     return text === "\n" || text === "\t";
 };
 
-BlockMirrorTextToBlocks.prototype.isDocString = function (node, parent) {
+PyBlock.prototype.isDocString = function (node, parent) {
     return (parent._astname === 'Expr' &&
         parent._parent &&
         ['FunctionDef', 'ClassDef'].indexOf(parent._parent._astname) !== -1 &&
         parent._parent.body[0] === parent);
 };
 
-BlockMirrorTextToBlocks.prototype.isSimpleString = function (text) {
+PyBlock.prototype.isSimpleString = function (text) {
     return text.split("\n").length <= 2 && text.length <= 40;
 };
 
-BlockMirrorTextToBlocks.prototype.dedent = function (text, levels, isDocString) {
+PyBlock.prototype.dedent = function (text, levels, isDocString) {
     if (!isDocString && text.charAt(0) === "\n") {
         return text;
     }
@@ -45,30 +45,30 @@ BlockMirrorTextToBlocks.prototype.dedent = function (text, levels, isDocString) 
 };
 
 // TODO: Handle indentation intelligently
-BlockMirrorTextToBlocks.prototype['ast_Str'] = function (node, parent) {
+PyBlock.prototype['ast_Str'] = function (node, parent) {
     let s = node.s;
     let text = Sk.ffi.remapToJs(s);
     /*if (text.startsWith("http") && text.endsWith(".png")) {
-        return BlockMirrorTextToBlocks.create_block("ast_Image", node.lineno, {}, {}, {},
+        return PyBlock.create_block("ast_Image", node.lineno, {}, {}, {},
             {"@src": text});
     } else*/ if (this.isSingleChar(text)) {
-        return BlockMirrorTextToBlocks.create_block("ast_StrChar", node.lineno, "Str", {"TEXT": text});
+        return PyBlock.create_block("ast_StrChar", node.lineno, "Str", {"TEXT": text});
     } else if (this.isDocString(node, parent)) {
         let dedented = this.dedent(text, this.levelIndex - 1, true);
-        return [BlockMirrorTextToBlocks.create_block("ast_StrDocstring", node.lineno, undefined, {"TEXT": dedented})];
+        return [PyBlock.create_block("ast_StrDocstring", node.lineno, undefined, {"TEXT": dedented})];
     } else if (text.indexOf('\n') === -1) {
-        return BlockMirrorTextToBlocks.create_block("text", node.lineno, "Str", {"TEXT": text});
+        return PyBlock.create_block("text", node.lineno, "Str", {"TEXT": text});
     } else {
         let dedented = this.dedent(text, this.levelIndex - 1, false);
-        return BlockMirrorTextToBlocks.create_block("text", node.lineno, "Str", {"TEXT": dedented});
+        return PyBlock.create_block("text", node.lineno, "Str", {"TEXT": dedented});
     }
 };
 
 // in text (args[0]) find first occurence of text (args[1])
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["find"] = function(args, node){
-    var values = {"VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node)};
+PyBlock.prototype.METHODS_BLOCKS["find"] = function(args, node){
+    var values = {"VALUE":PyBlock.prototype.convert(args[0], node)};
     if(args[1] != undefined){
-        Object.assign(values, {"FIND":BlockMirrorTextToBlocks.prototype.convert(args[1], node)});
+        Object.assign(values, {"FIND":PyBlock.prototype.convert(args[1], node)});
     }
     return {
         "name":"text_indexOf", // block type="text_print"
@@ -79,7 +79,7 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["find"] = function(args, node){
         "statements":{},     //tag statement
         "returnType":"int",
         "parentBlock": (left)=>{
-            let res = BlockMirrorTextToBlocks.createOpBlock("MINUS", left, BlockMirrorTextToBlocks.createNumBlock(1, "int", node), "int", node); 
+            let res = PyBlock.createOpBlock("MINUS", left, PyBlock.createNumBlock(1, "int", node), "int", node); 
             res.blockGuess = "find";
             return res;
         },
@@ -88,10 +88,10 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["find"] = function(args, node){
 }
 
 // in text (args[0]) find last occurence of text (args[1])
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["rfind"] = function(args, node){
-    var values = {"VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node)};
+PyBlock.prototype.METHODS_BLOCKS["rfind"] = function(args, node){
+    var values = {"VALUE":PyBlock.prototype.convert(args[0], node)};
     if(args[1] != undefined){
-        Object.assign(values, {"FIND":BlockMirrorTextToBlocks.prototype.convert(args[1], node)});
+        Object.assign(values, {"FIND":PyBlock.prototype.convert(args[1], node)});
     }
     return {
         "name":"text_indexOf", // block type="text_print"
@@ -102,7 +102,7 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["rfind"] = function(args, node)
         "statements":{},     //tag statement
         "returnType":"int",
         "parentBlock": (left)=>{
-            let res = BlockMirrorTextToBlocks.createOpBlock("MINUS", left, BlockMirrorTextToBlocks.createNumBlock(1, "int", node), "int", node); 
+            let res = PyBlock.createOpBlock("MINUS", left, PyBlock.createNumBlock(1, "int", node), "int", node); 
             res.blockGuess = "find";
             return res;
         },
@@ -111,8 +111,8 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["rfind"] = function(args, node)
 }
 
 // in text get random letter, args[0] is the text
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["text_random_letter"] = function(args, node){
-    var values = {"VALUE":BlockMirrorTextToBlocks.prototype.convert(args[0], node)};
+PyBlock.prototype.FUNCTIONS_BLOCKS["text_random_letter"] = function(args, node){
+    var values = {"VALUE":PyBlock.prototype.convert(args[0], node)};
     return {
         "name":"text_charAt", // block type="text_print"
         "fields":{
@@ -128,14 +128,14 @@ BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["text_random_letter"] = funct
 }
 
 // to UPPER CASE from string, args[0] is the string
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["upper"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["upper"] = function(args, node){
     return {
         "name":"text_changeCase", // block type="text_print"
         "fields":{
             "CASE":"UPPERCASE"
         },        // tag field of the block <field ...>
         "values":{
-            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "TEXT":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{},     //tag statement
         "returnType":"Str"
@@ -143,14 +143,14 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["upper"] = function(args, node)
 }
 
 // to lower case from string, args[0] is the string
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["lower"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["lower"] = function(args, node){
     return {
         "name":"text_changeCase", // block type="text_print"
         "fields":{
             "CASE":"LOWERCASE"
         },        // tag field of the block <field ...>
         "values":{
-            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "TEXT":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{},     //tag statement
         "returnType":"Str"
@@ -158,14 +158,14 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["lower"] = function(args, node)
 }
 
 // to Title Case from string, args[0] is the string
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["title"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["title"] = function(args, node){
     return {
         "name":"text_changeCase", // block type="text_print"
         "fields":{
             "CASE":"TITLECASE"
         },        // tag field of the block <field ...>
         "values":{
-            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "TEXT":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{},     //tag statement
         "returnType":"Str"
@@ -173,14 +173,14 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["title"] = function(args, node)
 }
 
 // Trim spaces from both sides of string, args[0] is the string
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["strip"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["strip"] = function(args, node){
     return {
         "name":"text_trim", 
         "fields":{
             "MODE":"BOTH"
         },        // tag field of the block <field ...>
         "values":{
-            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "TEXT":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{},     //tag statement
         "returnType":"Str"
@@ -188,14 +188,14 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["strip"] = function(args, node)
 }
 
 // Trim spaces from left side of string, args[0] is the string
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["lstrip"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["lstrip"] = function(args, node){
     return {
         "name":"text_trim", 
         "fields":{
             "MODE":"LEFT"
         },        // tag field of the block <field ...>
         "values":{
-            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "TEXT":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{},     //tag statement
         "returnType":"Str"
@@ -203,14 +203,14 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["lstrip"] = function(args, node
 }
 
 // Trim spaces from right side of string, args[0] is the string
-BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["rstrip"] = function(args, node){
+PyBlock.prototype.METHODS_BLOCKS["rstrip"] = function(args, node){
     return {
         "name":"text_trim", 
         "fields":{
             "MODE":"RIGHT"
         },        // tag field of the block <field ...>
         "values":{
-            "TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node) // recursive conversion for args[0]
+            "TEXT":PyBlock.prototype.convert(args[0], node) // recursive conversion for args[0]
         },                  // tag value
         "statements":{},     //tag statement
         "returnType":"Str"
@@ -218,10 +218,10 @@ BlockMirrorTextToBlocks.prototype.METHODS_BLOCKS["rstrip"] = function(args, node
 }
 
 // Prompt for text with message, args[0] is the message
-BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS["text_prompt"] = function(args, node){
+PyBlock.prototype.FUNCTIONS_BLOCKS["text_prompt"] = function(args, node){
     var values = {};
     if(args != undefined){
-        Object.assign(values, {"TEXT":BlockMirrorTextToBlocks.prototype.convert(args[0], node)});
+        Object.assign(values, {"TEXT":PyBlock.prototype.convert(args[0], node)});
     }
 
     // Prompt for number with message

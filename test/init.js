@@ -10,7 +10,7 @@ function builtinRead(x) {
 }
 
 
-var textToBlock = new BlockMirrorTextToBlocks();
+var pyBlock = new PyBlock();
 Sk.configure({
   __future__: Sk.python3,
   read: function (filename) {
@@ -22,9 +22,9 @@ Sk.configure({
   }
 });
 function runit() {
-    BlockMirrorTextToBlocks.reset();
+    PyBlock.reset();
     var prog = document.getElementById("yourcode").value; 
-    xml = textToBlock.convertSource("__main__.py", prog);
+    xml = pyBlock.convertSource("__main__.py", prog);
     document.getElementById("output").innerHTML = xml.xml;
     let xmlDom = Blockly.Xml.textToDom(xml.xml);
     Blockly.Xml.clearWorkspaceAndLoadFromXml(xmlDom, workspace);

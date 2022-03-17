@@ -1,4 +1,4 @@
-BlockMirrorTextToBlocks.CAST_TYPE = { // cast_function : type
+PyBlock.CAST_TYPE = { // cast_function : type
     "str":"Str",
     "int":"int",
     "float":"float",
@@ -7,10 +7,10 @@ BlockMirrorTextToBlocks.CAST_TYPE = { // cast_function : type
     "char":"char"
 }
 
-BlockMirrorTextToBlocks.setVarType = (block, typeName)=>{
+PyBlock.setVarType = (block, typeName)=>{
     block.foundType = typeName;
     return block;
 }
-BlockMirrorTextToBlocks.getVarType = (block)=>{
+PyBlock.getVarType = (block)=>{
     return (((block != undefined) && (block != undefined)) ? block.foundType : undefined);
 }

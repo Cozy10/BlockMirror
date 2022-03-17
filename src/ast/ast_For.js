@@ -1,5 +1,5 @@
 
-BlockMirrorTextToBlocks.prototype['ast_For'] = function (node, parent) {
+PyBlock.prototype['ast_For'] = function (node, parent) {
     var target = node.target;
     var iter = node.iter;
     var body = node.body;
@@ -12,13 +12,13 @@ BlockMirrorTextToBlocks.prototype['ast_For'] = function (node, parent) {
     var iter_val;
     // for i in range(...)
     if (iter.func != undefined && iter.func.id.v === "range"){
-      let varUsedBefore = BlockMirrorTextToBlocks.isVariableUsed(Sk.ffi.remapToJs(target.id));
-      BlockMirrorTextToBlocks.incrementLevel();
-      BlockMirrorTextToBlocks.setVariable(Sk.ffi.remapToJs(target.id), "int");
-      BlockMirrorTextToBlocks.setVariableUsed(Sk.ffi.remapToJs(target.id), false);
+      let varUsedBefore = PyBlock.isVariableUsed(Sk.ffi.remapToJs(target.id));
+      PyBlock.incrementLevel();
+      PyBlock.setVariable(Sk.ffi.remapToJs(target.id), "int");
+      PyBlock.setVariableUsed(Sk.ffi.remapToJs(target.id), false);
       bodies = {'DO': this.convertBody(body, node)};
-      let varIsUsed = BlockMirrorTextToBlocks.isVariableUsed(Sk.ffi.remapToJs(target.id));
-      BlockMirrorTextToBlocks.decrementLevel();
+      let varIsUsed = PyBlock.isVariableUsed(Sk.ffi.remapToJs(target.id));
+      PyBlock.decrementLevel();
       // "for i in range(x)" block repeat x times
       if(!varUsedBefore && iter.args.length == 1 && !varIsUsed){
         blockName = "controls_repeat_ext";
@@ -33,14 +33,14 @@ BlockMirrorTextToBlocks.prototype['ast_For'] = function (node, parent) {
         // "for i in range(x, y)" or range(x) and i is used inside
         if(iter.args.length < 3){
           if(iter.args.length == 1){
-            to_block = BlockMirrorTextToBlocks.create_block("math_number", node.lineno, "int", {
+            to_block = PyBlock.create_block("math_number", node.lineno, "int", {
               "NUM": 0
             });
           }
           else{
             to_block = this.convert(iter.args[1], node);
           }
-          by_block = BlockMirrorTextToBlocks.create_block("math_number", node.lineno, "int", {
+          by_block = PyBlock.create_block("math_number", node.lineno, "int", {
               "NUM": 1
             });
         }
@@ -59,15 +59,15 @@ BlockMirrorTextToBlocks.prototype['ast_For'] = function (node, parent) {
     }
     else{
       blockName = 'controls_forEach';
-      BlockMirrorTextToBlocks.incrementLevel();
+      PyBlock.incrementLevel();
       bodies = {'DO': this.convertBody(body, node)};
-      BlockMirrorTextToBlocks.decrementLevel();
+      PyBlock.decrementLevel();
       fields['VAR'] = Sk.ffi.remapToJs(target.id);
       iter_val = {
           "LIST": this.convert(iter, node)
       };
     }
 
-    return BlockMirrorTextToBlocks.create_block(blockName, node.lineno, undefined, fields,
+    return PyBlock.create_block(blockName, node.lineno, undefined, fields,
       iter_val, {}, {}, bodies);
 }

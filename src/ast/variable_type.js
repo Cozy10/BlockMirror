@@ -1,36 +1,36 @@
 // Array of dict like Variables for storing variables only inside their block (if/while/def)
-BlockMirrorTextToBlocks.Local_Var = [{}];
-BlockMirrorTextToBlocks.Lists = {};
+PyBlock.Local_Var = [{}];
+PyBlock.Lists = {};
 
-BlockMirrorTextToBlocks.currentLevel = 0;
-BlockMirrorTextToBlocks.reset = function(){
-    BlockMirrorTextToBlocks.Local_Var = [{}];
-    BlockMirrorTextToBlocks.Lists = {};
-    BlockMirrorTextToBlocks.currentLevel = 0;
+PyBlock.currentLevel = 0;
+PyBlock.reset = function(){
+    PyBlock.Local_Var = [{}];
+    PyBlock.Lists = {};
+    PyBlock.currentLevel = 0;
 }
 
-BlockMirrorTextToBlocks.getVariable = (varName) => {
-    if(BlockMirrorTextToBlocks.Local_Var[BlockMirrorTextToBlocks.currentLevel][varName] === undefined){
+PyBlock.getVariable = (varName) => {
+    if(PyBlock.Local_Var[PyBlock.currentLevel][varName] === undefined){
         return undefined;
     }
-    BlockMirrorTextToBlocks.Local_Var[BlockMirrorTextToBlocks.currentLevel][varName].used = true;
-    return BlockMirrorTextToBlocks.Local_Var[BlockMirrorTextToBlocks.currentLevel][varName].type;
+    PyBlock.Local_Var[PyBlock.currentLevel][varName].used = true;
+    return PyBlock.Local_Var[PyBlock.currentLevel][varName].type;
 };
-BlockMirrorTextToBlocks.setVariable = (varName, val) => {
-    BlockMirrorTextToBlocks.Local_Var[BlockMirrorTextToBlocks.currentLevel][varName] = {"used":true , "type":val};
+PyBlock.setVariable = (varName, val) => {
+    PyBlock.Local_Var[PyBlock.currentLevel][varName] = {"used":true , "type":val};
 };
-BlockMirrorTextToBlocks.isVariableUsed = (varName)=>{
-    if(BlockMirrorTextToBlocks.Local_Var[BlockMirrorTextToBlocks.currentLevel][varName] === undefined){
+PyBlock.isVariableUsed = (varName)=>{
+    if(PyBlock.Local_Var[PyBlock.currentLevel][varName] === undefined){
         return false;
     }
-    return BlockMirrorTextToBlocks.Local_Var[BlockMirrorTextToBlocks.currentLevel][varName].used;
+    return PyBlock.Local_Var[PyBlock.currentLevel][varName].used;
 }
-BlockMirrorTextToBlocks.setVariableUsed = (varName, used)=>{
-    if(BlockMirrorTextToBlocks.Local_Var[BlockMirrorTextToBlocks.currentLevel][varName] === undefined){
-        BlockMirrorTextToBlocks.Local_Var[BlockMirrorTextToBlocks.currentLevel][varName] = {"used":used , "type":val};
+PyBlock.setVariableUsed = (varName, used)=>{
+    if(PyBlock.Local_Var[PyBlock.currentLevel][varName] === undefined){
+        PyBlock.Local_Var[PyBlock.currentLevel][varName] = {"used":used , "type":val};
     }
     else{
-        BlockMirrorTextToBlocks.Local_Var[BlockMirrorTextToBlocks.currentLevel][varName].used = used;
+        PyBlock.Local_Var[PyBlock.currentLevel][varName].used = used;
     }
 }
 // Variable type after
@@ -38,13 +38,13 @@ BlockMirrorTextToBlocks.setVariableUsed = (varName, used)=>{
 // if test:
 //   a = ""
 // will be string
-BlockMirrorTextToBlocks.incrementLevel = () =>{
-    BlockMirrorTextToBlocks.Local_Var.push({"used":{}, "type":{}});
-    BlockMirrorTextToBlocks.currentLevel += 1;
+PyBlock.incrementLevel = () =>{
+    PyBlock.Local_Var.push({"used":{}, "type":{}});
+    PyBlock.currentLevel += 1;
     // Copy reference to existing parameters (because they are objects) only so new created parameters will not propagate to subLevel
-    BlockMirrorTextToBlocks.Local_Var[BlockMirrorTextToBlocks.currentLevel] = {...BlockMirrorTextToBlocks.Local_Var[BlockMirrorTextToBlocks.currentLevel-1]};
+    PyBlock.Local_Var[PyBlock.currentLevel] = {...PyBlock.Local_Var[PyBlock.currentLevel-1]};
 };
-BlockMirrorTextToBlocks.decrementLevel = ()=>{
-    BlockMirrorTextToBlocks.Local_Var.pop();
-    BlockMirrorTextToBlocks.currentLevel-=1;
+PyBlock.decrementLevel = ()=>{
+    PyBlock.Local_Var.pop();
+    PyBlock.currentLevel-=1;
 }

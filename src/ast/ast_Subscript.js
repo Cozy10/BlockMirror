@@ -4,7 +4,7 @@ var isWeirdSliceCase = function(slice) {
         slice.step.value === Sk.builtin.none.none$);
 }
 
-BlockMirrorTextToBlocks.prototype.addSliceDim = function (slice, i, values, mutations, node) {
+PyBlock.prototype.addSliceDim = function (slice, i, values, mutations, node) {
     let sliceKind = slice._astname;
     if (sliceKind === "Index") {
         values['INDEX' + i] = this.convert(slice.value, node);
@@ -27,20 +27,20 @@ BlockMirrorTextToBlocks.prototype.addSliceDim = function (slice, i, values, muta
     }
 }
 
-BlockMirrorTextToBlocks.prototype['ast_Index'] = function(node, parent){
+PyBlock.prototype['ast_Index'] = function(node, parent){
     var value = node.value;
     var lineno = node._parent.lineno;
     let num = this.convert(value, node);
-    return BlockMirrorTextToBlocks.create_block("math_number", lineno, BlockMirrorTextToBlocks.getVarType(num), {
+    return PyBlock.create_block("math_number", lineno, PyBlock.getVarType(num), {
         "NUM": num
     });
 }
 
-BlockMirrorTextToBlocks.prototype['ast_Slice'] = function(node, parent){
+PyBlock.prototype['ast_Slice'] = function(node, parent){
     return null;
 }
 
-BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
+PyBlock.prototype['ast_Subscript'] = function(node, parent){
     var value = node.value;
     var slice = node.slice;
     // in list get sub-list from
@@ -56,7 +56,7 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
         let foundType;
         let valueNode = this.convert(value, node);
         let values;
-        if(BlockMirrorTextToBlocks.getVarType(valueNode) === "Str"){
+        if(PyBlock.getVarType(valueNode) === "Str"){
             blockName = "text_getSubstring";
             foundType = "Str";
             values = {
@@ -91,8 +91,8 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
                     lower_value = this.convert(lower, node);
                 }
                 else{
-                    let right = BlockMirrorTextToBlocks.createNumBlock(1, "int", node);
-                    lower_value = BlockMirrorTextToBlocks.createOpBlock("ADD", this.convert(lower, node), right, "int", node);
+                    let right = PyBlock.createNumBlock(1, "int", node);
+                    lower_value = PyBlock.createOpBlock("ADD", this.convert(lower, node), right, "int", node);
                 }
             }
             Object.assign(values, {"AT1":lower_value});
@@ -105,7 +105,7 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
             Object.assign(values, {"AT2":this.convert(upper, node)});
         }
 
-        return BlockMirrorTextToBlocks.create_block(
+        return PyBlock.create_block(
             blockName, // type
             node.lineno, // line_number
             foundType,
@@ -133,13 +133,13 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
         let blockName;
         let valueNode = this.convert(value, node);
         let foundType;
-        if(BlockMirrorTextToBlocks.getVarType(valueNode) === "Str"){
+        if(PyBlock.getVarType(valueNode) === "Str"){
             blockName = "text_charAt";
             foundType = "char";
         }
         else {
             blockName = "lists_getIndex";
-            foundType = BlockMirrorTextToBlocks.Lists[BlockMirrorTextToBlocks.getName(valueNode)];
+            foundType = PyBlock.Lists[PyBlock.getName(valueNode)];
         }
         // in list get # from start par defaut
         
@@ -172,8 +172,8 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
                 value = this.convert(slice.value, node);
             }
             else{
-                let right = BlockMirrorTextToBlocks.createNumBlock(1, "int", node);
-                value = BlockMirrorTextToBlocks.createOpBlock("ADD", this.convert(slice.value, node), right, "int", node);
+                let right = PyBlock.createNumBlock(1, "int", node);
+                value = PyBlock.createOpBlock("ADD", this.convert(slice.value, node), right, "int", node);
             }
             Object.assign(values, {"AT":value});
         }
@@ -184,7 +184,7 @@ BlockMirrorTextToBlocks.prototype['ast_Subscript'] = function(node, parent){
         }
         Object.assign(fields, {"WHERE":where});
 
-        return BlockMirrorTextToBlocks.create_block(
+        return PyBlock.create_block(
             blockName, // type
             node.lineno, // line_number
             foundType,

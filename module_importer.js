@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
-const create_block_func = "BlockMirrorTextToBlocks.prototype.FUNCTIONS_BLOCKS";
-const block_converter = "BlockMirrorTextToBlocks.prototype.convert";
+const create_block_func = "PyBlock.prototype.FUNCTIONS_BLOCKS";
+const block_converter = "PyBlock.prototype.convert";
 const modules_path = path.join(__dirname, 'modules');
 
 fs.readdir(modules_path, (err, modules)=>{

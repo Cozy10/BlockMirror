@@ -1,4 +1,4 @@
-BlockMirrorTextToBlocks.prototype['ast_If'] = function (node, parent) {
+PyBlock.prototype['ast_If'] = function (node, parent) {
     let test = node.test;
     let body = node.body;
     let orelse = node.orelse;
@@ -12,18 +12,18 @@ BlockMirrorTextToBlocks.prototype['ast_If'] = function (node, parent) {
         let values = {"CONDITION": this.convert(test, node)}
         let returnType;
         if(node.body[0].value != null){
-            BlockMirrorTextToBlocks.incrementLevel();
+            PyBlock.incrementLevel();
             values["VALUE"] = this.convert(node.body[0].value, node);
-            returnType = BlockMirrorTextToBlocks.getVarType(values['VALUE']);
+            returnType = PyBlock.getVarType(values['VALUE']);
         }
-        let res = BlockMirrorTextToBlocks.create_block("procedures_ifreturn", node.lineno, returnType, {}, values);
-        BlockMirrorTextToBlocks.decrementLevel();
+        let res = PyBlock.create_block("procedures_ifreturn", node.lineno, returnType, {}, values);
+        PyBlock.decrementLevel();
         return res;
     }
     let values = {"IF0": this.convert(test, node)};
-    BlockMirrorTextToBlocks.incrementLevel();
+    PyBlock.incrementLevel();
     let statements = {"DO0": this.convertBody(body, node)};
-    BlockMirrorTextToBlocks.decrementLevel();
+    PyBlock.decrementLevel();
 
     while (orelse !== undefined && orelse.length > 0) {
         if (orelse.length === 1) {
@@ -32,25 +32,25 @@ BlockMirrorTextToBlocks.prototype['ast_If'] = function (node, parent) {
                 this.heights.shift();
                 elifCount++;
                 values['IF' + elifCount] = this.convert(orelse[0].test, node);
-                BlockMirrorTextToBlocks.incrementLevel();
+                PyBlock.incrementLevel();
                 statements['DO' + elifCount] = this.convertBody(orelse[0].body, node);
-                BlockMirrorTextToBlocks.decrementLevel();
+                PyBlock.decrementLevel();
             } else {
                 hasOrelse = 1;
-                BlockMirrorTextToBlocks.incrementLevel();
+                PyBlock.incrementLevel();
                 statements['ELSE'] = this.convertBody(orelse, node);
-                BlockMirrorTextToBlocks.decrementLevel();
+                PyBlock.decrementLevel();
             }
         } else {
             hasOrelse = 1;
-            BlockMirrorTextToBlocks.incrementLevel();
+            PyBlock.incrementLevel();
             statements['ELSE'] = this.convertBody(orelse, node);
-            BlockMirrorTextToBlocks.decrementLevel();
+            PyBlock.decrementLevel();
         }
         orelse = orelse[0].orelse;
     }
     
-    return BlockMirrorTextToBlocks.create_block("controls_if", node.lineno,
+    return PyBlock.create_block("controls_if", node.lineno,
         undefined,
         {},
         values, {}, {
