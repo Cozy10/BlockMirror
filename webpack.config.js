@@ -106,7 +106,7 @@ const config = {
     ],
     output: {
         path: __dirname + '/dist',
-        filename: 'block_mirror.js',
+        filename: 'pyblock.js',
         library: 'BlockMirror'
     },
     module: {
@@ -125,11 +125,11 @@ const config = {
         new MergeIntoSingleFilePlugin({
             files: {
                 "skulpt_parser.js": JS_SKULPT_PARSER_FILES,
-                "block_mirror.js": JS_BLOCKMIRROR_FILES
+                "pyblock.js": JS_BLOCKMIRROR_FILES
             },
             transform: {
                 "skulpt_parser.js":babelify,
-                "block_mirror.js":babelify
+                "pyblock.js":babelify
             }
         })
     ]

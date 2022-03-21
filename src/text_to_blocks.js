@@ -17,7 +17,6 @@ PyBlock.xmlToString = function (xml) {
 
 PyBlock.prototype.convertSourceToCodeBlock = function (python_source) {
     var xml = document.createElement("xml");
-    console.log(python_source);
     xml.appendChild(PyBlock.raw_block(python_source));
     return PyBlock.xmlToString(xml);
 };
@@ -456,7 +455,6 @@ PyBlock.create_block = function (type, lineNumber, python_type, fields, values, 
 
 PyBlock.raw_block = function (txt) {
     // TODO: lineno as second parameter!
-    console.log(txt);
     return PyBlock.create_block("raw_code", 0, undefined, {"TEXT": txt});
 };
 
