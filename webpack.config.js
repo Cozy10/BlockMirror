@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const MergeIntoSingleFilePlugin = require('webpack-merge-and-include-globally');
 const babel = require("@babel/core");
-const modules_path = [path.resolve(__dirname, "modules/numpy/import")];
+// const modules_path = [path.resolve(__dirname, "modules")];
 
 // Blockly
 const JS_BLOCKLY_FILES = [
@@ -83,14 +83,22 @@ const JS_BLOCKMIRROR_FILES = [
     path.resolve(__dirname,'src/ast/random.js'),
     path.resolve(__dirname,'src/ast/pythonDef.js'),
     path.resolve(__dirname, 'src/ast/variable_type.js'),
-].concat((() => { // Import modules files
-    let modules_import_path;
-    modules_path.forEach((module_path)=>{
-        files = fs.readdirSync(module_path);
-        modules_import_path = files.map(file => path.join(module_path, file));
-    });
-    return modules_import_path;
-})());
+];
+// .concat((() => { // Import modules files
+//     let modules_import_path = [];
+//     console.log(modules_path);
+//     modules_path.forEach((module_path)=>{
+//         let modules_found = fs.readdirSync(module_path);
+//         modules_found.forEach((module) => {
+//             let module_path = path.join(module)
+//             let files = fs.readdirSync(path.join(module, ));
+//         });
+//         console.log(files);
+//         modules_import_path.concat(files.map(file => path.join(module_path, file)));
+//     });
+//     console.log(modules_import_path);
+//     return modules_import_path;
+// })());
 
 const JS_FILES = [].concat(JS_BLOCKLY_FILES, JS_SKULPT_FILES,
     JS_BLOCKMIRROR_FILES)
@@ -106,7 +114,7 @@ const config = {
     ],
     output: {
         path: __dirname + '/dist',
-        filename: 'block_mirror.js',
+        filename: 'pyblock.js',
         library: 'BlockMirror'
     },
     module: {
@@ -125,11 +133,11 @@ const config = {
         new MergeIntoSingleFilePlugin({
             files: {
                 "skulpt_parser.js": JS_SKULPT_PARSER_FILES,
-                "block_mirror.js": JS_BLOCKMIRROR_FILES
+                "pyblock.js": JS_BLOCKMIRROR_FILES
             },
             transform: {
                 "skulpt_parser.js":babelify,
-                "block_mirror.js":babelify
+                "pyblock.js":babelify
             }
         })
     ]

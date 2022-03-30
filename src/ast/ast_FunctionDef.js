@@ -8,22 +8,27 @@ PyBlock.prototype['ast_FunctionDef'] = function (node, parent) {
     let function_type = "procedures_callnoreturn";
     let returnNode;
     let returnType;
+    let returnValue;
 
     let values = {};
-    PyBlock.incrementLevel();
+    
     // Search return and remove all items after in the block because useless
     node.body.forEach((element, i, tab) => {
         if(element._astname === "Return"){
             if(element.value != null){
                 blockName = "procedures_defreturn";
                 function_type = "procedures_callreturn";
-                returnNode = this.convert(element.value, node);
-                returnType = PyBlock.getVarType(returnNode);
-                values["RETURN"] = returnNode;
+                returnValue = element.value;
             }
             tab.splice(i);
         }
     });
+    PyBlock.incrementLevel();
+    let stack = this.convertBody(node.body, node);
+    returnNode = this.convert(returnValue, node);
+    returnType = PyBlock.getVarType(returnNode);
+    values["RETURN"] = returnNode;
+    PyBlock.decrementLevel();
 
     // Args
     let mutation = {};
@@ -34,8 +39,7 @@ PyBlock.prototype['ast_FunctionDef'] = function (node, parent) {
     // Register functions
     PyBlock.prototype.LOCAL_FUNCTIONS[name] = 
         PyBlock.prototype.create_block_functionDef(name, mutation, function_type, returnType);
-    let stack = this.convertBody(node.body, node);
-    PyBlock.decrementLevel();
+    
     return PyBlock.create_block(blockName, node.lineno, undefined, {
             'NAME': Sk.ffi.remapToJs(name)
         }, values, {}, mutation, {
